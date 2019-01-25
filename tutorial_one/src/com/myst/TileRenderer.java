@@ -29,6 +29,7 @@ public class TileRenderer {
         };
 
         model = new Model(vertices, texture, indices);
+
         for (int i=0; i < Tile.tiles.length; i++){
             if(Tile.tiles[i] != null) {
                 if (!tileTextures.containsKey(Tile.tiles[i].getTexture())) {
@@ -37,22 +38,24 @@ public class TileRenderer {
                 }
             }
         }
-    }
-    public void renderTile(byte id, int x, int y, Shader shader, Matrix4f world, Camera cam){
-        shader.bind();
-        if(tileTextures.containsKey(Tile.tiles[id].getTexture())) {
-            tileTextures.get(Tile.tiles[id].getTexture()).bind(0);
 
+    }
+    public void renderTile(Tile tile, int x, int y, Shader shader, Matrix4f world, Camera cam){
+        shader.bind();
+        if(tileTextures.containsKey(tile.getTexture())) {
+            tileTextures.get(tile.getTexture()).bind(0);
         }
 
-
-        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x*2,y*2,0));
+//        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x*2,y*2,0));
+        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x,y,0));
         Matrix4f target = new Matrix4f();
 
         cam.getProjection().mul(world,target);
+//        translates the tiles according to the camera
         target.mul(tile_pos);
 
         shader.setUniform("sampler", 0);
+//        target is the location of the tile
         shader.setUniform("projection", target);
         model.render();
     }

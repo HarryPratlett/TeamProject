@@ -1,5 +1,6 @@
 package com.myst;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWVidMode;
 
@@ -15,6 +16,13 @@ public class Main {
 
     public static void main(String[] args){
         Window.setCallbacks();
+
+//        AABB box1 = new AABB(new Vector2f(0,0), new Vector2f(1,1));
+//        AABB box2 = new AABB(new Vector2f(1,0), new Vector2f(1,1));
+//
+//        if (box1.isIntersecting(box2)){
+//            System.out.println("the boxes are intersecting");
+//        }
 
         if (!glfwInit()){
             throw new IllegalStateException("Failed to initialise GLFW");
@@ -43,29 +51,38 @@ public class Main {
 
 
 
+        World world = new World();
 
-        System.out.println(new Matrix4f());
+        Player player = new Player();
 
-        Matrix4f projection = new Matrix4f().ortho2D(640 / 2, -640 / 2, -480 / 2, 480 / 2);
 
-//        projection.rotate(20.5f, 0,0,0);
-//        projection.scale(200);
-        Matrix4f scale = new Matrix4f()
-                .translate(new Vector3f(0,0,0))
-                .scale(16);
+
+        world.setTile(Tile.test_tile2.setSolid(),5,0 );
+        world.setTile(Tile.test_tile2.setSolid(),6,0 );
+
+
+//        world.se
+//
+//        Matrix4f projection = new Matrix4f().ortho2D(640 / 2, -640 / 2, -480 / 2, 480 / 2);
+//
+////        projection.rotate(20.5f, 0,0,0);
+////        projection.scale(200);
+//        Matrix4f scale = new Matrix4f()
+//                .translate(new Vector3f(0,0,0))
+//                .scale(16);
 
 
         Matrix4f target = new Matrix4f();
 
-        projection = projection.mul(scale,target);
+//        projection = projection.mul(scale,target);
 
-        Camera cam = new Camera(window.getWidth(), window.getHeight());
+        Camera camera = new Camera(window.getWidth(), window.getHeight());
 
         TileRenderer tiles = new TileRenderer();
 
         Shader shader = new Shader("assets/shader");
 
-        Texture tex = new Texture("assets/Untitled.png");
+
 
 
         double frame_cap = 1.0/60.0;
@@ -77,6 +94,9 @@ public class Main {
         int frames = 0;
 
         Boolean renderFrame;
+
+        double debugCurrentTime = Timer.getTime();
+        double debugLastTime = Timer.getTime();
 
         while (!window.shouldClose()){
             renderFrame = false;
@@ -102,9 +122,29 @@ public class Main {
                 if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
                     glfwSetWindowShouldClose(window.getWindow(),true);
                 }
-                else if (window.getInput().isKeyPressed(GLFW_KEY_ENTER)) {
-                    cam.addPosition(new Vector3f(1, 0, 0));
+                if (window.getInput().isKeyPressed(GLFW_KEY_ENTER)) {
+                    camera.addPosition(new Vector3f((camera.getWidth() / 2), 0, 0));
+                    System.out.println(camera.getWidth() / 2);
                 }
+                if (window.getInput().isKeyDown(GLFW_KEY_UP)){
+                    camera.addPosition(new Vector3f(0,-1,0));
+                }
+                if (window.getInput().isKeyDown(GLFW_KEY_DOWN)){
+                    camera.addPosition(new Vector3f(0,1,0));
+                }
+                if (window.getInput().isKeyDown(GLFW_KEY_LEFT)){
+                    camera.addPosition(new Vector3f(1,0,0));
+                }
+                if (window.getInput().isKeyDown(GLFW_KEY_RIGHT)){
+                    camera.addPosition(new Vector3f(-1,0,0));
+                }
+
+                world.correctCamera(camera, window);
+
+
+
+
+
             }
 
             if (frame_time >= 1) {
@@ -114,26 +154,28 @@ public class Main {
             }
 
 
+            debugCurrentTime = Timer.getTime();
+            double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
+            debugLastTime = debugCurrentTime;
+
+            player.update((float) timeSinceLastUpdate, window, camera, world);
 
             window.update();
 
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);
 
-//                target = scale;
 
-//            tex.bind();
-//                shader.bind();
-//                shader.setUniform("sampler", 0);
-//                shader.setUniform("projection", cam.getProjection().mul(target));
-//                tex.bind(0);
-//                model1.render();
-                for( int i=0; i < 8 ; i++){
-                    tiles.renderTile((byte)0,i,0,shader,scale, cam);
-                }
+
+
+                world.render(tiles,shader,camera, window);
+
+                player.render(shader,camera);
 
                 window.swapBuffers();
+
                 frames += 1;
+
             }
 
         }
