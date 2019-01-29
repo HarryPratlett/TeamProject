@@ -1,11 +1,21 @@
 package com.myst;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWVidMode;
+import com.myst.datatypes.TileCoords;
+import com.myst.helper.Timer;
+import com.myst.rendering.Texture;
+import com.myst.world.view.Camera;
+import com.myst.rendering.Window;
+import com.myst.world.World;
+import com.myst.world.entities.Player;
+import com.myst.world.map.generating.MapGenerator;
+import com.myst.world.map.rendering.Shader;
+import com.myst.world.map.rendering.Tile;
 
+import com.myst.world.map.rendering.TileRenderer;
 import org.lwjgl.opengl.GL;
 import org.joml.Matrix4f;
+
+import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -48,17 +58,33 @@ public class Main {
 
         glClearColor(0f,0f,0f, 0f);
 
+        Shader shader = new Shader("assets/shader");
+
+        Tile test_tile = new Tile(  0,  "assets/tile_18");
+        Tile test_tile2 = new Tile(1,"assets/tile_186");
+
+        Tile[] tileSet = new Tile[2];
+        tileSet[0] = test_tile;
+        tileSet[1] = test_tile2;
+
+        Tile[][] map = new MapGenerator(tileSet).generateMap(100,100);
 
 
+        TileRenderer tiles = new TileRenderer(map);
 
-        World world = new World();
+        World world = new World(tiles);
 
         Player player = new Player();
 
+        Camera camera = new Camera(window.getWidth(), window.getHeight());
 
 
-        world.setTile(Tile.test_tile2.setSolid(),5,0 );
-        world.setTile(Tile.test_tile2.setSolid(),6,0 );
+
+
+
+
+        world.setTile(test_tile2.setSolid(),5,0 );
+        world.setTile(test_tile2.setSolid(),6,0 );
 
 
 //        world.se
@@ -76,11 +102,7 @@ public class Main {
 
 //        projection = projection.mul(scale,target);
 
-        Camera camera = new Camera(window.getWidth(), window.getHeight());
 
-        TileRenderer tiles = new TileRenderer();
-
-        Shader shader = new Shader("assets/shader");
 
 
 
@@ -97,6 +119,8 @@ public class Main {
 
         double debugCurrentTime = Timer.getTime();
         double debugLastTime = Timer.getTime();
+
+        camera.bindPlayer(player);
 
         while (!window.shouldClose()){
             renderFrame = false;
@@ -122,24 +146,7 @@ public class Main {
                 if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
                     glfwSetWindowShouldClose(window.getWindow(),true);
                 }
-                if (window.getInput().isKeyPressed(GLFW_KEY_ENTER)) {
-                    camera.addPosition(new Vector3f((camera.getWidth() / 2), 0, 0));
-                    System.out.println(camera.getWidth() / 2);
-                }
-                if (window.getInput().isKeyDown(GLFW_KEY_UP)){
-                    camera.addPosition(new Vector3f(0,-1,0));
-                }
-                if (window.getInput().isKeyDown(GLFW_KEY_DOWN)){
-                    camera.addPosition(new Vector3f(0,1,0));
-                }
-                if (window.getInput().isKeyDown(GLFW_KEY_LEFT)){
-                    camera.addPosition(new Vector3f(1,0,0));
-                }
-                if (window.getInput().isKeyDown(GLFW_KEY_RIGHT)){
-                    camera.addPosition(new Vector3f(-1,0,0));
-                }
-
-                world.correctCamera(camera, window);
+                camera.updatePosition();
 
 
 
@@ -149,6 +156,8 @@ public class Main {
 
             if (frame_time >= 1) {
                 System.out.println(frames);
+                System.out.println(camera.position);
+                System.out.println(player.transform.pos);
                 frame_time = 0;
                 frames = 0;
             }
@@ -165,10 +174,10 @@ public class Main {
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);
 
+//                tiles.renderTile(test_tile,new TileCoords(0,0),shader, new Matrix4f().scale(30),camera);
 
+                world.render(shader,camera, window);
 
-
-                world.render(tiles,shader,camera, window);
 
                 player.render(shader,camera);
 
