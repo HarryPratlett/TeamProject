@@ -12,6 +12,7 @@ import com.myst.world.map.rendering.Shader;
 import com.myst.world.map.rendering.Tile;
 
 import com.myst.world.map.rendering.TileRenderer;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import org.joml.Matrix4f;
 
@@ -23,20 +24,20 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Main {
 
 
-
-    public static void main(String[] args){
+    public static void setUp(){
         Window.setCallbacks();
 
-//        AABB box1 = new AABB(new Vector2f(0,0), new Vector2f(1,1));
-//        AABB box2 = new AABB(new Vector2f(1,0), new Vector2f(1,1));
-//
-//        if (box1.isIntersecting(box2)){
-//            System.out.println("the boxes are intersecting");
-//        }
+
 
         if (!glfwInit()){
             throw new IllegalStateException("Failed to initialise GLFW");
         }
+    }
+
+
+
+    public static void main(String[] args){
+        setUp();
 
         Window window = new Window();
 
@@ -60,14 +61,12 @@ public class Main {
 
         Shader shader = new Shader("assets/shader");
 
-        Tile test_tile = new Tile(  0,  "assets/tile_18");
-        Tile test_tile2 = new Tile(1,"assets/tile_186");
+        String[] textures = new String[2];
+        textures[0] = "assets/tile_18";
+        textures[1] = "assets/tile_186";
 
-        Tile[] tileSet = new Tile[2];
-        tileSet[0] = test_tile;
-        tileSet[1] = test_tile2;
 
-        Tile[][] map = new MapGenerator(tileSet).generateMap(100,100);
+        Tile[][] map = new MapGenerator(textures).generateMap(100,100);
 
 
         TileRenderer tiles = new TileRenderer(map);
@@ -76,6 +75,8 @@ public class Main {
 
         Player player = new Player();
 
+        player.transform.pos.add(new Vector3f(1,-1,0));
+
         Camera camera = new Camera(window.getWidth(), window.getHeight());
 
 
@@ -83,8 +84,6 @@ public class Main {
 
 
 
-        world.setTile(test_tile2.setSolid(),5,0 );
-        world.setTile(test_tile2.setSolid(),6,0 );
 
 
 //        world.se
