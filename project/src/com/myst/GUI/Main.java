@@ -7,6 +7,7 @@ import com.myst.world.map.rendering.Shader;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
+import java.awt.Rectangle;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.opengl.GL11.*;
@@ -50,7 +51,7 @@ public class Main {
         };
 
         Shader shader = new Shader("assets/shader");
-        Texture texture = new Texture("assets/tile_18.png");
+        Texture texture = new Texture("assets/gamemenu.png");
 
         Model model = new Model(vertices, textureDocks, indices);
 
@@ -58,7 +59,7 @@ public class Main {
         while (!window.shouldClose()){
             window.update();
 
-            renderImage(shader,texture,0,0,new Matrix4f().scale(1), model);
+            renderImage(shader,texture,0,0,new Matrix4f().scale(0.65f), model);
 
             window.swapBuffers();
         }
@@ -86,4 +87,13 @@ public class Main {
 
     }
 
+    public void addButton(int x, int y) {
+        Rectangle bounds = new Rectangle();
+        bounds.x = x;
+        bounds.y = y;
+        //bounds.height =
+        //bounds.width =
+
+
+    }
 }
