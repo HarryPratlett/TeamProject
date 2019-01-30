@@ -1,10 +1,21 @@
 package com.myst;
 
-import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWVidMode;
+import com.myst.datatypes.TileCoords;
+import com.myst.helper.Timer;
+import com.myst.rendering.Texture;
+import com.myst.world.view.Camera;
+import com.myst.rendering.Window;
+import com.myst.world.World;
+import com.myst.world.entities.Player;
+import com.myst.world.map.generating.MapGenerator;
+import com.myst.world.map.rendering.Shader;
+import com.myst.world.map.rendering.Tile;
 
+import com.myst.world.map.rendering.TileRenderer;
 import org.lwjgl.opengl.GL;
 import org.joml.Matrix4f;
+
+import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -15,6 +26,13 @@ public class Main {
 
     public static void main(String[] args){
         Window.setCallbacks();
+
+//        AABB box1 = new AABB(new Vector2f(0,0), new Vector2f(1,1));
+//        AABB box2 = new AABB(new Vector2f(1,0), new Vector2f(1,1));
+//
+//        if (box1.isIntersecting(box2)){
+//            System.out.println("the boxes are intersecting");
+//        }
 
         if (!glfwInit()){
             throw new IllegalStateException("Failed to initialise GLFW");
@@ -40,32 +58,53 @@ public class Main {
 
         glClearColor(0f,0f,0f, 0f);
 
+        Shader shader = new Shader("assets/shader");
+
+        Tile test_tile = new Tile(  0,  "assets/tile_18");
+        Tile test_tile2 = new Tile(1,"assets/tile_186");
+
+        Tile[] tileSet = new Tile[2];
+        tileSet[0] = test_tile;
+        tileSet[1] = test_tile2;
+
+        Tile[][] map = new MapGenerator(tileSet).generateMap(100,100);
+
+
+        TileRenderer tiles = new TileRenderer(map);
+
+        World world = new World(tiles);
+
+        Player player = new Player();
+
+        Camera camera = new Camera(window.getWidth(), window.getHeight());
 
 
 
 
-        System.out.println(new Matrix4f());
 
-        Matrix4f projection = new Matrix4f().ortho2D(640 / 2, -640 / 2, -480 / 2, 480 / 2);
 
-//        projection.rotate(20.5f, 0,0,0);
-//        projection.scale(200);
-        Matrix4f scale = new Matrix4f()
-                .translate(new Vector3f(0,0,0))
-                .scale(16);
+        world.setTile(test_tile2.setSolid(),5,0 );
+        world.setTile(test_tile2.setSolid(),6,0 );
+
+
+//        world.se
+//
+//        Matrix4f projection = new Matrix4f().ortho2D(640 / 2, -640 / 2, -480 / 2, 480 / 2);
+//
+////        projection.rotate(20.5f, 0,0,0);
+////        projection.scale(200);
+//        Matrix4f scale = new Matrix4f()
+//                .translate(new Vector3f(0,0,0))
+//                .scale(16);
 
 
         Matrix4f target = new Matrix4f();
 
-        projection = projection.mul(scale,target);
+//        projection = projection.mul(scale,target);
 
-        Camera cam = new Camera(window.getWidth(), window.getHeight());
 
-        TileRenderer tiles = new TileRenderer();
 
-        Shader shader = new Shader("assets/shader");
 
-        Texture tex = new Texture("assets/Untitled.png");
 
 
         double frame_cap = 1.0/60.0;
@@ -77,6 +116,11 @@ public class Main {
         int frames = 0;
 
         Boolean renderFrame;
+
+        double debugCurrentTime = Timer.getTime();
+        double debugLastTime = Timer.getTime();
+
+        camera.bindPlayer(player);
 
         while (!window.shouldClose()){
             renderFrame = false;
@@ -102,38 +146,45 @@ public class Main {
                 if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
                     glfwSetWindowShouldClose(window.getWindow(),true);
                 }
-                else if (window.getInput().isKeyPressed(GLFW_KEY_ENTER)) {
-                    cam.addPosition(new Vector3f(1, 0, 0));
-                }
+                camera.updatePosition();
+
+
+
+
+
             }
 
             if (frame_time >= 1) {
                 System.out.println(frames);
+                System.out.println(camera.position);
+                System.out.println(player.transform.pos);
                 frame_time = 0;
                 frames = 0;
             }
 
 
+            debugCurrentTime = Timer.getTime();
+            double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
+            debugLastTime = debugCurrentTime;
+
+            player.update((float) timeSinceLastUpdate, window, camera, world);
 
             window.update();
 
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);
 
-//                target = scale;
+//                tiles.renderTile(test_tile,new TileCoords(0,0),shader, new Matrix4f().scale(30),camera);
 
-//            tex.bind();
-//                shader.bind();
-//                shader.setUniform("sampler", 0);
-//                shader.setUniform("projection", cam.getProjection().mul(target));
-//                tex.bind(0);
-//                model1.render();
-                for( int i=0; i < 8 ; i++){
-                    tiles.renderTile((byte)0,i,0,shader,scale, cam);
-                }
+                world.render(shader,camera, window);
+
+
+                player.render(shader,camera);
 
                 window.swapBuffers();
+
                 frames += 1;
+
             }
 
         }
