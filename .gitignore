@@ -4,3 +4,5 @@
 out/
 *.mvn
 *.iml
+*.project
+*.classpath
