@@ -59,11 +59,45 @@ public class Main {
 
         glClearColor(0f,0f,0f, 0f);
 
-        Shader shader = new Shader("assets/shader");
+        Shader shader = new Shader("/Users/seongheehan/Documents/myst-testing/project/assets/shader");
 
-        String[] textures = new String[2];
-        textures[0] = "assets/tile_18";
-        textures[1] = "assets/tile_186";
+        String[] textures = new String[21];
+        String path = ("/Users/seongheehan/Documents/myst-testing/project/assets/tile/");
+        textures[0] = path+"tile_01";
+        textures[1] = path+"tile_02";
+        textures[2] = path+"tile_03";
+        textures[3] = path+"tile_04";
+        textures[4] = path+"tile_05";
+        textures[5] = path+"tile_06";
+        textures[6] = path+"tile_07";
+        textures[7] = path+"tile_08";
+        textures[8] = path+"tile_09";
+        textures[9] = path+"tile_10";
+        textures[10] = path+"tile_11";
+        textures[11] = path+"tile_12";
+        textures[12] = path+"tile_13";
+        textures[13] = path+"tile_14";
+        textures[14] = path+"tile_15";
+        textures[15] = path+"tile_16";
+        textures[16] = path+"tile_17";
+        textures[17] = path+"tile_18";
+        textures[18] = path+"tile_19";
+        textures[19] = path+"tile_20";
+        
+        textures[20] = path+"tile_479";
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
 
         Tile[][] map = new MapGenerator(textures).generateMap(100,100);
