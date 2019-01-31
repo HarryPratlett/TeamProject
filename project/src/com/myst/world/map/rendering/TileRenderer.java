@@ -28,6 +28,8 @@ public class TileRenderer {
 
         tileTextures = new HashMap<String,Texture>();
 
+
+
         float[] vertices = new float[] {
                 -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
                 -0.5f, -0.5f, 0f/*3*/
@@ -79,6 +81,7 @@ public class TileRenderer {
         shader.setUniform("projection", target);
         model.render();
     }
+
 
 
 

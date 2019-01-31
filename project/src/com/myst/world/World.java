@@ -27,14 +27,26 @@ public class World {
 
     public World(TileRenderer render){
         this.render = render;
+//        this needs refactoring
+        Tile[][] map = render.tileMap;
 
         width = 30;
         height = 30;
         scale = 20; /*this has to be equal to the camera */
 
-        tiles = new int[width][height];
+        tiles = new int[map.length][map[0].length];
 
-        bounding_boxes = new AABB[width][height];
+        bounding_boxes = new AABB[map.length][map[0].length];
+
+
+        for(int i=0; i < map.length; i++){
+            for(int j=0; j < map[0].length; j++){
+                if (map[i][j].isSolid()){
+                    setTile(map[i][j],i,j);
+                }
+            }
+        }
+
 
     }
 
@@ -53,10 +65,7 @@ public class World {
         TileCoords topLeftTile = topLeft.asTileCoords(scale);
         TileCoords bottomRightTile = bottomRight.asTileCoords(scale);
 
-        topLeftTile.x = topLeftTile.x ;
 
-//        this is actually the bottom of the screen
-        topLeftTile.y = topLeftTile.y ;
         bottomRightTile.x = bottomRightTile.x + 1;
         bottomRightTile.y = bottomRightTile.y + 1;
 
