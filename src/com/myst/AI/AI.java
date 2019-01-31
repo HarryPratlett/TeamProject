@@ -4,19 +4,28 @@ import java.util.ArrayList;
 
 import org.joml.Vector2f;
 
+import com.myst.world.World;
+
 public class AI {
 
 	private Vector2f position;
+	private World world;
 	
-	public AI(Vector2f position) {
+	public AI(Vector2f position, World world) {
 		this.position = position;
+		this.world = world;
 	}
 	
-	public void pathFind() {
+	public ArrayList<Vector2f> pathFind(Vector2f goal) {
+		AStarSearch search = new AStarSearch(position, goal, world);
+		return search.getPath();
+	}
+	
+	public void shootEnemy() {
 		
 	}
 	
-	public void AStarSearch(Vector2f[] ) {
+	public void followPath() {
 		
 	}
 	

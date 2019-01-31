@@ -21,7 +21,16 @@ public class AStarSearch {
 		this.world = world;
 	}
 	
-	public ArrayList<MapNode> search(){
+	public ArrayList<Vector2f> getPath(){
+		ArrayList<Vector2f> routeAsCoords = new ArrayList<Vector2f>();
+		ArrayList<MapNode> route = search();
+		for(MapNode node : route) {
+			routeAsCoords.add(node.getPosition());
+		}
+		return routeAsCoords;
+	}
+	
+	private ArrayList<MapNode> search(){
 		MapNode start = new MapNode(position, goal, null, world);
 		openList.add(start);
 		
