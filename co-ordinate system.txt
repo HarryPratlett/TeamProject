@@ -1,0 +1,10 @@
+Everything will use the co-ordinate system of the map which will be
+
+     y
+     |
+-x———|———+x
+     |
+    -y
+
+With 0,0 being at the top hand corner of the tiles
+
