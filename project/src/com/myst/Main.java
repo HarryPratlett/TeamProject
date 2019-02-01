@@ -1,24 +1,19 @@
 package com.myst;
 
-import com.myst.datatypes.TileCoords;
 import com.myst.helper.Timer;
-import com.myst.rendering.Texture;
-import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.entities.Player;
 import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Shader;
 import com.myst.world.map.rendering.Tile;
-
 import com.myst.world.map.rendering.TileRenderer;
-import org.lwjgl.opengl.GL;
+import com.myst.world.view.Camera;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL;
 
-import java.util.HashMap;
-
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Main {
 

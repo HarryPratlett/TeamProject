@@ -51,7 +51,6 @@ public class Main {
         };
 
         Shader shader = new Shader("assets/shader");
-        Texture texture = new Texture("assets/gamemenu.png");
 
         Model model = new Model(vertices, textureDocks, indices);
 
@@ -59,15 +58,14 @@ public class Main {
         while (!window.shouldClose()){
             window.update();
 
-            renderImage(shader,texture,0,0,new Matrix4f().scale(0.65f), model);
-
+            renderGUI(model, shader, new Matrix4f().scale(0.3f));
             window.swapBuffers();
         }
 
     }
 
 
-    public static  void renderImage(Shader shader, Texture texture, int x, int y, Matrix4f scale, Model model){
+    public static void renderImage(Shader shader, Texture texture, int x, int y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
         Matrix4f target = new Matrix4f();
@@ -83,17 +81,25 @@ public class Main {
 
     }
 
-    public static void renderGUI(Window window) {
+    public static void renderGUI(Model model, Shader shader, Matrix4f scale) {
+        Texture[] menuTextures = new Texture[]  {
+                new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
+                new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
+        };
+        int y = 2;
+        for (Texture t : menuTextures)   {
+            renderImage(shader, t, 0, y, scale, model);
+            //addButton(x, y, t); //needs changing to be positions of button
+            y -= 1;
+        }
+
 
     }
 
-    public void addButton(int x, int y) {
-        Rectangle bounds = new Rectangle();
-        bounds.x = x;
-        bounds.y = y;
-        //bounds.height =
-        //bounds.width =
-
-
+    public static Rectangle addButton(int x, int y, Texture texture) {
+        Rectangle bounds = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
+        return bounds;
     }
+
+
 }
