@@ -1,6 +1,7 @@
 package com.myst.AI;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.PriorityQueue;
 import org.joml.Vector2f;
 
@@ -26,6 +27,7 @@ public class AStarSearch {
 		ArrayList<MapNode> route = search();
 		for(MapNode node : route) {
 			routeAsCoords.add(node.getPosition());
+			
 		}
 		return routeAsCoords;
 	}
@@ -37,11 +39,11 @@ public class AStarSearch {
 		while(!openList.isEmpty()) {
 			MapNode searchNode = openList.poll();
 			if(searchNode.getPosition().equals(goal)) {
-				closedList.add(searchNode);
-				return closedList;
+				return getRoute(searchNode);
 			}
 			
 			ArrayList<MapNode> children = generateChildren(searchNode);
+			
 			
 			for(MapNode child:children) {
 				if(!closedList.contains(child)) {
@@ -50,9 +52,10 @@ public class AStarSearch {
 					}
 				}
 			}
+
+			closedList.add(searchNode);
 		}
-		
-		return closedList;
+		return null;
 	}
 	
 	private ArrayList<MapNode> generateChildren(MapNode parent){
@@ -60,14 +63,23 @@ public class AStarSearch {
 		
 		for(int x = -1; x <= 1; x++) {
 			for(int y = -1; y <= 1; y++) {
-				Vector2f childPosition = new Vector2f(parent.getPosition().x + x, parent.getPosition().y + 1);
+				Vector2f childPosition = new Vector2f(parent.getPosition().x + x, parent.getPosition().y + y);
 				if(world.getTile(new TileCoords((int)childPosition.x,(int)childPosition.y)) != null) {
 					children.add(new MapNode(childPosition, goal, parent, world));
 				}
 			}
 		}
-		
 		return children;
+	}
+	
+	public ArrayList<MapNode> getRoute(MapNode node){
+		ArrayList<MapNode> route = new ArrayList<MapNode>();
+		Optional<MapNode> parent = node.getParent();
+		if(parent.isPresent()) {
+			route.addAll(getRoute(parent.get()));
+		}
+		route.add(node);
+		return route;
 	}
 
 }
