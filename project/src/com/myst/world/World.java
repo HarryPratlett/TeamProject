@@ -2,37 +2,34 @@ package com.myst.world;
 
 import com.myst.datatypes.TileCoords;
 import com.myst.datatypes.WorldCoords;
+import com.myst.rendering.Shader;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.collisions.AABB;
-import com.myst.world.map.rendering.Shader;
 import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
-
-import java.nio.IntBuffer;
 
 public class World {
     private final int view = 16;
     private AABB[][] bounding_boxes;
     private int[][] tiles;
-    private int width;
-    private int height;
+//    private int width;
+//    private int height;
     private TileRenderer render;
+    public Tile[][] map;
 //    scale is the width of and height of the tiles in the world
     public int scale;
 
-    public World(TileRenderer render){
+    public World(TileRenderer render,Tile[][] tileMap){
         this.render = render;
 //        this needs refactoring
-        Tile[][] map = render.tileMap;
+        this.map = tileMap;
 
-        width = 30;
-        height = 30;
-        scale = 20; /*this has to be equal to the camera */
+
+//        width = 30;
+//        height = 30;
+//        scale = 20; /*this has to be equal to the camera */
 
         tiles = new int[map.length][map[0].length];
 
@@ -62,8 +59,8 @@ public class World {
         WorldCoords topLeft = new WorldCoords(leftBorder, topBorder);
         WorldCoords bottomRight = new WorldCoords(rightBorder, bottomBorder);
 
-        TileCoords topLeftTile = topLeft.asTileCoords(scale);
-        TileCoords bottomRightTile = bottomRight.asTileCoords(scale);
+        TileCoords topLeftTile = topLeft.asTileCoords(camera.scale);
+        TileCoords bottomRightTile = bottomRight.asTileCoords(camera.scale);
 
 
         bottomRightTile.x = bottomRightTile.x + 1;
@@ -104,7 +101,7 @@ public class World {
 //    look at what is feeding this
     public void setTile(Tile tile, int x, int y){
 
-        render.tileMap[x][y] = tile;
+        map[x][y] = tile;
         if(tile.isSolid()){
             bounding_boxes[x][y] = new AABB(new Vector2f(x,-y),new Vector2f(0.5f,0.5f));
 
@@ -117,7 +114,7 @@ public class World {
     public Tile getTile(TileCoords coords){
         try{
 //            his code really needs refactoring here
-            return render.tileMap[coords.x][coords.y];
+            return map[coords.x][coords.y];
         } catch (ArrayIndexOutOfBoundsException e){
             return null;
         }

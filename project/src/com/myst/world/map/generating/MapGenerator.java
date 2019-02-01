@@ -59,9 +59,7 @@ public class MapGenerator {
 	
 	
 	
-	// prints coordinates of tile
-	System.out.println(x1);
-	System.out.println(y1);
+
 	
 	
 	
@@ -85,14 +83,12 @@ public class MapGenerator {
 					
 					
 					//randomly choose size of tile map
-					if(extendedmap1) { System.out.println("extend tile 3X3_by _horizontally");}
 					if(x1+2<width) {
 						map[x1+2][y1]=new Tile(m1-1, textures[m1]);
 						map[x1+2][y1+1]=new Tile(m1-1, textures[m1]);
 						
 						
 						//randomly choose size of tile map
-						if(extendedmap2){System.out.println("extend tile by 3x3 _vertically");}
 						if(y1+2<height) {
 							map[x1+1][y1+2]=new Tile(m1-1, textures[m1]);
 	    					map[x1+1][y1+2]=new Tile(m1-1, textures[m1]);
@@ -125,7 +121,6 @@ public class MapGenerator {
         for(int i=0; i<width; i++) {
         	map[0][i] = new Tile(20,textures[20]);
         	map[0][i].setSolid();
-        	System.out.println(map[0][i].isSolid());
         }
         
         
