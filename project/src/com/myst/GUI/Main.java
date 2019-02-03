@@ -1,4 +1,4 @@
-package com.myst;
+package com.myst.GUI;
 
 import com.myst.helper.Timer;
 import com.myst.world.map.rendering.Shader;
