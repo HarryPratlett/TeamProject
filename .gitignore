@@ -4,3 +4,4 @@
 out/
 *.mvn
 *.iml
+bin/
