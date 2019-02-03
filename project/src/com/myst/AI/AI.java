@@ -24,9 +24,5 @@ public class AI {
 	public void shootEnemy() {
 		
 	}
-	
-	public void followPath() {
-		
-	}
-	
+
 }
