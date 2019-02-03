@@ -1,22 +1,19 @@
 package com.myst;
 
-import com.myst.datatypes.TileCoords;
 import com.myst.helper.Timer;
-import com.myst.rendering.Texture;
+import com.myst.rendering.Shader;
+import com.myst.world.entities.Entity;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.entities.Player;
 import com.myst.world.map.generating.MapGenerator;
-import com.myst.world.map.rendering.Shader;
 import com.myst.world.map.rendering.Tile;
 
 import com.myst.world.map.rendering.TileRenderer;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import org.joml.Matrix4f;
-
-import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -39,7 +36,22 @@ public class Main {
     public static void main(String[] args){
         setUp();
 
+
+//        set up connection
+
+//        Connection con = asdf();
+
+
+
+//        from server on thread 2
+//        new ServerConn(Entities).run()
+
+
         Window window = new Window();
+
+        Entity[] entities = new Entity[1];
+
+
 
         window.setFullscreen(false);
         window.createWindow("My game");
@@ -105,9 +117,15 @@ public class Main {
         Tile[][] map = new MapGenerator(tiles).generateMap(100,100);
 
 
+<<<<<<< HEAD:src/com/myst/Main.java
         TileRenderer tileRenderer = new TileRenderer(map);
 
         World world = new World(tileRenderer);
+=======
+        TileRenderer tiles = new TileRenderer(textures);
+
+        World world = new World(tiles, map);
+>>>>>>> 8bd608ad14cb02a8921c1c51c1863e8b77dafb36:project/src/com/myst/Main.java
 
         Player player = new Player();
 
@@ -212,8 +230,11 @@ public class Main {
 
                 world.render(shader,camera, window);
 
+//                for (int i=0; i < entities.length; i++){
+//                    entities[i].render(camera);
+//                }
 
-                player.render(shader,camera);
+                player.render(camera);
 
                 window.swapBuffers();
 
