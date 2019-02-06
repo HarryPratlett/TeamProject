@@ -4,20 +4,26 @@ import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
 import com.myst.world.map.rendering.Shader;
+import com.myst.input.Input;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
-import java.awt.Rectangle;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 
 public class Main {
+
+    static List<Rectangle2D.Float> buttons = new ArrayList<>();
 
     public static void main(String[] args){
         Window.setCallbacks();
@@ -27,8 +33,12 @@ public class Main {
 
         Window window = new Window();
 
+
+
         window.setFullscreen(false);
         window.createWindow("My GUI");
+        glfwSetCursorPosCallback(window.getWindow(), window.getInput());
+
 
         GL.createCapabilities();
 
@@ -46,6 +56,7 @@ public class Main {
             window.update();
 
             renderGUI(shader, new Matrix4f().scale(0.3f));
+            checkButtons(window);
             window.swapBuffers();
             try {
                 Thread.sleep(  100);
@@ -98,7 +109,6 @@ public class Main {
         };
         float y = 2.25f;
         for (Texture t : menuTextures)   {
-
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices[0] *= t.getWidth()*0.009;
             vertices[3] *= t.getWidth()*0.009;
@@ -115,10 +125,22 @@ public class Main {
 
     }
 
-    public static Rectangle2D.Float addButton(float x, float y, Texture texture) {
+    public static void addButton(float x, float y, Texture texture) {
+
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, texture.getWidth(), texture.getHeight());
-        return bounds;
+        buttons.add(bounds);
     }
 
+    public static void checkButtons(Window window)   {
+        for (Rectangle2D.Float b : buttons)   {
+            double mouseX = window.getInput().getMouseCoordinates()[0];
+            double mouseY = window.getInput().getMouseCoordinates()[1];
+
+            if (mouseX > b.getX() && mouseX < (b.getX()+b.getWidth()) && mouseY > b.getY() && mouseY < (b.getY()-b.getHeight()))  {
+                System.out.println("yay");
+            }
+        }
+    }
+//need to fix scaling with regards to mouse pointer maybe replace with quad
 
 }

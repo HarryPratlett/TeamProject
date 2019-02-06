@@ -1,12 +1,16 @@
 package com.myst.input;
 
 import static org.lwjgl.glfw.GLFW.*;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 
 
-public class Input {
+public class Input extends GLFWCursorPosCallback {
+
     private long window;
 
     private boolean keys[];
+
+    private double[] coordinates = new double[] {0, 0};
 
 
     public Input(long window){
@@ -17,7 +21,15 @@ public class Input {
         }
     }
 
-    public boolean isKeyDown(int key){
+    public void invoke(long window, double xpos, double ypos)   {
+        coordinates = new double[] {xpos, ypos};
+    }
+
+    public double[] getMouseCoordinates() {
+        return coordinates;
+    }
+
+    public boolean isKeyDown(int key)  {
         return glfwGetKey(window, key) == 1;
     }
 

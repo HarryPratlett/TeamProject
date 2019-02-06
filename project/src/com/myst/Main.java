@@ -34,7 +34,6 @@ public class Main {
         }
 
         Window window = new Window();
-
         window.setFullscreen(false);
         window.createWindow("My game");
 

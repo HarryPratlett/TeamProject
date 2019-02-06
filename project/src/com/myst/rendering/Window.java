@@ -47,6 +47,7 @@ public class Window {
         glfwMakeContextCurrent(window);
 
         input = new Input(window);
+        glfwSetCursorPosCallback(window, input);
     }
 
     public boolean shouldClose(){
