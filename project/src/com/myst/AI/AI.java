@@ -21,7 +21,7 @@ public class AI {
 		return search.getPath();
 	}
 	
-	public void shootEnemy() {
+	public boolean enemyDetection() {
 		
 	}
 
