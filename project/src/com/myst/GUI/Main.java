@@ -54,7 +54,7 @@ public class Main {
                 2,3,0
         };
 
-        Shader shader = new Shader("assets/shader.vs");
+        Shader shader = new Shader("C:/Users/gnash/Downloads/TeamProject/mystteamproject/project/assets/shader");
         Texture texture = new Texture("assets/tile_18.png");
 
 

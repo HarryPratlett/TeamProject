@@ -22,6 +22,7 @@ public class AI {
 	}
 	
 	public boolean enemyDetection() {
+		return false;
 		
 	}
 

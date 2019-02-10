@@ -7,6 +7,8 @@ import org.joml.Vector2f;
 import com.myst.AI.AI;
 import com.myst.rendering.Window;
 import com.myst.world.World;
+import com.myst.world.collisions.AABB;
+import com.myst.world.collisions.Collision;
 import com.myst.world.map.rendering.Shader;
 import com.myst.world.view.Camera;
 
@@ -30,6 +32,30 @@ public class Bot extends Entity {
 	public void update(float deltaTime, Window window, Camera camera, World world) {
 		while(followPath(deltaTime)) {
 			//add enemy detection method here, so constantly checks for enemies as well as randomly turning on flashlight.
+			this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
+
+	        AABB[] boxes = new AABB[25];
+	        for (int i = 0; i < 5; i++) {
+	            for (int j = 0; j < 5; j++) {
+//	              30 is the scale and 0.5f is half the width of the box and 2.5 is the scan width
+	                int x = (int) (transform.pos.x + (0.5f - 2.5 + i));
+	                int y = (int) (-transform.pos.y + (0.5f - 2.5 + j));
+	                boxes[i + (j * 5)] = world.getBoundingBox(x, y);
+	            }
+	        }
+
+
+
+	        for (int i = 0; i < boxes.length; i++) {
+	            if (boxes[i] != null) {
+	                Collision data = boundingBox.getCollision(boxes[i]);
+	                if (data.isIntersecting) {
+	                    boundingBox.correctPosition(boxes[i], data);
+	                    transform.pos.set(boundingBox.getCentre(), 0);
+	                    boundingBox.getCentre().set(transform.pos.x, transform.pos.y);
+	                }
+	            }
+	        }
 		}
 		followPath(deltaTime);
 
