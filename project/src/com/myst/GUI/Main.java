@@ -135,7 +135,7 @@ public class Main {
         for (Rectangle2D.Float b : buttons)   {
             double mouseX = window.getInput().getMouseCoordinates()[0];
             double mouseY = window.getInput().getMouseCoordinates()[1];
-
+            System.out.println("mousex " + mouseX + "mouse Y " + mouseY + "bx " + b.getX() + "by " + b.getY());
             if (mouseX > b.getX() && mouseX < (b.getX()+b.getWidth()) && mouseY > b.getY() && mouseY < (b.getY()-b.getHeight()))  {
                 System.out.println("yay");
             }
