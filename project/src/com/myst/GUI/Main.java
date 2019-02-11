@@ -14,6 +14,7 @@ import java.util.List;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.opengl.GL11.*;
@@ -118,7 +119,7 @@ public class Main {
             Model model = new Model(vertices, textureDocks, indices);
             renderImage(shader, t, 0f, y, scale, model);
 
-            addButton(0, y, t); //needs changing to be positions of button
+            addButton(0 -(t.getWidth()*0.009f)/2, y+(t.getHeight()*0.009f)/2, t); //needs changing to be positions of button
             y += (-1.5f);
         }
 
@@ -127,17 +128,19 @@ public class Main {
 
     public static void addButton(float x, float y, Texture texture) {
 
-        Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, texture.getWidth(), texture.getHeight());
+        Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, (texture.getWidth()*0.009f), (texture.getHeight()*0.009f));
         buttons.add(bounds);
     }
 
     public static void checkButtons(Window window)   {
         for (Rectangle2D.Float b : buttons)   {
-            double mouseX = window.getInput().getMouseCoordinates()[0];
-            double mouseY = window.getInput().getMouseCoordinates()[1];
-            System.out.println("mousex " + mouseX + "mouse Y " + mouseY + "bx " + b.getX() + "by " + b.getY());
-            if (mouseX > b.getX() && mouseX < (b.getX()+b.getWidth()) && mouseY > b.getY() && mouseY < (b.getY()-b.getHeight()))  {
-                System.out.println("yay");
+            double mouseX = ((window.getInput().getMouseCoordinates()[0])/window.getWidth()/2)-0.25;
+            double mouseY = ((window.getInput().getMouseCoordinates()[1])/window.getHeight()/2)-1;
+            if (mouseX >= b.getX() && mouseX <= (b.getX()+b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY()-b.getHeight()))  {
+                if (window.getInput().isMouseButtonDown(GLFW_MOUSE_BUTTON_1)){
+                    System.out.println("mouse X : " + mouseX + "button x and x+width: " + b.getX() + " " + (b.getX()+b.getWidth()) + "mousey: " +  mouseY + "bY and bY-height: " + b.getY() + " " + (b.getY()-b.getHeight()));
+                    System.exit(1);
+                }
             }
         }
     }
