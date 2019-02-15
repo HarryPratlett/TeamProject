@@ -17,11 +17,12 @@ public class Bot extends Entity {
 	private AI intelligence;
 	private Vector2f position;
 	private final float MOVEMENT_SPEED = 10f;
+	private ArrayList<Vector2f> path;
 	
 	public Bot(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords, Shader shader) {
 		super(vertices, texture, indices, boundingBoxCoords, shader);
 		entityType = Type.Player;
-		position = boundingBoxCoords;
+		position = new Vector2f(transform.pos.x, transform.pos.y);
 	}
 
 	public void initialiseAI(World world) {
@@ -30,70 +31,75 @@ public class Bot extends Entity {
 	
 	@Override
 	public void update(float deltaTime, Window window, Camera camera, World world) {
-		while(followPath(deltaTime)) {
-			//add enemy detection method here, so constantly checks for enemies as well as randomly turning on flashlight.
-			this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
+		//add enemy detection method here, so constantly checks for enemies as well as randomly turning on flashlight.
+		this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
+			
+	    AABB[] boxes = new AABB[25];
+	    for (int i = 0; i < 5; i++) {
+	         for (int j = 0; j < 5; j++) {
+//	           30 is the scale and 0.5f is half the width of the box and 2.5 is the scan width
+	            int x = (int) (transform.pos.x + (0.5f - 2.5 + i));
+	            int y = (int) (-transform.pos.y + (0.5f - 2.5 + j));
+	            boxes[i + (j * 5)] = world.getBoundingBox(x, y);
+	        }
+	    }
 
-	        AABB[] boxes = new AABB[25];
-	        for (int i = 0; i < 5; i++) {
-	            for (int j = 0; j < 5; j++) {
-//	              30 is the scale and 0.5f is half the width of the box and 2.5 is the scan width
-	                int x = (int) (transform.pos.x + (0.5f - 2.5 + i));
-	                int y = (int) (-transform.pos.y + (0.5f - 2.5 + j));
-	                boxes[i + (j * 5)] = world.getBoundingBox(x, y);
+
+
+	   for (int i = 0; i < boxes.length; i++) {
+		   if (boxes[i] != null) {
+	            Collision data = boundingBox.getCollision(boxes[i]);
+	            if (data.isIntersecting) {
+	                boundingBox.correctPosition(boxes[i], data);
+	                transform.pos.set(boundingBox.getCentre(), 0);
+	                boundingBox.getCentre().set(transform.pos.x, transform.pos.y);
 	            }
 	        }
-
-
-
-	        for (int i = 0; i < boxes.length; i++) {
-	            if (boxes[i] != null) {
-	                Collision data = boundingBox.getCollision(boxes[i]);
-	                if (data.isIntersecting) {
-	                    boundingBox.correctPosition(boxes[i], data);
-	                    transform.pos.set(boundingBox.getCentre(), 0);
-	                    boundingBox.getCentre().set(transform.pos.x, transform.pos.y);
-	                }
-	            }
-	        }
-		}
-		followPath(deltaTime);
-
+	    }
 	}
 	
-	public boolean followPath(float deltaTime) {
-		ArrayList<Vector2f> path = intelligence.pathFind(position);
-		for(Vector2f point : path) {
-			while(!position.equals(point)) {
-				if(this.position.x > point.x && this.position.y > point.y) {
-					transform.pos.add(-MOVEMENT_SPEED * deltaTime, -MOVEMENT_SPEED * deltaTime, 0);
-				}
-				else if(this.position.x > point.x && this.position.y < point.y) {
-					transform.pos.add(-MOVEMENT_SPEED * deltaTime, MOVEMENT_SPEED * deltaTime, 0);
-				}
-				else if(this.position.x < point.x && this.position.y > point.y) {
-					transform.pos.add(MOVEMENT_SPEED * deltaTime, -MOVEMENT_SPEED * deltaTime, 0);
-				}
-				else if(this.position.x < point.x && this.position.y < point.y) {
-					transform.pos.add(MOVEMENT_SPEED * deltaTime, MOVEMENT_SPEED * deltaTime, 0);
-				}
-				else if(this.position.x > point.x) {
-					transform.pos.x += -MOVEMENT_SPEED * deltaTime;
-				}
-				else if(this.position.x < point.x) {
-					transform.pos.x += MOVEMENT_SPEED * deltaTime;
-				}
-				else if (this.position.y > point.y) {
+	public void followPath(float deltaTime) {
+		while(!path.isEmpty()) {
+			Vector2f point = path.get(0);
+		
+			if(this.position.x > point.x && this.position.y > point.y) {
+				transform.pos.add(-MOVEMENT_SPEED * deltaTime, -MOVEMENT_SPEED * deltaTime, 0);
+			}
+			else if(this.position.x > point.x && this.position.y < point.y) {
+				transform.pos.add(-MOVEMENT_SPEED * deltaTime, MOVEMENT_SPEED * deltaTime, 0);
+			}
+			else if(this.position.x < point.x && this.position.y > point.y) {
+				transform.pos.add(MOVEMENT_SPEED * deltaTime, -MOVEMENT_SPEED * deltaTime, 0);
+			}
+			else if(this.position.x < point.x && this.position.y < point.y) {
+				transform.pos.add(MOVEMENT_SPEED * deltaTime, MOVEMENT_SPEED * deltaTime, 0);
+			}
+			else if(this.position.x > point.x) {
+				transform.pos.x += -MOVEMENT_SPEED * deltaTime;
+			}
+			else if(this.position.x < point.x) {
+				transform.pos.x += MOVEMENT_SPEED * deltaTime;
+			}
+			else if (this.position.y > point.y) {
 					transform.pos.y += -MOVEMENT_SPEED * deltaTime;
-				}
-				else if(this.position.y < point.y) {
+			}
+			else if(this.position.y < point.y) {
 					transform.pos.y += MOVEMENT_SPEED * deltaTime;
-				}
-				return true;
+			}
+			else if(this.position.x == point.x && this.position.y == point.y) {
+				path.remove(0);
 			}
 			position = point;
 		}
-		return false;
+	}
+	
+	public void setPath(Vector2f goal) {
+		path = intelligence.pathFind(goal);
+		System.out.print(path);
+	}
+	
+	public ArrayList<Vector2f> getPath(){
+		return path;
 	}
 
 }

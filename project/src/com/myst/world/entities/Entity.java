@@ -36,10 +36,10 @@ public abstract class Entity {
 
     public abstract void update(float deltaTime, Window window, Camera camera, World world);
 
-    public void render(Camera camera){
-        this.shader.bind();
-        this.shader.setUniform("sampler", 0);
-        this.shader.setUniform("projection", transform.getProjection(camera.getProjection()));
+    public void render(Shader shader, Camera camera){
+        shader.bind();
+        shader.setUniform("sampler", 0);
+        shader.setUniform("projection", transform.getProjection(camera.getProjection()));
         texture.bind(0);
         model.render();
 

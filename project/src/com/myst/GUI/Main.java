@@ -51,7 +51,7 @@ public class Main {
         };
 
 
-        Shader shader = new Shader("assets/shader");
+        Shader shader = new Shader("project/assets/shader");
         Model model = new Model(vertices, textureDocks, indices);
 
 
@@ -83,8 +83,8 @@ public class Main {
 
     public static void renderGUI(Model model, Shader shader, Matrix4f scale) {
         Texture[] menuTextures = new Texture[]  {
-                new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
-                new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
+                new Texture("project/assets/resume_button.png"), new Texture("project/assets/controls_button.png"),
+                new Texture("project/assets/settings_button.png"), new Texture("project/assets/exit_button.png")
         };
         int y = 2;
         for (Texture t : menuTextures)   {

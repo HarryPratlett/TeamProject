@@ -3,6 +3,7 @@ package com.myst;
 import com.myst.helper.Timer;
 import com.myst.rendering.Window;
 import com.myst.world.World;
+import com.myst.world.entities.Bot;
 import com.myst.world.entities.Player;
 import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Shader;
@@ -10,6 +11,7 @@ import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
 import com.myst.world.view.Camera;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -53,10 +55,10 @@ public class Main {
 
         glClearColor(0f,0f,0f, 0f);
 
-        Shader shader = new Shader("assets/shader");
+        Shader shader = new Shader("project/assets/shader");
 
-        Tile test_tile = new Tile(  0,  "assets/tile_18");
-        Tile test_tile2 = new Tile(1,"assets/tile_186");
+        Tile test_tile = new Tile(  0,  "project/assets/tile_18");
+        Tile test_tile2 = new Tile(1,"project/assets/tile_186");
 
         Tile[] tileSet = new Tile[2];
         tileSet[0] = test_tile;
@@ -70,7 +72,25 @@ public class Main {
         World world = new World(tiles);
 
         Player player = new Player();
+        
+        Bot bot = new Bot(new float[]{
+                -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
+                -0.5f, -0.5f, 0f/*3*/
+        	},
+            new float[] {
+            	0f, 0f,   1, 0f,  1f, 1f,
+            	0f, 1f
+        	},
+            new int[] {
+            		0,1,2,
+            	2,3,0
+        	},
+            new Vector2f(0.5f,0.5f), shader);
+        bot.initialiseAI(world);
 
+        System.out.println("or Is the leak here?");
+        bot.setPath(new Vector2f(100f,100f));
+        System.out.println("Is the leak here?");
         Camera camera = new Camera(window.getWidth(), window.getHeight());
 
 
@@ -160,9 +180,9 @@ public class Main {
             debugCurrentTime = Timer.getTime();
             double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
             debugLastTime = debugCurrentTime;
-
             player.update((float) timeSinceLastUpdate, window, camera, world);
-
+            bot.update((float) timeSinceLastUpdate, window, camera, world);
+            bot.followPath((float) timeSinceLastUpdate);
             window.update();
 
             if (renderFrame) {
@@ -174,7 +194,7 @@ public class Main {
 
 
                 player.render(shader,camera);
-
+                bot.render(shader, camera);
                 window.swapBuffers();
 
                 frames += 1;

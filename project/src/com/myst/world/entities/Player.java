@@ -34,14 +34,13 @@ public class Player extends Entity{
                 0,1,2,
                 2,3,0
         },
-        new Vector2f(0.5f,0.5f), new Shader("assets/Shader"));
+        new Vector2f(0.5f,0.5f), new Shader("project/assets/Shader"));
 
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world) {
 //        these needs fixing and entering into an entities class
 //        the entities will then
-
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
             transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0);
         }
