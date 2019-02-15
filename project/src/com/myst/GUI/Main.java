@@ -57,7 +57,7 @@ public class Main {
         while (!window.shouldClose()){
             window.update();
 
-            renderGUI(shader, new Matrix4f().scale(0.3f));
+            renderGUI(shader);
             checkButtons(window);
             window.swapBuffers();
             try {
@@ -87,7 +87,7 @@ public class Main {
 
     }
 
-    public static void renderGUI(Shader shader, Matrix4f scale) {
+    public static void renderGUI(Shader shader) {
 
         final float[] baseVertices = new float[] {
                 -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
@@ -109,35 +109,54 @@ public class Main {
                 new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
                 new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
         };
-        float y = 2.25f;
+        float y = 0.6f;
         for (Texture t : menuTextures)   {
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-            vertices[0] *= t.getWidth()*0.009;
-            vertices[3] *= t.getWidth()*0.009;
-            vertices[6] *= t.getWidth()*0.009;
-            vertices[9] *= t.getWidth()*0.009;
+            vertices[0] *= t.getWidth()*0.001;
+            vertices[3] *= t.getWidth()*0.001;
+            vertices[6] *= t.getWidth()*0.001;
+            vertices[9] *= t.getWidth()*0.001;
+
+            vertices[1] *= t.getHeight()*0.005;
+            vertices[4] *= t.getHeight()*0.005;
+            vertices[7] *= t.getHeight()*0.005;
+            vertices[10] *= t.getHeight()*0.005;
 
             Model model = new Model(vertices, textureDocks, indices);
-            renderImage(shader, t, 0f, y, scale, model);
+            renderImage(shader, t, 0f, y, new Matrix4f(), model);
 
-            addButton(0 - (t.getWidth()*0.009f)/2,  y + (t.getHeight()*0.009f)/2, t, t.getPath());
-            y += (-1.5f);
+//            -1 -- 0 -- 1
+
+
+            addButton(0 + vertices[0],  y + vertices[1],  vertices[3] - vertices[0], vertices[1] - vertices[7]);
+            y += (-0.3f);
         }
 
 
     }
 
-    public static void addButton(float x, float y, Texture texture, String name) {
+    public static void addButton(float x, float y, float width, float height) {
 
-        Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, texture.getWidth()*0.00135f, -texture.getHeight()*0.009f);
+        Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
         buttons.add(bounds);
+    }
+
+    public static float convertPixelToRender(float pixel, Integer windowMeasurement){
+        float output =  (pixel / (windowMeasurement / 2));
+        return output;
     }
 
     public static void checkButtons(Window window)   {
         for (Rectangle2D.Float b : buttons)   {
-            double mouseX = ((window.getInput().getMouseCoordinates()[0])/window.getWidth()/2)-1;
-            double mouseY = ((window.getInput().getMouseCoordinates()[1])/window.getHeight()/2)-1;
-            if (mouseX >= b.getX() && mouseX <= (b.getX()+b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY()+b.getHeight()))  {
+            double mouseX = ((window.getInput().getMouseCoordinates()[0])/(window.getWidth()/2))-1;
+            double mouseY = -(((window.getInput().getMouseCoordinates()[1])/(window.getHeight()/2))-1);
+//            System.out.println(mouseX + " " + mouseY);
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+            if (mouseX >= b.getX() && mouseX <= (b.getX()+b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY()-b.getHeight()))  {
                 if (window.getInput().isMouseButtonDown(GLFW_MOUSE_BUTTON_1)){
                     System.out.println("mouse X : " + mouseX + "button x and x+width: " + b.getX() + " " + (b.getX()+b.getWidth()) + "mousey: " +  mouseY + "bY and bY-height: " + b.getY() + " " + (b.getY()+b.getHeight()));
                     System.exit(1);
