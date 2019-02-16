@@ -25,10 +25,10 @@ import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 public class Main {
 
-    static HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
-
+    HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
 
     public static void main(String[] args){
+        Main GUI = new Main();
         Window.setCallbacks();
         if (!glfwInit()){
             throw new IllegalStateException("Failed to initialise GLFW");
@@ -58,8 +58,8 @@ public class Main {
         while (!window.shouldClose()){
             window.update();
 
-            renderGUI(shader);
-            checkButtons(window);
+            GUI.renderGUI(shader);
+            GUI.checkButtons(window);
             window.swapBuffers();
             try {
                 Thread.sleep(  100);
@@ -72,7 +72,7 @@ public class Main {
     }
 
 
-    public static void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
+    public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
         Matrix4f target = new Matrix4f();
@@ -88,7 +88,7 @@ public class Main {
 
     }
 
-    public static void renderGUI(Shader shader) {
+    public void renderGUI(Shader shader) {
 
         final float[] baseVertices = new float[] {
                 -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
@@ -128,18 +128,18 @@ public class Main {
 
 //            -1 -- 0 -- 1
 
-            addButton(0 + vertices[0],  y + vertices[1],  vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
+            this.addButton(0 + vertices[0],  y + vertices[1],  vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
             y += (-0.35f);
         }
     }
 
-    public static void addButton(float x, float y, float width, float height, String filepath) {
+    public void addButton(float x, float y, float width, float height, String filepath) {
 
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
         buttons.put(bounds, filepath);
     }
 
-    public static void checkButtons(Window window)   {
+    public void checkButtons(Window window)   {
         for (Rectangle2D.Float b : buttons.keySet())   {
 
             double mouseX = ((window.getInput().getMouseCoordinates()[0])/(window.getWidth()/2))-1;
@@ -151,7 +151,7 @@ public class Main {
                     //System.out.println("mouse X : " + mouseX + "button x and x+width: " + b.getX() + " " + (b.getX()+b.getWidth()) + "mousey: " +  mouseY + "bY and bY-height: " + b.getY() + " " + (b.getY()+b.getHeight()));i
                     String buttonName = buttons.get(b);
                     switch(buttonName) {
-                        case "exit_button.png": exitGame();
+                        case "exit_button.png": this.exitGame();
                         case "settings_button.png": System.exit(2);
                         case "controls_button.png": System.exit(3);
                         case "resume_button.png": System.exit(4);
@@ -164,7 +164,7 @@ public class Main {
         }
     }
 
-    public static void exitGame()  {
+    public void exitGame()  {
         System.exit(1);
     }
 
