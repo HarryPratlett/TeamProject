@@ -10,6 +10,7 @@ import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 public class Main {
 
-    static List<Rectangle2D.Float> buttons = new ArrayList<>();
+    static HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
 
 
     public static void main(String[] args){
@@ -104,18 +105,18 @@ public class Main {
                 2,3,0
         };
 
-
         Texture[] menuTextures = new Texture[]  {
                 new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
                 new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
         };
-        float y = 0.6f;
+
+        float y = 0.55f;
         for (Texture t : menuTextures)   {
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-            vertices[0] *= t.getWidth()*0.001;
-            vertices[3] *= t.getWidth()*0.001;
-            vertices[6] *= t.getWidth()*0.001;
-            vertices[9] *= t.getWidth()*0.001;
+            vertices[0] *= t.getWidth()*0.002;
+            vertices[3] *= t.getWidth()*0.002;
+            vertices[6] *= t.getWidth()*0.002;
+            vertices[9] *= t.getWidth()*0.002;
 
             vertices[1] *= t.getHeight()*0.005;
             vertices[4] *= t.getHeight()*0.005;
@@ -127,39 +128,34 @@ public class Main {
 
 //            -1 -- 0 -- 1
 
-
-            addButton(0 + vertices[0],  y + vertices[1],  vertices[3] - vertices[0], vertices[1] - vertices[7]);
-            y += (-0.3f);
+            addButton(0 + vertices[0],  y + vertices[1],  vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
+            y += (-0.35f);
         }
-
-
     }
 
-    public static void addButton(float x, float y, float width, float height) {
+    public static void addButton(float x, float y, float width, float height, String filepath) {
 
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
-        buttons.add(bounds);
-    }
-
-    public static float convertPixelToRender(float pixel, Integer windowMeasurement){
-        float output =  (pixel / (windowMeasurement / 2));
-        return output;
+        buttons.put(bounds, filepath);
     }
 
     public static void checkButtons(Window window)   {
-        for (Rectangle2D.Float b : buttons)   {
+        for (Rectangle2D.Float b : buttons.keySet())   {
+
             double mouseX = ((window.getInput().getMouseCoordinates()[0])/(window.getWidth()/2))-1;
             double mouseY = -(((window.getInput().getMouseCoordinates()[1])/(window.getHeight()/2))-1);
-//            System.out.println(mouseX + " " + mouseY);
-//            try {
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+
             if (mouseX >= b.getX() && mouseX <= (b.getX()+b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY()-b.getHeight()))  {
                 if (window.getInput().isMouseButtonDown(GLFW_MOUSE_BUTTON_1)){
-                    System.out.println("mouse X : " + mouseX + "button x and x+width: " + b.getX() + " " + (b.getX()+b.getWidth()) + "mousey: " +  mouseY + "bY and bY-height: " + b.getY() + " " + (b.getY()+b.getHeight()));
-                    System.exit(1);
+
+                    //System.out.println("mouse X : " + mouseX + "button x and x+width: " + b.getX() + " " + (b.getX()+b.getWidth()) + "mousey: " +  mouseY + "bY and bY-height: " + b.getY() + " " + (b.getY()+b.getHeight()));i
+                    String buttonName = buttons.get(b);
+                    switch(buttonName) {
+                        case "exit_button.png": exitGame();
+                        case "settings_button.png": System.exit(2);
+                        case "controls_button.png": System.exit(3);
+                        case "resume_button.png": System.exit(4);
+                     }
                 }
             }
             else    {
@@ -167,6 +163,10 @@ public class Main {
             }
         }
     }
-//need to fix scaling with regards to mouse pointer maybe replace with quad
+
+    public static void exitGame()  {
+        System.exit(1);
+    }
+
 
 }

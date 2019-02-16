@@ -62,7 +62,10 @@ public class Texture {
     public int getWidth()  {
         return this.width;
     }
-    public String getPath() {return this.filepath;}
+    public String getPath() {
+        String path = this.filepath.split("/")[1];
+        return path;
+    }
 
 
 
