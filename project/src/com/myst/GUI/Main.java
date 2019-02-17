@@ -41,6 +41,7 @@ public class Main {
     };
 
     Boolean controls_accessed = false;
+    Boolean settings_accessed = false;
 
     public static void main(String[] args){
         Main GUI = new Main();
@@ -75,6 +76,9 @@ public class Main {
 
             if (GUI.controls_accessed)  {
                 GUI.accessControls(window);
+            }
+            else if(GUI.settings_accessed)  {
+                GUI.accessSettings(window);
             }
             else {
                 glClear(GL_COLOR_BUFFER_BIT);
@@ -162,9 +166,10 @@ public class Main {
                         case "resume_button.png": this.resumeGame();
                             break;
                         case "controls_button.png": this.accessControls(window);
-                            controls_accessed = true;;
+                            controls_accessed = true;
                             break;
-                        case "settings_button.png": System.exit(3);
+                        case "settings_button.png": this.accessSettings(window);
+                            settings_accessed = true;
                             break;
                         case "exit_button.png": this.exitGame();
                             break;
@@ -192,7 +197,33 @@ public class Main {
             }
         }
     }
-    public void accessSettings(){}
+    public void accessSettings(Window window){
+        if (settings_accessed)  {
+            glClear(GL_COLOR_BUFFER_BIT);
+            Shader shader = new Shader("assets/shader");
+            Texture[] settingsTextures = new Texture[]{new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
+            Matrix4f scale = new Matrix4f();
+            float y = 0;
+            for (Texture t : settingsTextures)   {
+                float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+                vertices[0] *= t.getWidth() * 0.002;
+                vertices[3] *= t.getWidth() * 0.002;
+                vertices[6] *= t.getWidth() * 0.002;
+                vertices[9] *= t.getWidth() * 0.002;
+
+                vertices[1] *= t.getHeight() * 0.005;
+                vertices[4] *= t.getHeight() * 0.005;
+                vertices[7] *= t.getHeight() * 0.005;
+                vertices[10] *= t.getHeight() * 0.005;
+                Model model = new Model(vertices, textureDocks, indices);
+                this.renderImage(shader, t, -0.5f, y, scale, model);
+                y -= -0.35f;
+            }
+            if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
+                settings_accessed = false;
+            }
+        }
+    }
     public void exitGame()  {
         System.exit(1);
     }
