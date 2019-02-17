@@ -1,5 +1,8 @@
 package com.myst.world.map.generating;
 
+import java.util.Scanner;
+import java.io.*;
+
 import com.myst.datatypes.TileCoords;
 import com.myst.rendering.Texture;
 import com.myst.world.map.rendering.Tile;
@@ -149,8 +152,44 @@ public class MapGenerator {
         	map[width-1][i] = new Tile(20,textures[20]);
         	map[width-1][i].setSolid();
         }
+        
+        
+         openMaze();
+        
+        while(m.hasNext()) {
+    		for(int i=0; i<100; i++) {
+    			for(int j=0; j<100; j++) {
+    				if(m.nextInt()==1) {
+    				map[j][i]=new Tile(20,textures[20]);
+    				map[j][i].setSolid();
+    				}
+    				else {
+    					
+    				}
+    			}
+    		}
+    	}
+        
+        
+        closeMaze();
+        
+        
+        
+        
         return map;
     }
+    public void openMaze() {
+    	try {
+    		m= new Scanner(new File("/Maze.m"));
+   
+    	}catch(Exception e) {
+    		System.out.println("Fatal Error: missing maze data");
+    	}
+    }
 
+    
+    public void closeMaze() {
+    	m.close();
+    }
 
 }
