@@ -24,6 +24,7 @@ import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 public class Main {
 
     HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
+    HashMap<Rectangle2D.Float, String> settings_buttons = new HashMap<>();
 
     final float[] baseVertices = new float[] {
             -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
@@ -40,9 +41,9 @@ public class Main {
             2,3,0
     };
 
-    Boolean controls_accessed = false;
-    Boolean settings_accessed = false;
-
+    private Boolean controls_accessed = false;
+    private Boolean settings_accessed = false;
+    int volume = 3;
     public static void main(String[] args){
         Main GUI = new Main();
         Window.setCallbacks();
@@ -148,7 +149,12 @@ public class Main {
     public void addButton(float x, float y, float width, float height, String filepath) {
 
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
-        buttons.put(bounds, filepath);
+        if(filepath.contains("volume_assets")||filepath.contains("brightness_assets"))  {
+            settings_buttons.put(bounds, filepath);
+        }
+        else {
+            buttons.put(bounds, filepath);
+        }
     }
 
 
@@ -176,8 +182,19 @@ public class Main {
                      }
                 }
             }
-            else    {
-                continue;
+        }
+    }
+
+    public void checkSettingsButtons(Window window) {
+        for (Rectangle2D.Float b : settings_buttons.keySet()) {
+
+            double mouseX = ((window.getInput().getMouseCoordinates()[0]) / (window.getWidth() / 2)) - 1;
+            double mouseY = -(((window.getInput().getMouseCoordinates()[1]) / (window.getHeight() / 2)) - 1);
+
+            if (mouseX >= b.getX() && mouseX <= (b.getX() + b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY() - b.getHeight())) {
+                if (window.getInput().isMouseButtonDown(GLFW_MOUSE_BUTTON_1)) {
+                    System.exit(1);
+                }
             }
         }
     }
@@ -218,6 +235,33 @@ public class Main {
                 Model model = new Model(vertices, textureDocks, indices);
                 this.renderImage(shader, t, -0.5f, y, scale, model);
                 y -= -0.35f;
+            }
+
+            Texture[] audioTextures = new Texture[]{new Texture("assets/volume_assets/0.png"), new Texture("assets/volume_assets/1.png"),new Texture("assets/volume_assets/2.png"),
+                    new Texture("assets/volume_assets/3.png"), new Texture("assets/volume_assets/4.png"), new Texture("assets/volume_assets/5.png"),
+                    new Texture("assets/volume_assets/plus.png"), new Texture("assets/volume_assets/minus.png"),};
+
+            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+            vertices[0] *= audioTextures[6].getWidth() * 0.002;
+            vertices[3] *= audioTextures[6].getWidth() * 0.002;
+            vertices[6] *= audioTextures[6].getWidth() * 0.002;
+            vertices[9] *= audioTextures[6].getWidth() * 0.002;
+
+            vertices[1] *= audioTextures[6].getHeight() * 0.005;
+            vertices[4] *= audioTextures[6].getHeight() * 0.005;
+            vertices[7] *= audioTextures[6].getHeight() * 0.005;
+            vertices[10] *= audioTextures[6].getHeight() * 0.005;
+
+            Model model = new Model(vertices, textureDocks, indices);
+            this.renderImage(shader, audioTextures[6], 0f, 0.35f, scale, model);
+            this.addButton(0 + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[6].getPath());
+            this.renderImage(shader, audioTextures[7], 0.5f, 0.35f, scale, model);
+            this.addButton(0.5f + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[7].getPath());
+
+            for (Texture t: audioTextures)  {
+                if (t.getPath().contains(Integer.toString(volume))) {
+                    this.renderImage(shader, t, 0.25f, 0.35f, scale, model);
+                }
             }
             if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
                 settings_accessed = false;
