@@ -43,14 +43,11 @@ public class Window {
 
             glfwShowWindow(window);
         }
-<<<<<<< HEAD
+
 
         glfwMakeContextCurrent(window);
 
-=======
-        glfwMakeContextCurrent(window);
-     
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
         input = new Input(window);
     }
 
