@@ -1,23 +1,22 @@
 package com.myst;
 
-<<<<<<< HEAD
+
 import com.myst.datatypes.TileCoords;
 import com.myst.helper.Timer;
 import com.myst.rendering.Texture;
-=======
+
 import com.myst.helper.Timer;
 import com.myst.rendering.Shader;
 import com.myst.world.entities.Entity;
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.entities.Player;
 import com.myst.world.map.generating.MapGenerator;
-<<<<<<< HEAD
+
 import com.myst.world.map.rendering.Shader;
-=======
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 import com.myst.world.map.rendering.Tile;
 
 import com.myst.world.map.rendering.TileRenderer;
@@ -25,11 +24,10 @@ import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import org.joml.Matrix4f;
 
-<<<<<<< HEAD
+
 import java.util.HashMap;
 
-=======
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -38,7 +36,7 @@ public class Main {
 
     public static void setUp(){
         Window.setCallbacks();
-<<<<<<< HEAD
+
 
 
 
@@ -46,26 +44,26 @@ public class Main {
             throw new IllegalStateException("Failed to initialise GLFW");
         }
     }
-=======
+
         if (!glfwInit()){
             throw new IllegalStateException("Failed to initialise GLFW");
         }
      }
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 
 
 
     public static void main(String[] args){
         setUp();
 
-<<<<<<< HEAD
+
         Window window = new Window();
 
         window.setFullscreen(false);
         window.createWindow("My game");
 
 
-=======
+
 
 //        set up connection
 //        Connection con = asdf();
@@ -77,7 +75,7 @@ public class Main {
         Entity[] entities = new Entity[1];
         window.setFullscreen(false);
         window.createWindow("My game");
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 
         GL.createCapabilities();
 
@@ -92,18 +90,13 @@ public class Main {
 
         glClearColor(0f,0f,0f, 0f);
 
-<<<<<<< HEAD
-        Shader shader = new Shader("/Users/seongheehan/Documents/myst/project/assets/shader");
 
-        String[] textures = new String[21];
-        String path = ("/Users/seongheehan/Documents/myst/project/assets/tile/");
-=======
         Shader shader = new Shader("assets/shader");
 
         String[] textures = new String[21];
         String path = ("assets/tile/");
        
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
         textures[0] = path+"tile_01";
         textures[1] = path+"tile_02";
         textures[2] = path+"tile_03";
@@ -124,7 +117,7 @@ public class Main {
         textures[17] = path+"tile_18";
         textures[18] = path+"tile_19";
         textures[19] = path+"tile_20";
-<<<<<<< HEAD
+
         
         textures[20] = path+"tile_479";
       
@@ -149,9 +142,7 @@ public class Main {
 
         World world = new World(tiles);
 
-=======
-         
-        textures[20] = path+"tile_479";
+
      
 
         Tile[][] map = new MapGenerator(textures).generateMap(100,100);
@@ -164,7 +155,7 @@ public class Main {
         World world = new World(tiles, map);
         
         
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
         Player player = new Player();
 
         player.transform.pos.add(new Vector3f(1,-1,0));
@@ -268,7 +259,7 @@ public class Main {
 
                 world.render(shader,camera, window);
 
-<<<<<<< HEAD
+
 
                 player.render(shader,camera);
 =======
@@ -277,7 +268,7 @@ public class Main {
 //                }
 
                 player.render(camera);
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 
                 window.swapBuffers();
 
