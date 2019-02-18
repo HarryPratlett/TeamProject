@@ -1,5 +1,6 @@
 package com.myst;
 
+import com.myst.audio.Audio;
 import com.myst.datatypes.TileCoords;
 import com.myst.helper.Timer;
 import com.myst.rendering.Texture;
@@ -15,6 +16,9 @@ import com.myst.world.map.rendering.TileRenderer;
 import org.lwjgl.opengl.GL;
 import org.joml.Matrix4f;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -22,9 +26,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Main {
 
-
-
-    public static void main(String[] args){
+    public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         Window.setCallbacks();
 
 //        AABB box1 = new AABB(new Vector2f(0,0), new Vector2f(1,1));
@@ -78,8 +80,9 @@ public class Main {
 
         Camera camera = new Camera(window.getWidth(), window.getHeight());
 
-
-
+        // TODO
+        Audio.getAudio().theme();
+        // TODO
 
 
 

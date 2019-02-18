@@ -6,6 +6,12 @@ import java.util.concurrent.TimeUnit;
 
 public class Audio {
 
+    private static Audio audio = new Audio();
+    public static Audio getAudio() {
+        return audio;
+    }
+    private Audio() { }
+
     int mapLengthX = 100;
     int mapLengthY = 100;
     double distance = getPythagoras(mapLengthX, mapLengthY);
@@ -16,12 +22,13 @@ public class Audio {
 
     String path = "assets/sounds/";
 
-    String theme = "astronaut.wav";
-    String gunshot = "gunshot.wav";
-    String manshot = "manshot.wav";
-    String footsteps = "footsteps.wav";
+    File theme = new File (path + "astronaut.wav");
+    File gunshot = new File (path + "gunshot.wav");
+    File manshot = new File (path + "manshot.wav");
+    File footsteps = new File (path + "footsteps.wav");
 
-    static boolean muted = false;
+    AudioInputStream themeStream;
+    Clip themeClip;
 
     // TODO - player/client: mute, volume level, location
 
@@ -30,29 +37,26 @@ public class Audio {
         return res;
     }
 
-    public void mute(Object Sender) {
-        muted = !muted;
-        if (muted) {
-            // TODO - mute main theme
-        } else {
-            // TODO - unmute main theme
-        }
+    // Object Sender
+    public void mute() {
+        if (themeClip.isRunning())
+            themeClip.stop();
     }
 
     // Object Sender
     public void volume(int change) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
-        // TODO - just plays for 5 sec as test
-        File theme = new File(path + "astronaut.wav");
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(theme);
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioInputStream);
-        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+
+        /*
+        FloatControl gainControl = (FloatControl) themeClip.getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(0.0f);
-        clip.start();
-        while (true) {
-            TimeUnit.SECONDS.sleep(5);
-            break;
-        }
+        */
+    }
+
+    public void theme() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        themeStream = AudioSystem.getAudioInputStream(theme);
+        themeClip = AudioSystem.getClip();
+        themeClip.open(themeStream);
+        themeClip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     // Object Sender
@@ -75,11 +79,24 @@ public class Audio {
     }
 
     public void play(Object Sender) {
-        if (!muted) {
+        if (themeClip.isRunning()) {
             Object[][] affected = getAffected(Sender);
             // TODO - play for right clients with right volume
         } else {
             // do nothing
         }
     }
+
+    /*
+    // testing - delete
+    public static void main(String[] args) throws Exception {
+        Audio sound = new Audio();
+        // TODO - could make new sound object for each player (sound_[player_name])?
+        sound.theme();
+        while (true) {
+            TimeUnit.SECONDS.sleep(5);
+            break;
+        }
+    }
+    */
 }

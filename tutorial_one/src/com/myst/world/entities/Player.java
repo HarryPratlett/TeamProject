@@ -1,5 +1,6 @@
 package com.myst.world.entities;
 
+import com.myst.audio.Audio;
 import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
 import com.myst.world.view.Camera;
@@ -15,6 +16,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class Player {
     private Model model;
+
     private AABB boundingBox;
     private Texture texture;
     public Transform transform;
@@ -64,6 +66,12 @@ public class Player {
             transform.pos.y += -MOVEMENT_SPEED * deltaTime;
         }
 
+        // TODO
+        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_M)) {
+            Audio.getAudio().mute();
+        }
+        // TODO
+
         //now that the co-ordinate system has been redone this needs redoing
         boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
 
@@ -101,4 +109,9 @@ public class Player {
 
     }
 
+    // TODO
+    public AABB getBoundingBox() {
+        return boundingBox;
+    }
+    // TODO
 }

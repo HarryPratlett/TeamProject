@@ -79,6 +79,7 @@ public class Shader {
         BufferedReader br;
         try{
             br = new BufferedReader(new FileReader(new File(filepath)));
+
             String line;
             while((line = br.readLine()) != null){
                 string.append(line);
