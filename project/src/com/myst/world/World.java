@@ -13,7 +13,12 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.nio.IntBuffer;
+
+import javax.imageio.ImageIO;
 
 public class World {
     private final int view = 16;
@@ -28,6 +33,13 @@ public class World {
     public World(TileRenderer render){
         this.render = render;
 //        this needs refactoring
+        
+        
+      
+      
+        
+        
+        
         Tile[][] map = render.tileMap;
 
         width = 30;

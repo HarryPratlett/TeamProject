@@ -49,8 +49,8 @@ public class Main {
                 2,3,0
         };
 
-        Shader shader = new Shader("assets/shader");
-        Texture texture = new Texture("assets/tile_18.png");
+        Shader shader = new Shader("/Users/seongheehan/Documents/myst/project/assets/shader");
+        Texture texture = new Texture("/Users/seongheehan/Documents/myst/project/assets/tile_18.png");
 
         Model model = new Model(vertices, textureDocks, indices);
 

@@ -59,10 +59,10 @@ public class Main {
 
         glClearColor(0f,0f,0f, 0f);
 
-        Shader shader = new Shader("assets/shader");
+        Shader shader = new Shader("/Users/seongheehan/Documents/myst/project/assets/shader");
 
         String[] textures = new String[21];
-        String path = ("assets/tile/");
+        String path = ("/Users/seongheehan/Documents/myst/project/assets/tile/");
         textures[0] = path+"tile_01";
         textures[1] = path+"tile_02";
         textures[2] = path+"tile_03";
