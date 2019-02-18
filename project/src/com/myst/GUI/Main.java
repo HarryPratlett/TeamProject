@@ -1,9 +1,15 @@
 package com.myst.GUI;
 
 import com.myst.rendering.Model;
+<<<<<<< HEAD
 import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
 import com.myst.world.map.rendering.Shader;
+=======
+import com.myst.rendering.Shader;
+import com.myst.rendering.Texture;
+import com.myst.rendering.Window;
+>>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
@@ -49,8 +55,16 @@ public class Main {
                 2,3,0
         };
 
+<<<<<<< HEAD
         Shader shader = new Shader("/Users/seongheehan/Documents/myst/project/assets/shader");
         Texture texture = new Texture("/Users/seongheehan/Documents/myst/project/assets/tile_18.png");
+=======
+        Shader shader = new Shader("assets/shader");
+        Texture texture = new Texture("assets/tile_18.png");
+
+
+
+>>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
 
         Model model = new Model(vertices, textureDocks, indices);
 

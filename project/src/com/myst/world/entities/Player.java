@@ -1,16 +1,25 @@
 package com.myst.world.entities;
 
+<<<<<<< HEAD
 import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
 import com.myst.world.view.Camera;
 import com.myst.world.view.Transform;
+=======
+import com.myst.rendering.Shader;
+import com.myst.world.view.Camera;
+>>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
+<<<<<<< HEAD
 import com.myst.world.map.rendering.Shader;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+=======
+import org.joml.Vector2f;
+>>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
 import org.lwjgl.glfw.GLFW;
 
 public class Player extends Entity{
@@ -37,7 +46,12 @@ public class Player extends Entity{
                 0,1,2,
                 2,3,0
         },
+<<<<<<< HEAD
         new Vector2f(0.5f,0.5f));
+=======
+        new Vector2f(0.5f,0.5f), new Shader("assets/Shader"));
+
+>>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world) {

@@ -2,6 +2,10 @@ package com.myst.world.map.rendering;
 
 import com.myst.datatypes.TileCoords;
 import com.myst.datatypes.WorldCoords;
+<<<<<<< HEAD
+=======
+import com.myst.rendering.Shader;
+>>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
 import com.myst.world.view.Camera;
 import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
@@ -15,16 +19,27 @@ import static com.myst.helper.Flatten.flatten;
 public class TileRenderer {
     private HashMap<String, Texture> tileTextures;
     private Model model;
+<<<<<<< HEAD
     public Tile[][] tileMap;
+=======
+//    public Tile[][] tileMap;
+>>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
     private int width;
     private int height;
 
 //    tile map should potentially be moved to world
 //    instead all the textures in tilemap should be passed through
+<<<<<<< HEAD
     public TileRenderer(Tile[][] tilemap /*, HashMap<String, Texture> textureMap*/){
         this.tileMap = tilemap;
         this.width = tilemap.length;
         this.height = tilemap[0].length;
+=======
+    public TileRenderer(/*Tile[][] tilemap ,*/ String[] textures){
+//        this.tileMap = tilemap;
+//        this.width = tilemap.length;
+//        this.height = tilemap[0].length;
+>>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
 
         tileTextures = new HashMap<String,Texture>();
 
@@ -47,6 +62,7 @@ public class TileRenderer {
 
         model = new Model(vertices, texture, indices);
 
+<<<<<<< HEAD
         Tile[] flatTileMap = flatten(tileMap, new Tile[this.width * this.height]);
         for (int i = 0; i < flatTileMap.length; i++){
             if(flatTileMap[i] != null) {
@@ -57,6 +73,22 @@ public class TileRenderer {
             }
         }
         int asdf = 0;
+=======
+        for(int i=0; i < textures.length; i++){
+            tileTextures.put(textures[i], new Texture(textures[i] + ".png"));
+        }
+
+//        Tile[] flatTileMap = flatten(tileMap, new Tile[this.width * this.height]);
+//        for (int i = 0; i < flatTileMap.length; i++){
+//            if(flatTileMap[i] != null) {
+//                if (!tileTextures.containsKey(flatTileMap[i].getTexture())) {
+//                    String tex = flatTileMap[i].getTexture();
+//                    tileTextures.put(tex, new Texture(tex + ".png"));
+//                }
+//            }
+//        }
+//        int asdf = 0;
+>>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
     }
 
 //    this renders a given tile at location x y
@@ -81,7 +113,32 @@ public class TileRenderer {
         shader.setUniform("projection", target);
         model.render();
     }
+<<<<<<< HEAD
 
+=======
+    
+    
+    //*
+    public void renderTile1(Tile tileset, TileCoords coords, Shader shader, Camera cam){
+        shader.bind();
+        if(tileTextures.containsKey(tileset.getTexture())) {
+            tileTextures.get(tileset.getTexture()).bind(0);
+        }
+
+//        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x*2,y*2,0));
+        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(coords.x,-coords.y,0));
+        Matrix4f target = new Matrix4f();
+
+        cam.getProjection().mul(new Matrix4f(),target);
+//        translates the tiles according to the camera
+        target.mul(tile_pos);
+
+        shader.setUniform("sampler", 0);
+//        target is the location of the tile
+        shader.setUniform("projection", target);
+        model.render();
+    }
+>>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
 
 
 
