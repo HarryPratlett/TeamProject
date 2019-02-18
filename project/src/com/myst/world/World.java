@@ -2,7 +2,6 @@ package com.myst.world;
 
 import com.myst.datatypes.TileCoords;
 import com.myst.datatypes.WorldCoords;
-
 import com.myst.rendering.Shader;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
@@ -18,37 +17,29 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.IntBuffer;
 import javax.imageio.ImageIO;
-
 public class World {
     private final int view = 16;
     private AABB[][] bounding_boxes;
     private int[][] tiles;
 
-//    private int width;
-//    private int height;
+    private int width;
+    private int height;
     private TileRenderer render;
-    public Tile[][] map;
 //    scale is the width of and height of the tiles in the world
     public int scale;
+
+//    private int width;
+//    private int height;
+    public Tile[][] map;
+//    scale is the width of and height of the tiles in the world
 
     public World(TileRenderer render,Tile[][] tileMap){
         this.render = render;
 //        this needs refactoring
-
-        
-        
-      
-      
-        
-        
-        
-        Tile[][] map = tileMap;
-
-
-//        width = 30;
-//        height = 30;
-//        scale = 20; /*this has to be equal to the camera */
-
+        this.map = tileMap;
+        width = 30;
+        height = 30;
+        scale = 20; 
         tiles = new int[map.length][map[0].length];
 
         bounding_boxes = new AABB[map.length][map[0].length];
@@ -78,7 +69,6 @@ public class World {
 
         TileCoords topLeftTile = topLeft.asTileCoords(camera.scale);
         TileCoords bottomRightTile = bottomRight.asTileCoords(camera.scale);
-
 
         bottomRightTile.x = bottomRightTile.x + 1;
         bottomRightTile.y = bottomRightTile.y + 1;
@@ -118,6 +108,7 @@ public class World {
 //    look at what is feeding this
     public void setTile(Tile tile, int x, int y){
 
+
         map[x][y] = tile;
         if(tile.isSolid()){
             bounding_boxes[x][y] = new AABB(new Vector2f(x,-y),new Vector2f(0.5f,0.5f));
@@ -131,6 +122,7 @@ public class World {
     public Tile getTile(TileCoords coords){
         try{
 //            his code really needs refactoring here
+
             return map[coords.x][coords.y];
         } catch (ArrayIndexOutOfBoundsException e){
             return null;

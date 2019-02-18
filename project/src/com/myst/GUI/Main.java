@@ -54,6 +54,7 @@ public class Main {
         Shader shader = new Shader("project/assets/shader");
         Texture texture = new Texture("project/assets/tile_18.png");
 
+
         Model model = new Model(vertices, textureDocks, indices);
 
 
