@@ -88,9 +88,7 @@ public class Main {
             new Vector2f(0.5f,0.5f), shader);
         bot.initialiseAI(world);
 
-        System.out.println("or Is the leak here?");
-        bot.setPath(new Vector2f(100f,100f));
-        System.out.println("Is the leak here?");
+        bot.setPath(new Vector2f(10f,0f));
         Camera camera = new Camera(window.getWidth(), window.getHeight());
 
 
@@ -181,8 +179,8 @@ public class Main {
             double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
             debugLastTime = debugCurrentTime;
             player.update((float) timeSinceLastUpdate, window, camera, world);
-            bot.update((float) timeSinceLastUpdate, window, camera, world);
             bot.followPath((float) timeSinceLastUpdate);
+            bot.update((float) timeSinceLastUpdate, window, camera, world);
             window.update();
 
             if (renderFrame) {

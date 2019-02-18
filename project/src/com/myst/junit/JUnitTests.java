@@ -60,8 +60,6 @@ public class JUnitTests {
 
 	    World world = new World(tiles);
 	    
-	    Player player = new Player();
-	    
 	    Bot bot = new Bot(new float[]{
             -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
                     -0.5f, -0.5f, 0f/*3*/
@@ -76,94 +74,12 @@ public class JUnitTests {
         },
         new Vector2f(0.5f,0.5f), shader);
 	    
-	    Camera camera = new Camera(window.getWidth(), window.getHeight());
 
 	    world.setTile(test_tile2.setSolid(),5,0 );
 	    world.setTile(test_tile2.setSolid(),6,0 );
 	    
 	    Matrix4f target = new Matrix4f();
-	    
-	    double frame_cap = 1.0/60.0;
-
-        double time = Timer.getTime();
-        double unprocessed = 0;
-
-        double frame_time = 0;
-        int frames = 0;
-
-        Boolean renderFrame;
-
-        double debugCurrentTime = Timer.getTime();
-        double debugLastTime = Timer.getTime();
-
-        camera.bindPlayer(player);
-
-        while (!window.shouldClose()){
-            renderFrame = false;
-
-            double time2 = Timer.getTime();
-            double deltaTime = time2 - time;
-            time = time2;
-
-            unprocessed += deltaTime;
-            frame_time += deltaTime;
-
-
-//            in the case you want to render a frame as you have gone over the frame_cap
-//            a while is used instead of an if incase the performance is less than 30 FPS
-            while (unprocessed >= frame_cap) {
-//                look into effects of containing a thread.sleep();
-
-//                take away the frame cap so that you account for the time you've taken of the next frame
-                unprocessed -= frame_cap;
-
-                renderFrame = true;
-
-                if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
-                    glfwSetWindowShouldClose(window.getWindow(),true);
-                }
-                camera.updatePosition();
-
-
-
-
-
-            }
-
-            if (frame_time >= 1) {
-                System.out.println(frames);
-                System.out.println(camera.position);
-                frame_time = 0;
-                frames = 0;
-            }
-
-
-            debugCurrentTime = Timer.getTime();
-            double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
-            debugLastTime = debugCurrentTime;
-
-            player.update((float) timeSinceLastUpdate, window, camera, world);
-
-            window.update();
-
-            if (renderFrame) {
-                glClear(GL_COLOR_BUFFER_BIT);
-
-//                tiles.renderTile(test_tile,new TileCoords(0,0),shader, new Matrix4f().scale(30),camera);
-
-                world.render(shader,camera, window);
-
-
-                player.render(shader,camera);
-
-                window.swapBuffers();
-
-                frames += 1;
-
-            }
-            
-        }
-
+	  
 	}
 	
 	@Test
@@ -186,7 +102,6 @@ public class JUnitTests {
 		path.add(new Vector2f(8,0));
 		path.add(new Vector2f(9,0));
 		path.add(new Vector2f(10,0));
-		
 		Assert.assertEquals(path, sim.pathFind(end));
 		
 	}

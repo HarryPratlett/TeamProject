@@ -33,7 +33,10 @@ public class TileCoords {
         return -y * tileSize;
     }
 
-
+    @Override
+    public String toString() {
+    	return new String(x+","+y);
+    }
 
 }
 

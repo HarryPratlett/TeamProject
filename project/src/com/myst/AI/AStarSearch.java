@@ -64,7 +64,7 @@ public class AStarSearch {
 		for(int x = -1; x <= 1; x++) {
 			for(int y = -1; y <= 1; y++) {
 				Vector2f childPosition = new Vector2f(parent.getPosition().x + x, parent.getPosition().y + y);
-				if(world.getTile(new TileCoords((int)childPosition.x,(int)childPosition.y)) != null) {
+				if(world.getTile(new TileCoords((int)childPosition.x,(int)childPosition.y)) != null && world.getTile(new TileCoords((int)childPosition.x,(int)childPosition.y)).isSolid() == false) {
 					children.add(new MapNode(childPosition, goal, parent, world));
 				}
 			}

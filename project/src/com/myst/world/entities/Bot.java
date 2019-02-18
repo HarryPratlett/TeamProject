@@ -95,6 +95,7 @@ public class Bot extends Entity {
 	
 	public void setPath(Vector2f goal) {
 		path = intelligence.pathFind(goal);
+		System.out.println("When is this printed?");
 		System.out.print(path);
 	}
 	

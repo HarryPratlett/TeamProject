@@ -18,6 +18,7 @@ public class AI {
 	
 	public ArrayList<Vector2f> pathFind(Vector2f goal) {
 		AStarSearch search = new AStarSearch(position, goal, world);
+		System.out.print(search.getPath().toString());
 		return search.getPath();
 	}
 	
