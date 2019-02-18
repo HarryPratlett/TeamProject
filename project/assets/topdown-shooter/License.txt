@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 	
@@ -47,4 +48,26 @@
 =======
 >>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
 >>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
+=======
+	
+
+	Topdown (Shooter) Pack
+
+	by  Kenney Vleugels (Kenney.nl)
+
+			------------------------------
+
+	License (Creative Commons Zero, CC0)
+	http://creativecommons.org/publicdomain/zero/1.0/
+
+	You may use these assets in personal and commercial projects.
+	Credit (Kenney or www.kenney.nl) would be nice but is not mandatory.
+
+			------------------------------
+
+	Donate:   http://support.kenney.nl
+	Request:  http://request.kenney.nl
+
+	Follow on Twitter for updates:
+>>>>>>> parent of 72574e9... maze
 	@KenneyWings

@@ -17,11 +17,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.IntBuffer;
 import javax.imageio.ImageIO;
+
 public class World {
     private final int view = 16;
     private AABB[][] bounding_boxes;
     private int[][] tiles;
-
     private int width;
     private int height;
     private TileRenderer render;
@@ -40,6 +40,7 @@ public class World {
         width = 30;
         height = 30;
         scale = 20; 
+    
         tiles = new int[map.length][map[0].length];
 
         bounding_boxes = new AABB[map.length][map[0].length];
@@ -66,9 +67,9 @@ public class World {
 
         WorldCoords topLeft = new WorldCoords(leftBorder, topBorder);
         WorldCoords bottomRight = new WorldCoords(rightBorder, bottomBorder);
-
         TileCoords topLeftTile = topLeft.asTileCoords(camera.scale);
         TileCoords bottomRightTile = bottomRight.asTileCoords(camera.scale);
+
 
         bottomRightTile.x = bottomRightTile.x + 1;
         bottomRightTile.y = bottomRightTile.y + 1;
@@ -107,7 +108,6 @@ public class World {
 
 //    look at what is feeding this
     public void setTile(Tile tile, int x, int y){
-
 
         map[x][y] = tile;
         if(tile.isSolid()){

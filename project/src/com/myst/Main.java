@@ -1,33 +1,18 @@
 package com.myst;
 
-<<<<<<< HEAD
 import com.myst.helper.Timer;
 
 import com.myst.rendering.Shader;
 import com.myst.world.entities.Bot;
 import com.myst.world.entities.Entity;
-=======
 
 import com.myst.datatypes.TileCoords;
-import com.myst.helper.Timer;
 import com.myst.rendering.Texture;
-
-import com.myst.helper.Timer;
-import com.myst.rendering.Shader;
-import com.myst.world.entities.Entity;
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.entities.Player;
 import com.myst.world.map.generating.MapGenerator;
-<<<<<<< HEAD
-=======
-
-import com.myst.world.map.rendering.Shader;
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
 import com.myst.world.map.rendering.Tile;
 
 import com.myst.world.map.rendering.TileRenderer;
@@ -35,14 +20,7 @@ import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-
-<<<<<<< HEAD
-=======
-
 import java.util.HashMap;
-
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -50,59 +28,24 @@ public class Main {
 
     public static void setUp(){
         Window.setCallbacks();
-<<<<<<< HEAD
-=======
-
-
-
 
         if (!glfwInit()){
             throw new IllegalStateException("Failed to initialise GLFW");
         }
     }
 
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
-        if (!glfwInit()){
-            throw new IllegalStateException("Failed to initialise GLFW");
-        }
-     }
-<<<<<<< HEAD
-=======
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
-
 
 
     public static void main(String[] args){
         setUp();
-
-<<<<<<< HEAD
-=======
-
         Window window = new Window();
-
-        window.setFullscreen(false);
-        window.createWindow("My game");
-
-
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
-
 //        set up connection
 //        Connection con = asdf();
 //        from server on thread 2
 //        new ServerConn(Entities).run()
-
-
-        Window window = new Window();
         Entity[] entities = new Entity[1];
         window.setFullscreen(false);
         window.createWindow("My game");
-
-<<<<<<< HEAD
-=======
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
         GL.createCapabilities();
 
         glEnable(GL_TEXTURE_2D);
@@ -115,22 +58,11 @@ public class Main {
 //        glfwShowWindow(window);
 
         glClearColor(0f,0f,0f, 0f);
-
-<<<<<<< HEAD
         Shader shader = new Shader("project/assets/shader");
 
 
         String[] textures = new String[21];
         String path = ("project/assets/tile/");
-=======
-
-        Shader shader = new Shader("assets/shader");
-
-        String[] textures = new String[21];
-        String path = ("assets/tile/");
-       
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
         textures[0] = path+"tile_01";
         textures[1] = path+"tile_02";
         textures[2] = path+"tile_03";
@@ -151,60 +83,15 @@ public class Main {
         textures[17] = path+"tile_18";
         textures[18] = path+"tile_19";
         textures[19] = path+"tile_20";
-<<<<<<< HEAD
-         
         textures[20] = path+"tile_479";
      
 
         Tile[][] map = new MapGenerator(textures).generateMap(100,100);
-       
-       
-        
-
-=======
-
-        
-        textures[20] = path+"tile_479";
-      
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-        Tile[][] map = new MapGenerator(textures).generateMap(100,100);
-
 
         TileRenderer tiles = new TileRenderer(map);
 
-        World world = new World(tiles);
-
-
-     
-
-        Tile[][] map = new MapGenerator(textures).generateMap(100,100);
-       
-       
-        
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
-        TileRenderer tiles = new TileRenderer(textures);
-
         World world = new World(tiles, map);
         
-        
-<<<<<<< HEAD
-=======
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
         Player player = new Player();
 
         player.transform.pos.add(new Vector3f(1,-1,0));
@@ -326,25 +213,8 @@ public class Main {
 
                 world.render(shader,camera, window);
 
-
-
-<<<<<<< HEAD
-=======
-                player.render(shader,camera);
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
-//                for (int i=0; i < entities.length; i++){
-//                    entities[i].render(camera);
-//                }
-
-<<<<<<< HEAD
-                player.render(shader, camera);
-                bot.render(shader, camera);
-=======
                 player.render(camera);
-
-
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
+                bot.render(camera);
                 window.swapBuffers();
 
                 frames += 1;

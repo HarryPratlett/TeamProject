@@ -1,37 +1,20 @@
 package com.myst.world.entities;
 
-<<<<<<< HEAD
+import java.awt.geom.Line2D;
+
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
-=======
-<<<<<<< HEAD
 import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
 import com.myst.world.view.Camera;
 import com.myst.world.view.Transform;
-=======
 import com.myst.rendering.Shader;
-import com.myst.world.view.Camera;
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
-<<<<<<< HEAD
-import com.myst.rendering.Shader;
-import com.myst.world.view.Camera;
-=======
-<<<<<<< HEAD
-import com.myst.world.map.rendering.Shader;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
-=======
-import org.joml.Vector2f;
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
-import org.lwjgl.glfw.GLFW;
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
 
 public class Player extends Entity{
 
@@ -57,17 +40,7 @@ public class Player extends Entity{
                 0,1,2,
                 2,3,0
         },
-<<<<<<< HEAD
         new Vector2f(0.5f,0.5f), new Shader("project/assets/Shader"));
-
-=======
-<<<<<<< HEAD
-        new Vector2f(0.5f,0.5f));
-=======
-        new Vector2f(0.5f,0.5f), new Shader("assets/Shader"));
-
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
->>>>>>> d16f8b6c5166ce944094769a6ee85d7743d22d59
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world) {
@@ -85,7 +58,11 @@ public class Player extends Entity{
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
             transform.pos.y += -MOVEMENT_SPEED * deltaTime;
         }
-
+        if(window.getInput().isMouseButtonDown(0)) {
+        	if(attack(world)) {
+        		//add code to send hit confirmation to server
+        	}
+        }
 
         //now that the co-ordinate system has been redone this needs redoing
         this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
@@ -113,6 +90,27 @@ public class Player extends Entity{
             }
         }
 
-
     }
+
+	@Override
+	public boolean attack(World world) {
+		
+		Line2D.Float bulletLine = new Line2D.Float(transform.pos.x, transform.pos.y, transform.pos.x + 100, transform.pos.y + 100);
+		AABB[] line = new AABB[(int) transform.pos.x + 100];
+		for (int i = 0; i < line.length; i++) {
+			int x = (int) transform.pos.x + i;
+			int y = (int) transform.pos.y + i;
+			line[i] = world.getBoundingBox(x,y);
+		}
+		
+		for(int i = 0; i< line.length; i++) {
+			if(line[i] != null) {
+				Collision collision = boundingBox.getCollision(line[i]);
+				if(collision.isIntersecting) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
