@@ -4,14 +4,10 @@ import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
 import com.myst.world.map.rendering.Shader;
-import com.myst.input.Input;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 
@@ -80,6 +76,7 @@ public class Main {
             }
             else if(GUI.settings_accessed)  {
                 GUI.accessSettings(window);
+                GUI.checkSettingsButtons(window);
             }
             else {
                 glClear(GL_COLOR_BUFFER_BIT);
@@ -149,7 +146,7 @@ public class Main {
     public void addButton(float x, float y, float width, float height, String filepath) {
 
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
-        if(filepath.contains("volume_assets")||filepath.contains("brightness_assets"))  {
+        if(settings_accessed)  {
             settings_buttons.put(bounds, filepath);
         }
         else {
@@ -192,8 +189,26 @@ public class Main {
             double mouseY = -(((window.getInput().getMouseCoordinates()[1]) / (window.getHeight() / 2)) - 1);
 
             if (mouseX >= b.getX() && mouseX <= (b.getX() + b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY() - b.getHeight())) {
-                if (window.getInput().isMouseButtonDown(GLFW_MOUSE_BUTTON_1)) {
-                    System.exit(1);
+                if (window.getInput().isMousePressed(GLFW_MOUSE_BUTTON_1)) {
+                    String buttonName = settings_buttons.get(b);
+                    switch(buttonName)  {
+                        case "plus.png":
+                            if (volume < 5) {
+                                volume += 1;
+
+                            }
+                            break;
+                        case "minus.png":
+                            if (volume > 0) {
+                                volume -= 1;
+                            }
+                            break;
+                        case "plus.png1":
+                            break;
+                        case "minus.png1":
+                            break;
+
+                    }
                 }
             }
         }
@@ -205,7 +220,17 @@ public class Main {
             glClear(GL_COLOR_BUFFER_BIT);
             Shader shader = new Shader("assets/shader");
             Texture controlsTexture = new Texture("assets/Keyboard_asset.png");
-            Model model = new Model(baseVertices, textureDocks, indices);
+            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+            vertices[0] *= controlsTexture.getWidth() * 0.0007;
+            vertices[3] *= controlsTexture.getWidth() * 0.0007;
+            vertices[6] *= controlsTexture.getWidth() * 0.0007;
+            vertices[9] *= controlsTexture.getWidth() * 0.0007;
+
+            vertices[1] *= controlsTexture.getHeight() * 0.0025;
+            vertices[4] *= controlsTexture.getHeight() * 0.0025;
+            vertices[7] *= controlsTexture.getHeight() * 0.0025;
+            vertices[10] *= controlsTexture.getHeight() * 0.0025;
+            Model model = new Model(vertices, textureDocks, indices);
             Matrix4f scale = new Matrix4f();
             this.renderImage(shader, controlsTexture, 0, 0, scale, model);
 
@@ -257,6 +282,10 @@ public class Main {
             this.addButton(0 + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[6].getPath());
             this.renderImage(shader, audioTextures[7], 0.5f, 0.35f, scale, model);
             this.addButton(0.5f + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[7].getPath());
+            this.renderImage(shader, audioTextures[6], 0f, 0f, scale, model);
+            this.addButton(0 + vertices[0], 0f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[6].getPath()+"1");
+            this.renderImage(shader, audioTextures[7], 0.5f, 0f, scale, model);
+            this.addButton(0.5f + vertices[0], 0f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[7].getPath()+"1");
 
             for (Texture t: audioTextures)  {
                 if (t.getPath().contains(Integer.toString(volume))) {

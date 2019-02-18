@@ -10,6 +10,8 @@ public class Input extends GLFWCursorPosCallback {
 
     private boolean keys[];
 
+    private boolean buttons[];
+
     private double[] coordinates = new double[] {0, 0};
 
 
@@ -18,6 +20,10 @@ public class Input extends GLFWCursorPosCallback {
         this.keys = new boolean[GLFW_KEY_LAST];
         for (int i =0; i < GLFW_KEY_LAST; i++){
             keys[i] = false;
+        }
+        this.buttons = new boolean[GLFW_MOUSE_BUTTON_LAST];
+        for (int i =0; i < GLFW_MOUSE_BUTTON_LAST; i++){
+            buttons[i] = false;
         }
     }
 
@@ -44,6 +50,11 @@ public class Input extends GLFWCursorPosCallback {
     public boolean isMouseButtonDown(int button){
         return glfwGetMouseButton(window, button) == 1;
     }
+
+    public boolean isMousePressed(int button){
+        return (isMouseButtonDown(button) && !buttons[button]);
+    }
+
 
     public void update(){
         for (int i =32; i < GLFW_KEY_LAST; i++){
