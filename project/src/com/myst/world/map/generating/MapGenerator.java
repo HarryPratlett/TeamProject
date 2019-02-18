@@ -1,29 +1,28 @@
 package com.myst.world.map.generating;
 
 import java.util.Scanner;
-<<<<<<< HEAD
+
 
 import javax.imageio.ImageIO;
 
 import java.awt.image.BufferedImage;
-=======
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 import java.io.*;
 
 import com.myst.datatypes.TileCoords;
 import com.myst.rendering.Texture;
 import com.myst.world.map.rendering.Tile;
 
-<<<<<<< HEAD
+
 //this need building on so we can potentially in future procedurally generate maps
 public class MapGenerator {
 	
 	private Scanner m;
-=======
+
 
 //this need building on so we can potentially in future procedurally generate maps
 public class MapGenerator {
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 
     //    public static final Tile test_tile = new Tile(  /*0,*/  "assets/tile_18");
     String[] textures;
@@ -34,7 +33,7 @@ public class MapGenerator {
         this.textures = textures;
     }
 
-<<<<<<< HEAD
+
 
 
     public Tile[][] generateMap(int width, int height){
@@ -50,7 +49,7 @@ public class MapGenerator {
     int x1 = (int) Math.floor(Math.random() * 100);
 	int y1 = (int) Math.floor(Math.random() * 100);
 	int m1 = (int) Math.floor(Math.random() * 20);
-=======
+
     public Tile[][] generateMap(int width, int height){
     	
         Tile[][] map = new Tile[width][height];
@@ -73,7 +72,7 @@ public class MapGenerator {
 	
 	//int m1 = (int) Math.floor(Math.random() * 20);
 	int m1=19;//for test
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 	
 	int TF1 = (int) Math.floor(Math.random()*2);
 	boolean extendedmap1;
@@ -81,22 +80,21 @@ public class MapGenerator {
 		extendedmap1=false;
 	}
 	else extendedmap1 = true;
-<<<<<<< HEAD
+
 	
 	
 	
 	int TF2 = (int) Math.floor(Math.random()*2);
-=======
+
 	int TF2 = (int) Math.floor(Math.random()*2);
-	
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 	boolean extendedmap2 = false;
 	if(TF2==0) {
 		extendedmap2=false;
 	}
 	else
 		extendedmap2=true;
-<<<<<<< HEAD
+
 	
 	
 	
@@ -114,7 +112,7 @@ public class MapGenerator {
 	
 	
 	
-=======
+
 /*
 	//
 	int[][] map={
@@ -136,19 +134,19 @@ public class MapGenerator {
 	}
 */	
 
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 	
 	
 	
 	//check the coordinate is valid or not
-<<<<<<< HEAD
+
 	if(x1<width|0<x1) {
 		if(y1<height|0<y1) {
 			map[x1][y1]=new Tile(m1-1,textures[m1]);
 			
 			
 			if(x1+1<height) {
-=======
+
 	if(x1<width|0<x1) {//within the wall
 		
 		if(y1<height|0<y1) {//within the wall
@@ -156,30 +154,29 @@ public class MapGenerator {
 			//*map[x1][y1].setSolid();//if added,player would be outside
 			
 			 if(x1+1<height) {
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 				map[x1+1][y1]=new Tile(m1-1,textures[m1]);
 				if(y1+1<height) {
 					map[x1+1][y1+1]=new Tile(m1-1, textures[m1]);
 					map[x1+1][y1+1]=new Tile(m1-1, textures[m1]);
 					map[x1][y1+1]=new Tile(m1-1, textures[m1]);
-<<<<<<< HEAD
+
 					
 					
 					
 					
 					//randomly choose size of tile map
 					if(extendedmap1) { System.out.println("extend tile 3X3_by _horizontally");}
-=======
+
 
 					//randomly choose size of tile map
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 					if(x1+2<width) {
 						map[x1+2][y1]=new Tile(m1-1, textures[m1]);
 						map[x1+2][y1+1]=new Tile(m1-1, textures[m1]);
 						
 						
 						//randomly choose size of tile map
-<<<<<<< HEAD
 						if(extendedmap2){System.out.println("extend tile by 3x3 _vertically");}
 						if(y1+2<height) {
 							map[x1+1][y1+2]=new Tile(m1-1, textures[m1]);
@@ -189,7 +186,7 @@ public class MapGenerator {
 	    					map[x1+2][y1+2]=new Tile(m1-1, textures[m1]);
 	    					map[x1][y1+2]=new Tile(m1-1, textures[m1]);
 	    				
-=======
+
 						if(y1+2<height) {
 							map[x1+1][y1+2]=new Tile(m1-1, textures[m1]);
 							
@@ -201,18 +198,18 @@ public class MapGenerator {
 	    					//map[x1+2][y1+2]=new Tile(m1-1, textures[m1]);
 	    					map[x1][y1+2]=new Tile(m1-1, textures[m1]);
 	    					
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
 						}
 					}
 				}
 			
-<<<<<<< HEAD
+
 			}
 			
 			
 			
 			
-			;
+			
 			
 			
 			
@@ -266,9 +263,9 @@ public class MapGenerator {
         	//map[0][i] = new Tile(20,textures[20]);
         	map[0][i].setSolid();
         	System.out.println(map[0][i].isSolid());
-=======
+
 			}			
-			;
+			
 	
 		}
 	}
@@ -285,31 +282,30 @@ public class MapGenerator {
         for(int i=0; i<width; i++) {
         	map[0][i] = new Tile(20,textures[20]);
         	map[0][i].setSolid();
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
         }
         
         
         for(int i=0; i<height; i++) {
         	map[i][0] = new Tile(20,textures[20]);
-<<<<<<< HEAD
+
         	//map[i][0].setSolid();
-=======
+
         	map[i][0].setSolid();
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
         	
         }
         for(int i=0; i<height; i++) {
-        	map[i][height-1] =new Tile(20,textures[20]);
-<<<<<<< HEAD
+
         	//map[i][height-1].setSolid();
-=======
+
         	map[i][height-1].setSolid();
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
         }
    
         for(int i=0; i<width; i++) {
         	map[width-1][i] = new Tile(20,textures[20]);
-<<<<<<< HEAD
+
         	//map[width-1][i].setSolid();
         }
         
@@ -341,7 +337,7 @@ public class MapGenerator {
         
         
         
-=======
+
         	map[width-1][i].setSolid();
         }
         
@@ -364,26 +360,24 @@ public class MapGenerator {
         
         
         closeMaze();
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
         
         
         
-        
-<<<<<<< HEAD
+
        
 // Cool feature to add is delete solid tiles as time goes by
 
-=======
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
         return map;
     }
     public void openMaze() {
     	try {
-<<<<<<< HEAD
+
     		m= new Scanner(new File("/Users/seongheehan/Documents/myst/project/assets/maze.m"));
-=======
+
     		m= new Scanner(new File("/Maze.m"));
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
+
    
     	}catch(Exception e) {
     		System.out.println("Fatal Error: missing maze data");
@@ -395,8 +389,4 @@ public class MapGenerator {
     	m.close();
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 2d7693e05ae7a0355ce8576eb2deac316cc812e2
 }
