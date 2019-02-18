@@ -1,16 +1,12 @@
 package com.myst.world.entities;
 
-import com.myst.rendering.Model;
-import com.myst.rendering.Texture;
+import com.myst.rendering.Shader;
 import com.myst.world.view.Camera;
-import com.myst.world.view.Transform;
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
-import com.myst.world.map.rendering.Shader;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 public class Player extends Entity{
@@ -37,7 +33,8 @@ public class Player extends Entity{
                 0,1,2,
                 2,3,0
         },
-        new Vector2f(0.5f,0.5f));
+        new Vector2f(0.5f,0.5f), new Shader("assets/Shader"));
+
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world) {
@@ -66,7 +63,7 @@ public class Player extends Entity{
             for (int j = 0; j < 5; j++) {
 //              30 is the scale and 0.5f is half the width of the box and 2.5 is the scan width
                 int x = (int) (transform.pos.x + (0.5f - 2.5 + i));
-                int y = (int) (transform.pos.y + (0.5f - 2.5 + j));
+                int y = (int) (-transform.pos.y + (0.5f - 2.5 + j));
                 boxes[i + (j * 5)] = world.getBoundingBox(x, y);
             }
         }
