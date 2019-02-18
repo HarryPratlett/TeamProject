@@ -10,6 +10,14 @@ import com.myst.world.collisions.AABB;
 import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.IntBuffer;
+import javax.imageio.ImageIO;
 
 public class World {
     private final int view = 16;
@@ -26,7 +34,15 @@ public class World {
     public World(TileRenderer render,Tile[][] tileMap){
         this.render = render;
 //        this needs refactoring
-        this.map = tileMap;
+
+        
+        
+      
+      
+        
+        
+        
+        Tile[][] map = tileMap;
 
 
 //        width = 30;

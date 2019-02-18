@@ -1,6 +1,9 @@
 package com.myst.world.map.generating;
 
 import java.util.Scanner;
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 import com.myst.datatypes.TileCoords;
@@ -10,6 +13,8 @@ import com.myst.world.map.rendering.Tile;
 
 //this need building on so we can potentially in future procedurally generate maps
 public class MapGenerator {
+	
+	private Scanner m;
 
     //    public static final Tile test_tile = new Tile(  /*0,*/  "assets/tile_18");
 
@@ -123,74 +128,116 @@ public class MapGenerator {
 	
 		}
 	}
+	 
+    try {
+		BufferedImage tile_sheet = ImageIO.read(new File("/Users/seongheehan/Desktop/map1.png"));
+		// 100 * 100 PNG
+		//BufferedImage entity_sheet = ImageIO.read(new File(""));
+		
+		//width = tile_sheet.getWidth();
+		//height = tile_sheet.getHeight();
+		
+		int [] colourTileSheet = tile_sheet.getRGB(0,0,width,height, null,0,width);
+		
+		
+		  
+        for (int y =0; y<height; y++) {
+        	for( int x =0; x<width; x++) {
+        		int red = (colourTileSheet [x + y * width] >>16) & 0xFF;
+        		
+        		if(red == 2) {
+        			map[x][y]=new Tile(20,textures[20]);
+	        		map[x][y].setSolid();
+        		}
+        		
+        		
+ 
+     
+        	
+        		
+        	}
+        
+        
+		
+		
+        }
+    }catch (IOException e) {
+		
+		e.printStackTrace();
+	}
+  
 	
-	
-	
-	//the starting point
-	map[2][2]=new Tile(20,textures[20]);
-	//map[2][2].setSolid();
-    
     }
         
         //
         for(int i=0; i<width; i++) {
-        	map[0][i] = new Tile(20,textures[20]);
+        	//map[0][i] = new Tile(20,textures[20]);
         	map[0][i].setSolid();
         }
         
         
         for(int i=0; i<height; i++) {
         	map[i][0] = new Tile(20,textures[20]);
-        	map[i][0].setSolid();
+        	//map[i][0].setSolid();
         	
         }
         for(int i=0; i<height; i++) {
         	map[i][height-1] =new Tile(20,textures[20]);
-        	map[i][height-1].setSolid();
+        	//map[i][height-1].setSolid();
         }
    
         for(int i=0; i<width; i++) {
         	map[width-1][i] = new Tile(20,textures[20]);
-        	map[width-1][i].setSolid();
+        	//map[width-1][i].setSolid();
         }
+       
         
         
-        Scanner m = openMaze();
+       // openMaze();
         
-		while(m.hasNext()) {
-    		for(int i=0; i<100; i++) {
-    			for(int j=0; j<100; j++) {
-    				if(m.nextInt()==1) {
-    				map[j][i]=new Tile(20,textures[20]);
-    				map[j][i].setSolid();
-    				}
-    				else {
-    					
-    				}
-    			}
-    		}
-    	}
-        
-        
-        closeMaze(m);
+       // while(m.hasNext()) {
+    	//	for(int i=0; i<100; i++) {
+    	//		for(int j=0; j<100; j++) {
+    	//			if(m.nextInt()==1) {
+    	//			map[j][i]=new Tile(20,textures[20]);
+    	//			map[j][i].setSolid();
+    	//			}
+    	//			else {
+    	//				
+    	//			}
+    	//		}
+    	//	}
+    //	}
         
         
+      //  closeMaze();
+        
+       
         
         
+        
+        
+        
+        
+        
+        
+       
+// Cool feature to add is delete solid tiles as time goes by
+
         return map;
     }
-    public Scanner openMaze() {
+    
+    public void openMaze() {
     	try {
-    		Scanner m= new Scanner(new File("/Maze.m"));
-    		return m;
+    		m= new Scanner(new File("project/assets/maze.m"));
+   
     	}catch(Exception e) {
     		System.out.println("Fatal Error: missing maze data");
-    		return null;
     	}
     }
 
     
-    public void closeMaze(Scanner m) {
+    public void closeMaze() {
     	m.close();
     }
 

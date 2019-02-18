@@ -62,9 +62,9 @@ public class Main {
 
         Shader shader = new Shader("project/assets/shader");
 
+
         String[] textures = new String[21];
-        String path = ("projet/assets/tile/");
-       
+        String path = ("project/assets/tile/");
         textures[0] = path+"tile_01";
         textures[1] = path+"tile_02";
         textures[2] = path+"tile_03";
