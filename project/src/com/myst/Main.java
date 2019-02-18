@@ -1,46 +1,51 @@
 package com.myst;
 
 import com.myst.helper.Timer;
+
+import com.myst.rendering.Shader;
+import com.myst.world.entities.Bot;
+import com.myst.world.entities.Entity;
+import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
-import com.myst.world.entities.Bot;
 import com.myst.world.entities.Player;
 import com.myst.world.map.generating.MapGenerator;
-import com.myst.world.map.rendering.Shader;
 import com.myst.world.map.rendering.Tile;
+
 import com.myst.world.map.rendering.TileRenderer;
-import com.myst.world.view.Camera;
+import org.joml.Vector3f;
+import org.lwjgl.opengl.GL;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.lwjgl.opengl.GL;
 
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Main {
+
+    public static void setUp(){
+        Window.setCallbacks();
+        if (!glfwInit()){
+            throw new IllegalStateException("Failed to initialise GLFW");
+        }
+     }
 
 
 
     public static void main(String[] args){
-        Window.setCallbacks();
+        setUp();
 
-//        AABB box1 = new AABB(new Vector2f(0,0), new Vector2f(1,1));
-//        AABB box2 = new AABB(new Vector2f(1,0), new Vector2f(1,1));
-//
-//        if (box1.isIntersecting(box2)){
-//            System.out.println("the boxes are intersecting");
-//        }
 
-        if (!glfwInit()){
-            throw new IllegalStateException("Failed to initialise GLFW");
-        }
+//        set up connection
+//        Connection con = asdf();
+//        from server on thread 2
+//        new ServerConn(Entities).run()
+
 
         Window window = new Window();
-
+        Entity[] entities = new Entity[1];
         window.setFullscreen(false);
         window.createWindow("My game");
-
-
 
         GL.createCapabilities();
 
@@ -57,21 +62,46 @@ public class Main {
 
         Shader shader = new Shader("project/assets/shader");
 
-        Tile test_tile = new Tile(  0,  "project/assets/tile_18");
-        Tile test_tile2 = new Tile(1,"project/assets/tile_186");
+        String[] textures = new String[21];
+        String path = ("projet/assets/tile/");
+       
+        textures[0] = path+"tile_01";
+        textures[1] = path+"tile_02";
+        textures[2] = path+"tile_03";
+        textures[3] = path+"tile_04";
+        textures[4] = path+"tile_05";
+        textures[5] = path+"tile_06";
+        textures[6] = path+"tile_07";
+        textures[7] = path+"tile_08";
+        textures[8] = path+"tile_09";
+        textures[9] = path+"tile_10";
+        textures[10] = path+"tile_11";
+        textures[11] = path+"tile_12";
+        textures[12] = path+"tile_13";
+        textures[13] = path+"tile_14";
+        textures[14] = path+"tile_15";
+        textures[15] = path+"tile_16";
+        textures[16] = path+"tile_17";
+        textures[17] = path+"tile_18";
+        textures[18] = path+"tile_19";
+        textures[19] = path+"tile_20";
+         
+        textures[20] = path+"tile_479";
+     
 
-        Tile[] tileSet = new Tile[2];
-        tileSet[0] = test_tile;
-        tileSet[1] = test_tile2;
+        Tile[][] map = new MapGenerator(textures).generateMap(100,100);
+       
+       
+        
 
-        Tile[][] map = new MapGenerator(tileSet).generateMap(100,100);
+        TileRenderer tiles = new TileRenderer(textures);
 
-
-        TileRenderer tiles = new TileRenderer(map);
-
-        World world = new World(tiles);
-
+        World world = new World(tiles, map);
+        
+        
         Player player = new Player();
+
+        player.transform.pos.add(new Vector3f(1,-1,0));
         
         Bot bot = new Bot(new float[]{
                 -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
@@ -96,8 +126,7 @@ public class Main {
 
 
 
-        world.setTile(test_tile2.setSolid(),5,0 );
-        world.setTile(test_tile2.setSolid(),6,0 );
+
 
 
 //        world.se
@@ -178,6 +207,7 @@ public class Main {
             debugCurrentTime = Timer.getTime();
             double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
             debugLastTime = debugCurrentTime;
+
             player.update((float) timeSinceLastUpdate, window, camera, world);
             bot.followPath((float) timeSinceLastUpdate);
             bot.update((float) timeSinceLastUpdate, window, camera, world);
@@ -191,7 +221,12 @@ public class Main {
                 world.render(shader,camera, window);
 
 
-                player.render(shader,camera);
+
+//                for (int i=0; i < entities.length; i++){
+//                    entities[i].render(camera);
+//                }
+
+                player.render(shader, camera);
                 bot.render(shader, camera);
                 window.swapBuffers();
 

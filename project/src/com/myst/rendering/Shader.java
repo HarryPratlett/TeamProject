@@ -1,4 +1,4 @@
-package com.myst.world.map.rendering;
+package com.myst.rendering;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

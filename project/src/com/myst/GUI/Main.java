@@ -3,7 +3,7 @@ package com.myst.GUI;
 import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
-import com.myst.world.map.rendering.Shader;
+import com.myst.rendering.Shader;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
@@ -52,6 +52,7 @@ public class Main {
 
 
         Shader shader = new Shader("project/assets/shader");
+
         Model model = new Model(vertices, textureDocks, indices);
 
 
@@ -64,22 +65,8 @@ public class Main {
 
     }
 
+    public static void renderImage(Shader shader, Texture texture, int x, int y, Matrix4f scale, Model model){}
 
-    public static void renderImage(Shader shader, Texture texture, int x, int y, Matrix4f scale, Model model){
-        shader.bind();
-        texture.bind(0);
-        Matrix4f target = new Matrix4f();
-
-        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x,y,0));
-        scale.mul(tile_pos, target);
-
-
-        shader.setUniform("sampler",0);
-        shader.setUniform("projection", target);
-        model.render();
-
-
-    }
 
     public static void renderGUI(Model model, Shader shader, Matrix4f scale) {
         Texture[] menuTextures = new Texture[]  {
@@ -100,6 +87,5 @@ public class Main {
         Rectangle bounds = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
         return bounds;
     }
-
 
 }

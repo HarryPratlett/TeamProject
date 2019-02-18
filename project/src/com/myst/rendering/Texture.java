@@ -54,14 +54,12 @@ public class Texture {
             glBindTexture(GL_TEXTURE_2D, id);
         }
     }
-
     public int getHeight() {
         return this.height;
     }
     public int getWidth()  {
         return this.width;
     }
-
 
 
 }

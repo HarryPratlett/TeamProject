@@ -9,7 +9,7 @@ import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
-import com.myst.world.map.rendering.Shader;
+import com.myst.rendering.Shader;
 import com.myst.world.view.Camera;
 
 public class Bot extends Entity {
