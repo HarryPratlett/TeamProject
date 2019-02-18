@@ -262,7 +262,7 @@ public class Main {
 
 
                 player.render(shader,camera);
-=======
+
 //                for (int i=0; i < entities.length; i++){
 //                    entities[i].render(camera);
 //                }
