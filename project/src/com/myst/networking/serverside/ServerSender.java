@@ -14,15 +14,15 @@ import java.util.concurrent.BlockingQueue;
 public class ServerSender extends Thread {
   private BlockingQueue<Object> clientQueue;
   private ObjectOutputStream client;
-  private Integer clientName;
+  private String clientID;
   private WorldModel world;
   private boolean updateClient;
 
 
-  public ServerSender(BlockingQueue<Object> q, ObjectOutputStream c, Integer clientName, WorldModel world) {
+  public ServerSender(BlockingQueue<Object> q, ObjectOutputStream c, String clientID, WorldModel world) {
     clientQueue = q;
     client = c;
-    this.clientName = clientName;
+    this.clientID = clientID;
     this.world = world;
     this.updateClient = false;
   }
@@ -40,14 +40,14 @@ public class ServerSender extends Thread {
           while (!clientQueue.isEmpty()) {
             Object msg = clientQueue.take();
             client.writeObject(msg);
-
           }
         }
 
       }
 
     }catch(IOException | InterruptedException e){
-        System.out.println("server sender for " + clientName + " ending");
+        System.out.println("server sender for " + clientID+ " ending");
+
     }
   }
 

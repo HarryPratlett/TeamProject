@@ -23,21 +23,19 @@ public class TileRenderer {
 //    tile map should potentially be moved to world
 //    instead all the textures in tilemap should be passed through
     public TileRenderer(/*Tile[][] tilemap ,*/ String[] textures){
-//        this.tileMap = tilemap;
-//        this.width = tilemap.length;
-//        this.height = tilemap[0].length;
-
         tileTextures = new HashMap<String,Texture>();
 
-
-
         float[] vertices = new float[] {
-                -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
-                -0.5f, -0.5f, 0f/*3*/
+                -0.5f, 0.5f, 0f,    /*0*/
+                0.5f, 0.5f, 0f,    /*1*/
+                0.5f, -0.5f, 0f,  /*2*/
+                -0.5f, -0.5f, 0f /*3*/
         };
 
         float[] texture = new float[] {
-                0f, 0f,   1, 0f,  1f, 1f,
+                0f, 0f,
+                1, 0f,
+                1f, 1f,
                 0f, 1f
         };
 
@@ -52,16 +50,6 @@ public class TileRenderer {
             tileTextures.put(textures[i], new Texture(textures[i] + ".png"));
         }
 
-//        Tile[] flatTileMap = flatten(tileMap, new Tile[this.width * this.height]);
-//        for (int i = 0; i < flatTileMap.length; i++){
-//            if(flatTileMap[i] != null) {
-//                if (!tileTextures.containsKey(flatTileMap[i].getTexture())) {
-//                    String tex = flatTileMap[i].getTexture();
-//                    tileTextures.put(tex, new Texture(tex + ".png"));
-//                }
-//            }
-//        }
-//        int asdf = 0;
     }
 
 //    this renders a given tile at location x y
@@ -73,16 +61,15 @@ public class TileRenderer {
             tileTextures.get(tile.getTexture()).bind(0);
         }
 
-//        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x*2,y*2,0));
         Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(coords.x,-coords.y,0));
         Matrix4f target = new Matrix4f();
 
-        cam.getProjection().mul(new Matrix4f(),target);
 //        translates the tiles according to the camera
+        cam.getProjection().mul(new Matrix4f(),target);
         target.mul(tile_pos);
 
-        shader.setUniform("sampler", 0);
 //        target is the location of the tile
+        shader.setUniform("sampler", 0);
         shader.setUniform("projection", target);
         model.render();
     }

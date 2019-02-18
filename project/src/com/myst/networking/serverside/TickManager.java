@@ -3,7 +3,7 @@ package com.myst.networking.serverside;
 import com.myst.networking.Report;
 
 public class TickManager extends Thread{
-    private final int TICKRATE = 1;
+    private final int TICKRATE = 10;
     private ServerSender[] senders = new ServerSender[8];
     private Object senderListKey = new Object();
     TickManager(){
@@ -15,13 +15,14 @@ public class TickManager extends Thread{
         while(true){
             for (int i=0; i< senders.length; i++){
                 if(senders[i] != null) {
-                    System.out.println("tick");
-                    senders[i].updateClient();
+//                    System.out.println("tick");
                     senders[i].requestClientUpdate();
+                    senders[i].updateClient();
+
                 }
             }
             try {
-                Thread.sleep((long) 4000 / (long) TICKRATE);
+                Thread.sleep((long) 1000 / (long) TICKRATE);
             } catch (InterruptedException e){
                 Report.error("Tick Manager is not running correctly");
             }

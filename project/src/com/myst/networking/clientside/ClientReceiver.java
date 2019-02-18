@@ -3,27 +3,36 @@ package com.myst.networking.clientside;
 import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
 import com.myst.networking.Message;
+import com.myst.world.entities.Enemy;
 import com.myst.world.entities.Entity;
+import com.myst.world.entities.Player;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientReceiver extends Thread {
     private ClientSender toServer;
     private ObjectInputStream fromServer;
-    private Entity[] entities;
-    private final int MAX_ENTITIES = 16;
-    private int clientID;
+    private ConcurrentHashMap<String,HashMap<Integer, Entity>> entities;
+    private ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender;
+    private String clientID;
 
 //    convert entity[] into hash map potentially currently the arrays indexes corresponds to the entity's ID
-    public ClientReceiver(ObjectInputStream fromServer, ClientSender toServer, Entity[] entities){
+    public ClientReceiver(ObjectInputStream fromServer,
+                          ClientSender toServer,
+                          ConcurrentHashMap<String,HashMap<Integer, Entity>> entities,
+                          ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender,
+                          String clientID){
         this.fromServer = fromServer;
         this.toServer = toServer;
         this.entities = entities;
+        this.clientID = clientID;
+        this.toRender = toRender;
     }
 
-
-//    as a general this should be avoided
     @Override
     public void run(){
         System.out.println("client receiver ran");
@@ -32,12 +41,6 @@ public class ClientReceiver extends Thread {
                 Message msg = (Message) fromServer.readObject();
                 System.out.println(msg.header);
                 switch(msg.header){
-                    case SET_CLIENT_ID:
-                        System.out.println("setting client ID");
-                        clientID = (Integer) msg.data;
-                        setClientID(clientID);
-                        System.out.println("received ID");
-                        break;
                     case ENTITY_UPDATE:
                         readInEntities(msg.data);
                         break;
@@ -64,33 +67,55 @@ public class ClientReceiver extends Thread {
 //    sends the entities positions to the server
     private void sendEntities(){
 //        this needs refactoring
-        for(int i=0; i < entities.length; i++){
-            if (entities[i] != null){
-                EntityData[] data = new EntityData[]{entities[i].getData()};
-                data[0].clientID = this.clientID;
+        HashMap<Integer, Entity> myEntities = this.entities.get(clientID);
+        ArrayList<EntityData> toSend = new ArrayList<EntityData>();
+        if(myEntities ==  null){
+//            this is sloppy and needs tidying once debugging has finished
+            return;
+        }
+        for(Integer i: myEntities.keySet()){
+            if (myEntities.get(i) != null){
+                toSend.add(myEntities.get(i).getData());
                 System.out.println("sending to Server:");
-                System.out.println(data[0].transform.pos);
-                Message msg = new Message(Codes.UPDATE_SERVER,data);
-                toServer.addToQueue(msg);
+                System.out.println("entity owned by " + myEntities.get(i).getData().ownerID);
+                System.out.println("entity with ID " + myEntities.get(i).getData().localID);
+                System.out.println("with position" + myEntities.get(i).getData().transform.pos);
             }
         }
+        Message msg = new Message(Codes.UPDATE_SERVER,toSend);
+        toServer.addToQueue(msg);
 //        this tells the Server sender to empty it's queue to the server
         toServer.sendQueue();
     }
 
 //    this can be modified
-    private void readInEntities(Object data){
-        EntityData[] entityData = (EntityData[]) data;
+    private void readInEntities(Object data) {
+        ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
 
-        System.out.println("Entity data length " + entityData.length);
-        for(int i=0; i < entityData.length;i++){
-            System.out.println(entityData[i].transform);
+        System.out.println("Entity data length " + entityData.size());
+        for (int i = 0; i < entityData.size(); i++) {
+            if (entityData.get(i) != null) {
+                EntityData entity = entityData.get(i);
+                System.out.println(entityData.get(i).transform.pos);
+                if(entities.get(entity.ownerID) == null){
+                    entities.put(entity.ownerID, new HashMap<Integer,Entity>());
+                    if(toRender.get(entity.ownerID) == null){
+                        toRender.put(entity.ownerID, new HashMap<Integer,EntityData>());
+                    }
+                }
+                if(entities.get(entity.ownerID).get(entity.localID) == null){
+                    if(toRender.get(entity.ownerID).get(entity.localID) == null){
+                        toRender.get(entity.ownerID).put(entity.localID, entity);
+                    }
+                }
+                else if (!entity.ownerID.equals(clientID)) {
+                    entities.get(entity.ownerID).get(entity.localID).transform = entityData.get(i).transform;
+                }
+            }
         }
+
+
     }
 
-    public void setClientID(){
-        for(int i=0; i <entities.length; i++){
 
-        }
-    }
 }

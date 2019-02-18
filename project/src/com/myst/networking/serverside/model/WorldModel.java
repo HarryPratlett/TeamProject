@@ -1,33 +1,56 @@
 package com.myst.networking.serverside.model;
 
 import com.myst.networking.EntityData;
-import com.myst.world.entities.Entity;
+
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class WorldModel {
     //    max 64 entities
-    private EntityData[] entities;
+    private ConcurrentHashMap<String,ArrayList<EntityData>> entities;
     private int entityCount;
 
     public WorldModel() {
-        this.entities = new EntityData[64];
+        this.entities = new ConcurrentHashMap<>();
         this.entityCount = 0;
     }
 
     public void updateWorld(EntityData entity) {
-        if (entities[entity.entityID] == null){
-            entityCount++;
+        ArrayList<EntityData> clientEntities = entities.get(entity.ownerID);
+
+//        this is sloppy and needs redoing after the prototype and replacing with a better system
+//        a better system may be replacing it with a hashmap which may even be more efficient
+        System.out.println(entity.localID);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        entities[entity.entityID] = entity;
+        if (entity.localID +1 > clientEntities.size()){
+            while(entity.localID +1 > clientEntities.size()){
+                clientEntities.add(null);
+                System.out.println("added an element");
+            }
+        }
+
+//        try and catch need to catch when you try and access an element which doesn't exist
+//        try {
+            clientEntities.set(entity.localID, entity);
+//        } catch() {
+
+//        }
     }
 
-    public EntityData[] getWorldData() {
-        EntityData[] out = new EntityData[entityCount];
+    public void addClient(String clientID){
+        entities.put(clientID, new ArrayList<>());
+    }
+
+//    simply returns all the data stored by the world model in a form for networking to send
+    public ArrayList<EntityData> getWorldData() {
+        ArrayList<EntityData> out = new ArrayList<>();
         int j=0;
-        for(int i=0; i < entities.length; i++){
-            if (entities[i] != null){
-                out[j] = entities[i];
-                j++;
-            }
+        for(String key: entities.keySet()){
+            out.addAll(this.entities.get(key));
         }
         return out;
     }

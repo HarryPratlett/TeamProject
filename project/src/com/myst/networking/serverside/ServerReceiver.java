@@ -7,36 +7,29 @@ import com.myst.networking.serverside.model.WorldModel;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 // Gets messages from client and puts them in a queue, for another
 // thread to forward to the appropriate client.
 
 public class ServerReceiver extends Thread {
-  private Integer clientID;
+  private String clientID;
   private ObjectInputStream myClient;
   private ClientTable clientTable;
   private ServerSender companion;
   private WorldModel world;
 
-  /**
-   * Constructs a new server receiver.
-   * @param n the name of the client with which this server is communicating
-   * @param c the reader with which this receiver will read data
-   * @param t the table of known clients and connections
-   * @param s the corresponding sender for this receiver
-   */
-  public ServerReceiver(Integer n, ObjectInputStream c, ClientTable t, ServerSender s, WorldModel world) {
-    System.out.println("server receiver for " + n + " created");
-    clientID = n;
+
+  public ServerReceiver(String ID, ObjectInputStream c, ClientTable t, ServerSender s, WorldModel world) {
+    System.out.println("server receiver for " + ID+ " created");
+    clientID = ID;
     myClient = c;
     clientTable = t;
     companion = s;
     this.world = world;
   }
 
-  /**
-   * Starts this server receiver.
-   */
+  @Override
   public void run() {
     try {
       while (true) {
@@ -47,16 +40,18 @@ public class ServerReceiver extends Thread {
             case UPDATE_SERVER:
               updateWorld(userMessage.data);
               break;
+            case ERROR:
+              Report.error((String) userMessage.data);
+              break;
           }
-
 
         } catch(ClassNotFoundException e){
           Report.error("corrupted / incorrect information received from the client");
-          e.printStackTrace();
         }
       }
     } catch (IOException e) {
       Report.error("Something went wrong with the client " + clientID + " " + e.getMessage());
+      e.printStackTrace();
       // No point in trying to close sockets. Just give up.
       // We end this thread (we don't do System.exit(1)).
     }
@@ -66,10 +61,11 @@ public class ServerReceiver extends Thread {
   }
 
   public void updateWorld(Object data){
-    EntityData[] entityData = (EntityData[]) data;
-    System.out.println(entityData[0].transform.pos);
-    for(int i=0; i < entityData.length; i++){
-      world.updateWorld(entityData[i]);
+    ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
+    for(int i=0; i < entityData.size(); i++){
+      System.out.println("receiving entity with transform : ");
+      System.out.println(entityData.get(i).transform.pos);
+      world.updateWorld(entityData.get(i));
     }
   }
 }

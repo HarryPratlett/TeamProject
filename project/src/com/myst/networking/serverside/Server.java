@@ -11,6 +11,7 @@ import com.myst.networking.serverside.model.WorldModel;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Server {
   private static final int PORT = 4444;
@@ -41,10 +42,7 @@ public class Server {
 
     Object IDKey = new Object();
 
-    Boolean[] availableIDs = new Boolean[MAX_CLIENTS];
-    for (int i=0; i < availableIDs.length; i++){
-      availableIDs[i] = false;
-    }
+    ArrayList<String> usedIDs = new ArrayList<>();
 
     TickManager ticker = new TickManager();
     ticker.start();
@@ -57,7 +55,7 @@ public class Server {
         Socket socket = serverSocket.accept(); // Matches AAAAA in ClientConnection
         // By creating another thread to deal with client connection it allows
         // multiple users to connect at once
-        new ClientConnectionThread(socket, clientTable, availableIDs, IDKey, world, ticker).start();
+        new ClientConnectionThread(socket, clientTable, usedIDs, IDKey, world, ticker).start();
 
       }
     } catch (IOException e) {

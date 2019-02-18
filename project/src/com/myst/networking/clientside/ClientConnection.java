@@ -14,6 +14,9 @@ package com.myst.networking.clientside;
 // Another limitation is that there is no provision to terminate when
 // the server dies.
 
+import com.myst.networking.Codes;
+import com.myst.networking.EntityData;
+import com.myst.networking.Message;
 import com.myst.networking.Report;
 import com.myst.networking.serverside.ServerReceiver;
 import com.myst.world.entities.Entity;
@@ -22,21 +25,27 @@ import java.io.*;
 
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientConnection{
   private static final int PORT = 4444;
-  private int clientID;
   private String hostname;
-  private Entity[] entities;
+  private ConcurrentHashMap<String,HashMap<Integer, Entity>> entities;
+  private ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender;
 
-  public ClientConnection(Entity[] entities, String host){
+  public ClientConnection(ConcurrentHashMap<String,HashMap<Integer, Entity>> entities,
+                          ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender,
+                          String host){
     this.hostname = host;
     this.entities = entities;
+    this.toRender = toRender;
   }
 
-  public void run() {
+  public void startConnection(String clientID) {
     // Open sockets:
     ObjectOutputStream toServer = null;
     ObjectInputStream fromServer = null;
@@ -47,8 +56,16 @@ public class ClientConnection{
       toServer = new ObjectOutputStream(server.getOutputStream());
       fromServer = new ObjectInputStream(server.getInputStream());
       BlockingQueue<Object> clientqueue = new LinkedBlockingQueue<Object>();
+
+      if(!checkClientID(toServer, fromServer, clientID)){
+        Report.error("client ID was unavailable");
+//        lazy way of doing this needs to be refactored, only doing for the prototype
+        System.exit(1);
+        return;
+      }
+
       ClientSender sender = new ClientSender(toServer,clientqueue);
-      ClientReceiver receiver = new ClientReceiver(fromServer,sender,this.entities);
+      ClientReceiver receiver = new ClientReceiver(fromServer,sender,this.entities, toRender, clientID);
       sender.start();
       receiver.start();
     } catch (UnknownHostException e) {
@@ -56,9 +73,29 @@ public class ClientConnection{
     } catch (IOException e) {
       Report.errorAndGiveUp("The server doesn't seem to be running " + e.getMessage());
     }
+  }
 
-//    new ClientReceiver();
-//    new ClientSender();
+  public boolean checkClientID(ObjectOutputStream toServer, ObjectInputStream fromServer, String clientID){
+    try {
+//      you ask the server if the client ID is available, if so then it returns true else it returns false
+      toServer.writeObject(new Message(Codes.SET_CLIENT_ID, clientID));
+      Message response = (Message) fromServer.readObject();
+      System.out.println(response.header);
+      switch(response.header){
+        case SUCCESS:
+          return true;
+        case ID_UNAVAILABLE:
+          return false;
+        case ERROR:
+          return false;
+      }
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    return false;
   }
 
 }
