@@ -1,0 +1,7 @@
+*.idea
+*.DS_Store
+*.out
+out/
+*.mvn
+*.iml
+bin/
