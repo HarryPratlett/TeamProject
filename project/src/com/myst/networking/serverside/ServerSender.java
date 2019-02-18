@@ -35,7 +35,7 @@ public class ServerSender extends Thread {
 //        don't know why but it won't work without a thread.sleep()
         Thread.sleep(1);
         if (updateClient) {
-          System.out.println("updating client");
+//          System.out.println("updating client");
           this.updateClient = false;
           while (!clientQueue.isEmpty()) {
             Object msg = clientQueue.take();

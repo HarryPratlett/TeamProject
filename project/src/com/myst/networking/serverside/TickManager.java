@@ -3,7 +3,7 @@ package com.myst.networking.serverside;
 import com.myst.networking.Report;
 
 public class TickManager extends Thread{
-    private final int TICKRATE = 10;
+    private final int TICKRATE = 60;
     private ServerSender[] senders = new ServerSender[8];
     private Object senderListKey = new Object();
     TickManager(){

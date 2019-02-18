@@ -39,7 +39,7 @@ public class ClientReceiver extends Thread {
         while(true){
             try {
                 Message msg = (Message) fromServer.readObject();
-                System.out.println(msg.header);
+//                System.out.println(msg.header);
                 switch(msg.header){
                     case ENTITY_UPDATE:
                         readInEntities(msg.data);
@@ -76,10 +76,10 @@ public class ClientReceiver extends Thread {
         for(Integer i: myEntities.keySet()){
             if (myEntities.get(i) != null){
                 toSend.add(myEntities.get(i).getData());
-                System.out.println("sending to Server:");
-                System.out.println("entity owned by " + myEntities.get(i).getData().ownerID);
-                System.out.println("entity with ID " + myEntities.get(i).getData().localID);
-                System.out.println("with position" + myEntities.get(i).getData().transform.pos);
+//                System.out.println("sending to Server:");
+//                System.out.println("entity owned by " + myEntities.get(i).getData().ownerID);
+//                System.out.println("entity with ID " + myEntities.get(i).getData().localID);
+//                System.out.println("with position" + myEntities.get(i).getData().transform.pos);
             }
         }
         Message msg = new Message(Codes.UPDATE_SERVER,toSend);
@@ -92,11 +92,11 @@ public class ClientReceiver extends Thread {
     private void readInEntities(Object data) {
         ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
 
-        System.out.println("Entity data length " + entityData.size());
+//        System.out.println("Entity data length " + entityData.size());
         for (int i = 0; i < entityData.size(); i++) {
             if (entityData.get(i) != null) {
                 EntityData entity = entityData.get(i);
-                System.out.println(entityData.get(i).transform.pos);
+//                System.out.println(entityData.get(i).transform.pos);
                 if(entities.get(entity.ownerID) == null){
                     entities.put(entity.ownerID, new HashMap<Integer,Entity>());
                     if(toRender.get(entity.ownerID) == null){

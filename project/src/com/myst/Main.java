@@ -51,7 +51,7 @@ public class Main {
 
         ClientConnection connection = new ClientConnection(entities, toRender,"127.0.0.1");
 
-        String clientID = "Base2";
+        String clientID = "Base1";
 
         connection.startConnection(clientID);
 

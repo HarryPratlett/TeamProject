@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class WorldModel {
     //    max 64 entities
+//    this needs improving, replace the array list with a hashmap
     private ConcurrentHashMap<String,ArrayList<EntityData>> entities;
     private int entityCount;
 
@@ -20,16 +21,10 @@ public class WorldModel {
 
 //        this is sloppy and needs redoing after the prototype and replacing with a better system
 //        a better system may be replacing it with a hashmap which may even be more efficient
-        System.out.println(entity.localID);
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         if (entity.localID +1 > clientEntities.size()){
             while(entity.localID +1 > clientEntities.size()){
                 clientEntities.add(null);
-                System.out.println("added an element");
             }
         }
 

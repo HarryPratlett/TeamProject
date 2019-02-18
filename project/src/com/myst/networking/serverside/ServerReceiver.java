@@ -35,7 +35,7 @@ public class ServerReceiver extends Thread {
       while (true) {
         try {
           Message userMessage = (Message) myClient.readObject();
-          System.out.println("received data from client");
+//          System.out.println("received data from client");
           switch(userMessage.header){
             case UPDATE_SERVER:
               updateWorld(userMessage.data);
@@ -63,8 +63,8 @@ public class ServerReceiver extends Thread {
   public void updateWorld(Object data){
     ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
     for(int i=0; i < entityData.size(); i++){
-      System.out.println("receiving entity with transform : ");
-      System.out.println(entityData.get(i).transform.pos);
+//      System.out.println("receiving entity with transform : ");
+//      System.out.println(entityData.get(i).transform.pos);
       world.updateWorld(entityData.get(i));
     }
   }
