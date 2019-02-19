@@ -21,7 +21,7 @@ public class Bot extends Entity {
 	
 	public Bot(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords, Shader shader) {
 		super(vertices, texture, indices, boundingBoxCoords, shader);
-		entityType = Type.Player;
+		type = EntityTypes.BOT;
 		position = new Vector2f(transform.pos.x, transform.pos.y);
 	}
 
@@ -104,7 +104,7 @@ public class Bot extends Entity {
 
 	@Override
 	public boolean attack(World world) {
-		return killable;
+		return isKillable();
 		// TODO Auto-generated method stub
 		
 	}

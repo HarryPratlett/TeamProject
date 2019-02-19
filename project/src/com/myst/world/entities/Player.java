@@ -16,6 +16,8 @@ import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
 import org.joml.Vector3f;
 
+import static com.myst.world.entities.EntityTypes.PLAYER;
+
 public class Player extends Entity{
 
     private final float MOVEMENT_SPEED = 10f;
@@ -40,7 +42,10 @@ public class Player extends Entity{
                 0,1,2,
                 2,3,0
         },
+
         new Vector2f(0.5f,0.5f), new Shader("project/assets/Shader"));
+        this.type = PLAYER;
+
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world) {

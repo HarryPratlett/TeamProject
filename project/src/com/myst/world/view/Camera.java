@@ -12,7 +12,7 @@ public class Camera {
     private int width;
     private int height;
     private Player player;
-    public int scale = 20;
+    public int scale = 40;
 
     public Camera(int width, int height){
         position = new Vector3f(0,0,1);
@@ -24,7 +24,6 @@ public class Camera {
     public void setPosition(Vector3f position){
         this.position = position;
     }
-
 
     public void bindPlayer(Player player){
         this.player = player;

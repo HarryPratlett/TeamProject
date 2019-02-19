@@ -6,6 +6,7 @@ import java.util.PriorityQueue;
 import org.joml.Vector2f;
 
 import com.myst.datatypes.TileCoords;
+import com.myst.datatypes.WorldCoords;
 import com.myst.world.World;
 
 public class AStarSearch {
@@ -64,7 +65,7 @@ public class AStarSearch {
 		for(int x = -1; x <= 1; x++) {
 			for(int y = -1; y <= 1; y++) {
 				Vector2f childPosition = new Vector2f(parent.getPosition().x + x, parent.getPosition().y + y);
-				if(world.getTile(new TileCoords((int)childPosition.x,(int)childPosition.y)) != null && world.getTile(new TileCoords((int)childPosition.x,(int)childPosition.y)).isSolid() == false) {
+				if(world.getTile(new WorldCoords((int)childPosition.x,(int)childPosition.y).asTileCoords(20)) != null && world.getTile(new WorldCoords((int)childPosition.x,(int)childPosition.y).asTileCoords(20)).isSolid() == false) {
 					children.add(new MapNode(childPosition, goal, parent, world));
 				}
 			}

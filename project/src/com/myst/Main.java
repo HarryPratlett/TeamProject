@@ -1,8 +1,10 @@
 package com.myst;
 
 import com.myst.helper.Timer;
+import com.myst.networking.EntityData;
 import com.myst.rendering.Shader;
 import com.myst.world.entities.Bot;
+import com.myst.world.entities.Enemy;
 import com.myst.world.entities.Entity;
 
 import com.myst.datatypes.TileCoords;
@@ -14,12 +16,18 @@ import com.myst.world.entities.Player;
 import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
 
+import com.myst.networking.clientside.ClientConnection;
+
 import com.myst.world.map.rendering.TileRenderer;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import java.util.HashMap;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -37,12 +45,20 @@ public class Main {
 
     public static void main(String[] args){
         setUp();
+
+
         Window window = new Window();
-//        set up connection
-//        Connection con = asdf();
-//        from server on thread 2
-//        new ServerConn(Entities).run()
-        Entity[] entities = new Entity[1];
+
+        ConcurrentHashMap<String,HashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
+//        only the main can render and create items so this array hands stuff to the main to render
+        ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
+
+        ClientConnection connection = new ClientConnection(entities, toRender,"127.0.0.1");
+
+        String clientID = "Base1";
+        String cpuID = "CPU1";
+        connection.startConnection(clientID);
+
         window.setFullscreen(false);
         window.createWindow("My game");
         GL.createCapabilities();
@@ -83,7 +99,6 @@ public class Main {
         textures[18] = path+"tile_19";
         textures[19] = path+"tile_20";
         textures[20] = path+"tile_479";
-     
 
         Tile[][] map = new MapGenerator(textures).generateMap(100,100);
 
@@ -92,55 +107,35 @@ public class Main {
         World world = new World(tiles, map);
         
         Player player = new Player();
-
-        player.transform.pos.add(new Vector3f(1,-1,0));
-        
+        player.localID = 1;
+        player.owner = clientID;
         Bot bot = new Bot(new float[]{
                 -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
                 -0.5f, -0.5f, 0f/*3*/
-        	},
+    },
             new float[] {
-            	0f, 0f,   1, 0f,  1f, 1f,
-            	0f, 1f
-        	},
-            new int[] {
-            		0,1,2,
-            	2,3,0
-        	},
-            new Vector2f(0.5f,0.5f), shader);
-        bot.initialiseAI(world);
+            0f, 0f,   1, 0f,  1f, 1f,
+            0f, 1f
+    },
+    new int[] {
+            0,1,2,
+            2,3,0
+    },
+    new Vector2f(0.5f,0.5f), new Shader("project/assets/Shader"));
 
-        bot.setPath(new Vector2f(10f,0f));
+        bot.localID = 2;
+        bot.owner = cpuID;
+      
+        player.transform.pos.add(new Vector3f(1,-1,0));
+        bot.transform.pos.add(new Vector3f(5,-1,0));
         Camera camera = new Camera(window.getWidth(), window.getHeight());
 
-
-
-
-
-
-
-
-
-//        world.se
-//
-//        Matrix4f projection = new Matrix4f().ortho2D(640 / 2, -640 / 2, -480 / 2, 480 / 2);
-//
-////        projection.rotate(20.5f, 0,0,0);
-////        projection.scale(200);
-//        Matrix4f scale = new Matrix4f()
-//                .translate(new Vector3f(0,0,0))
-//                .scale(16);
-
-
-        Matrix4f target = new Matrix4f();
-
-//        projection = projection.mul(scale,target);
-
-
-
-
-
-
+        entities.put(clientID, new HashMap<Integer,Entity>());
+        entities.put(cpuID, new HashMap<Integer,Entity>());
+        HashMap<Integer, Entity> myEntities = entities.get(clientID);
+        
+        myEntities.put(player.localID, player);
+        myEntities.put(bot.localID, bot);
         double frame_cap = 1.0/60.0;
 
         double time = Timer.getTime();
@@ -157,6 +152,7 @@ public class Main {
         camera.bindPlayer(player);
 
         while (!window.shouldClose()){
+
             renderFrame = false;
 
             double time2 = Timer.getTime();
@@ -182,15 +178,10 @@ public class Main {
                 }
                 camera.updatePosition();
 
-
-
-
-
             }
 
             if (frame_time >= 1) {
                 System.out.println(frames);
-                System.out.println(camera.position);
                 frame_time = 0;
                 frames = 0;
             }
@@ -199,7 +190,7 @@ public class Main {
             debugCurrentTime = Timer.getTime();
             double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
             debugLastTime = debugCurrentTime;
-
+            bot.setPath(new Vector2f(10f, 0f));
             player.update((float) timeSinceLastUpdate, window, camera, world);
             bot.followPath((float) timeSinceLastUpdate);
             bot.update((float) timeSinceLastUpdate, window, camera, world);
@@ -208,12 +199,14 @@ public class Main {
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);
 
-//                tiles.renderTile(test_tile,new TileCoords(0,0),shader, new Matrix4f().scale(30),camera);
-
                 world.render(shader,camera, window);
 
-                player.render(camera);
-                bot.render(camera);
+                for(String owner: entities.keySet()){
+                    for(Integer entityID: entities.get(owner).keySet()){
+                        entities.get(owner).get(entityID).render(camera);
+                    }
+                }
+                createAndRender(toRender, entities);
                 window.swapBuffers();
 
                 frames += 1;
@@ -224,5 +217,24 @@ public class Main {
 
 //        clears everything we have used from memory
         glfwTerminate();
+
+//        sloppy and needs tidying
+        System.exit(1);
+    }
+
+
+//    make this render all the objects in the hashmap then set the hasmap to null
+    public static void createAndRender(ConcurrentHashMap<String,HashMap<Integer, EntityData>> items,ConcurrentHashMap<String,HashMap<Integer, Entity>> entities){
+        for(String owner: items.keySet()){
+            for(Integer id: items.get(owner).keySet()){
+                EntityData entitysData = items.get(owner).get(id);
+                if (entitysData != null){
+                    Entity ent = new Enemy();
+                    ent.readInEntityData(entitysData);
+                    entities.get(owner).put(id, ent);
+                    items.get(owner).put(id,null);
+                }
+            }
+        }
     }
 }

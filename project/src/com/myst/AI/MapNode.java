@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.joml.Vector2f;
 
 import com.myst.datatypes.TileCoords;
+import com.myst.datatypes.WorldCoords;
 import com.myst.world.World;
 
 public class MapNode implements Comparable<MapNode> {
@@ -42,12 +43,12 @@ public class MapNode implements Comparable<MapNode> {
 	}
 	
 	private int euclideanDistance() {
-		TileCoords coords = new TileCoords((int)position.x,(int)position.y);
-		if(world.getTile(coords) == null) {
+		WorldCoords coords = new WorldCoords((int)position.x,(int)position.y);
+		if(world.getTile(coords.asTileCoords(20)) == null) {
 			return Integer.MAX_VALUE;
 		}
 		
-		else if (world.getTile(coords).isSolid()) {
+		else if (world.getTile(coords.asTileCoords(20)).isSolid()) {
 			return Integer.MAX_VALUE;
 		}
 		
