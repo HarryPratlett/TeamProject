@@ -16,7 +16,8 @@ import com.myst.world.map.rendering.Tile;
 
 //this need building on so we can potentially in future procedurally generate maps
 public class MapGenerator {
-
+	
+	private Scanner m;
 
     //    public static final Tile test_tile = new Tile(  /*0,*/  "assets/tile_18");
     String[] textures;
@@ -27,22 +28,32 @@ public class MapGenerator {
         this.textures = textures;
     }
 
-
-
+    int x1 = (int) Math.floor(Math.random() * 100);
+	int y1 = (int) Math.floor(Math.random() * 100);
+	int m1 = (int) Math.floor(Math.random() * 20);
 
     public Tile[][] generateMap(int width, int height){
+    	
         Tile[][] map = new Tile[width][height];
+       // Tileset[][] map1 = new Tileset[width][height];
+        
         for(int x = 0; x < width; x++){
             for(int y=0; y < height; y++){
-                map[x][y] = new Tile(0, textures[0]);
+                map[x][y] = new Tile(0, textures[0]);  
+                map[x][y].unsetSolid();//*
             }
         }
-        for(int i=0; i<1400; i++) {
-            
+      
 
+        
+  
+        
+        for(int i=0; i<1400; i++) {
         	int x1 = (int) Math.floor(Math.random() * 100);
-        	int y1 = (int) Math.floor(Math.random() * 100);
-        	int m1 = (int) Math.floor(Math.random() * 20);
+        	int y1 = (int) Math.floor(Math.random() * 100);//this number is the range of cor
+	
+        	//int m1 = (int) Math.floor(Math.random() * 20);
+        	int m1=19;//for test
 
 	
         	int TF1 = (int) Math.floor(Math.random()*2);
@@ -51,19 +62,15 @@ public class MapGenerator {
         		extendedmap1=false;
         	}
         	else extendedmap1 = true;
+	
         	int TF2 = (int) Math.floor(Math.random()*2);
+
         	boolean extendedmap2 = false;
         	if(TF2==0) {
         		extendedmap2=false;
         	}
         	else
         		extendedmap2=true;
-	// prints coordinates of tile
-        	System.out.println(x1);
-        	System.out.println(y1);
-	
-	
-	
 
 /*
 	//
@@ -92,20 +99,20 @@ public class MapGenerator {
 	
 	//check the coordinate is valid or not
 
-	if(x1<width|0<x1) {
-		if(y1<height|0<y1) {
-			map[x1][y1]=new Tile(m1-1,textures[m1]);
+        	if(x1<width|0<x1) {
+        		if(y1<height|0<y1) {
+        			map[x1][y1]=new Tile(m1-1,textures[m1]);
+				
 			
-			
-			if(x1+1<height) {
+        				if(x1+1<height) {
 
-	if(x1<width|0<x1) {//within the wall
+        					if(x1<width|0<x1) {//within the wall
 		
-		if(y1<height|0<y1) {//within the wall
-			map[x1][y1]=new Tile(m1-1,textures[m1]);
+        						if(y1<height|0<y1) {//within the wall
+        							map[x1][y1]=new Tile(m1-1,textures[m1]);
 			//*map[x1][y1].setSolid();//if added,player would be outside
 			
-			 if(x1+1<height) {
+        							if(x1+1<height) {
 
 				map[x1+1][y1]=new Tile(m1-1,textures[m1]);
 				if(y1+1<height) {
@@ -154,7 +161,6 @@ public class MapGenerator {
 						}
 					}
 				}
-			}
 		}
 	}
 	

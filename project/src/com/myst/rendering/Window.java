@@ -44,7 +44,9 @@ public class Window {
             glfwShowWindow(window);
         }
 
+
         glfwMakeContextCurrent(window);
+
 
         input = new Input(window);
     }

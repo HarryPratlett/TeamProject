@@ -1,8 +1,11 @@
 package com.myst.GUI;
 
 import com.myst.rendering.Model;
+
+
 import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
+
 import com.myst.rendering.Shader;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -52,7 +55,6 @@ public class Main {
 
         Shader shader = new Shader("project/assets/shader");
         Texture texture = new Texture("project/assets/tile_18.png");
-
 
         Model model = new Model(vertices, textureDocks, indices);
 
