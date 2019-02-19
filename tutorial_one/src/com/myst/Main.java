@@ -21,6 +21,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static com.myst.audio.Audio.THEME_CLIP;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 

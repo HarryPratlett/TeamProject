@@ -1,13 +1,17 @@
 0) Duplex Bassline - Astronaut (test theme option)
+    theme
 	https://www.youtube.com/watch?v=RkDTd0L9Ubw
 	Licence: ask Duplex
-1) gunshot 
+1) gunshot
+    gun
 	https://www.youtube.com/watch?v=nS9VmrOzd7o
 	License: Public Domain
-2) footsteps 
+2) footsteps
+    footsteps
 	https://www.youtube.com/watch?v=nS9VmrOzd7o
 	License: Public Domain
 3) man getting shot
+    hit
 	https://www.youtube.com/watch?v=89vJ8V4qQrs
 	Licence: Public Domain
 4) 

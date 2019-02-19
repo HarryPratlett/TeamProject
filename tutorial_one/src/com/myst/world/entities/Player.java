@@ -15,12 +15,16 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 public class Player {
-    private Model model;
 
+    private Model model;
     private AABB boundingBox;
     private Texture texture;
     public Transform transform;
     private final float MOVEMENT_SPEED = 10f;
+
+    // TODO
+    public static int volume = 5;
+    // TODO
 
     public Player(){
 
@@ -28,7 +32,6 @@ public class Player {
                 -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
                 -0.5f, -0.5f, 0f/*3*/
         };
-
 
         float[] texture = new float[] {
                 0f, 0f,   1, 0f,  1f, 1f,
@@ -43,7 +46,6 @@ public class Player {
         model = new Model(vertices, texture, indices);
         this.texture = new Texture("assets/survivor1_hold.png");
 
-
         transform = new Transform();
         transform.scale = new Vector3f(1,1,1);
         boundingBox = new AABB(new Vector2f(transform.pos.x, transform.pos.y), new Vector2f(0.5f,0.5f));
@@ -51,7 +53,6 @@ public class Player {
 
     public void update(float deltaTime, Window window, Camera camera, World world) {
 //        these needs fixing and entering into an entities class
-
 
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
             transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0);
@@ -67,7 +68,7 @@ public class Player {
         }
 
         // TODO
-        if (window.getInput().isKeyDown(GLFW.GLFW_KEY_M)) {
+        if (window.getInput().isKeyPressed(GLFW.GLFW_KEY_M)) {
             Audio.getAudio().mute();
         }
         // TODO
@@ -85,8 +86,6 @@ public class Player {
             }
         }
 
-
-
         for (int i = 0; i < boxes.length; i++) {
             if (boxes[i] != null) {
                 Collision data = boundingBox.getCollision(boxes[i]);
@@ -97,21 +96,31 @@ public class Player {
                 }
             }
         }
-
-
     }
+
     public void render(Shader shader, Camera camera){
         shader.bind();
         shader.setUniform("sampler", 0);
         shader.setUniform("projection", transform.getProjection(camera.getProjection()));
         texture.bind(0);
         model.render();
-
     }
 
     // TODO
     public AABB getBoundingBox() {
         return boundingBox;
+    }
+
+    public static int getVolume() {
+        return volume;
+    }
+
+    public static void setVolume(int change) {
+        volume = volume + change;
+    }
+
+    public void playSound(String clipName, Vector2f location) {
+        Audio.getAudio().play(clipName, location);
     }
     // TODO
 }
