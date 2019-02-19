@@ -49,6 +49,7 @@ public class Window {
 
 
         input = new Input(window);
+        glfwSetCursorPosCallback(window, input);
     }
 
     public boolean shouldClose(){

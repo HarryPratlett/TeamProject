@@ -95,7 +95,6 @@ public class Player extends Entity{
 	@Override
 	public boolean attack(World world) {
 		
-		Line2D.Float bulletLine = new Line2D.Float(transform.pos.x, transform.pos.y, transform.pos.x + 100, transform.pos.y + 100);
 		AABB[] line = new AABB[(int) transform.pos.x + 100];
 		for (int i = 0; i < line.length; i++) {
 			int x = (int) transform.pos.x + i;

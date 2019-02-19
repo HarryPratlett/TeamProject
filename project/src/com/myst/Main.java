@@ -1,7 +1,6 @@
 package com.myst;
 
 import com.myst.helper.Timer;
-
 import com.myst.rendering.Shader;
 import com.myst.world.entities.Bot;
 import com.myst.world.entities.Entity;
@@ -88,7 +87,7 @@ public class Main {
 
         Tile[][] map = new MapGenerator(textures).generateMap(100,100);
 
-        TileRenderer tiles = new TileRenderer(map);
+        TileRenderer tiles = new TileRenderer(textures);
 
         World world = new World(tiles, map);
         

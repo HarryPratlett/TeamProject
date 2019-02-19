@@ -20,6 +20,7 @@ public class Texture {
     private int id;
     private int width;
     private int height;
+    private String filepath;
     private ByteBuffer data;
 
     public Texture(String filepath){
@@ -31,7 +32,7 @@ public class Texture {
 //        try{
 
             this.data = STBImage.stbi_load(filepath,width,height,comp,4);
-
+            this.filepath = filepath;
             id = glGenTextures();
             this.width = width.get();
             this.height = height.get();
@@ -59,6 +60,10 @@ public class Texture {
     }
     public int getWidth()  {
         return this.width;
+    }
+    public String getPath() {
+        String[] path = this.filepath.split("/");
+        return path[path.length-1];
     }
 
 

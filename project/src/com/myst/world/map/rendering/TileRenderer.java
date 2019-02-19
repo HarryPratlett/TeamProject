@@ -16,16 +16,20 @@ import static com.myst.helper.Flatten.flatten;
 public class TileRenderer {
     private HashMap<String, Texture> tileTextures;
     private Model model;
-
-    public Tile[][] tileMap;
+//    public Tile[][] tileMap;
     private int width;
     private int height;
-    
-    public TileRenderer(Tile[][] tilemap /*, HashMap<String, Texture> textureMap*/){
-        this.tileMap = tilemap;
-        this.width = tilemap.length;
-        this.height = tilemap[0].length;
+
+//    tile map should potentially be moved to world
+//    instead all the textures in tilemap should be passed through
+    public TileRenderer(/*Tile[][] tilemap ,*/ String[] textures){
+//        this.tileMap = tilemap;
+//        this.width = tilemap.length;
+//        this.height = tilemap[0].length;
+
         tileTextures = new HashMap<String,Texture>();
+
+
 
         float[] vertices = new float[] {
                 -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
@@ -44,26 +48,29 @@ public class TileRenderer {
 
         model = new Model(vertices, texture, indices);
 
-        Tile[] flatTileMap = flatten(tileMap, new Tile[this.width * this.height]);
-        for (int i = 0; i < flatTileMap.length; i++){
-            if(flatTileMap[i] != null) {
-                if (!tileTextures.containsKey(flatTileMap[i].getTexture())) {
-                    String tex = flatTileMap[i].getTexture();
-                    tileTextures.put(tex, new Texture(tex + ".png"));
-                }
-            }
-        }
-        int asdf = 0;
         for(int i=0; i < textures.length; i++){
             tileTextures.put(textures[i], new Texture(textures[i] + ".png"));
         }
+
+//        Tile[] flatTileMap = flatten(tileMap, new Tile[this.width * this.height]);
+//        for (int i = 0; i < flatTileMap.length; i++){
+//            if(flatTileMap[i] != null) {
+//                if (!tileTextures.containsKey(flatTileMap[i].getTexture())) {
+//                    String tex = flatTileMap[i].getTexture();
+//                    tileTextures.put(tex, new Texture(tex + ".png"));
+//                }
+//            }
+//        }
+//        int asdf = 0;
     }
-    
-    //*
-    public void renderTile(Tile tileset, TileCoords coords, Shader shader, Camera cam){
+
+//    this renders a given tile at location x y
+//    x and y should be according to the new co-ordinate system
+//    where x is positive and y is negative
+    public void renderTile(Tile tile, TileCoords coords, Shader shader, Camera cam){
         shader.bind();
-        if(tileTextures.containsKey(tileset.getTexture())) {
-            tileTextures.get(tileset.getTexture()).bind(0);
+        if(tileTextures.containsKey(tile.getTexture())) {
+            tileTextures.get(tile.getTexture()).bind(0);
         }
 
 //        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x*2,y*2,0));
@@ -79,6 +86,7 @@ public class TileRenderer {
         shader.setUniform("projection", target);
         model.render();
     }
+
 
 
 

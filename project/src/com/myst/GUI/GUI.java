@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 
-public class Main {
+public class GUI {
 
     HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
     HashMap<Rectangle2D.Float, String> settings_buttons = new HashMap<>();
@@ -37,11 +37,20 @@ public class Main {
             2,3,0
     };
 
-    private Boolean controls_accessed = false;
-    private Boolean settings_accessed = false;
-    int volume = 3;
+    private Boolean controls_accessed;
+    private Boolean settings_accessed;
+    int volume;
+    int brightness;
+
+    public GUI()    {
+        controls_accessed = false;
+        settings_accessed = false;
+        volume = 3;
+        brightness = 3;
+    }
+
     public static void main(String[] args){
-        Main GUI = new Main();
+        GUI GUI = new GUI();
         Window.setCallbacks();
         if (!glfwInit()){
             throw new IllegalStateException("Failed to initialise GLFW");
@@ -63,7 +72,7 @@ public class Main {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glClearColor(0f,0f,0f, 0f);
 
-        Shader shader = new Shader("project/assets/shader");
+        Shader shader = new Shader("assets/shader");
 
 
 
@@ -115,28 +124,17 @@ public class Main {
     public void renderGUI(Shader shader) {
 
             Texture[] menuTextures = new Texture[]{
-                    new Texture("project/assets/resume_button.png"), new Texture("project/assets/controls_button.png"),
-                    new Texture("project/assets/settings_button.png"), new Texture("project/assets/exit_button.png")
+                    new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
+                    new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
             };
 
             float y = 0.55f;
+
             for (Texture t : menuTextures) {
                 float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-                vertices[0] *= t.getWidth() * 0.002;
-                vertices[3] *= t.getWidth() * 0.002;
-                vertices[6] *= t.getWidth() * 0.002;
-                vertices[9] *= t.getWidth() * 0.002;
-
-                vertices[1] *= t.getHeight() * 0.005;
-                vertices[4] *= t.getHeight() * 0.005;
-                vertices[7] *= t.getHeight() * 0.005;
-                vertices[10] *= t.getHeight() * 0.005;
-
+                vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
                 Model model = new Model(vertices, textureDocks, indices);
                 renderImage(shader, t, 0f, y, new Matrix4f(), model);
-
-//            -1 -- 0 -- 1
-
                 this.addButton(0 + vertices[0], y + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
                 y += (-0.35f);
             }
@@ -192,6 +190,16 @@ public class Main {
                 if (window.getInput().isMousePressed(GLFW_MOUSE_BUTTON_1)) {
                     String buttonName = settings_buttons.get(b);
                     switch(buttonName)  {
+                        case "plus1.png":
+                            if (brightness < 5) {
+                                brightness += 1;
+                            }
+                            break;
+                        case "minus1.png":
+                            if (brightness > 0) {
+                                brightness -= 1;
+                            }
+                            break;
                         case "plus.png":
                             if (volume < 5) {
                                 volume += 1;
@@ -203,33 +211,22 @@ public class Main {
                                 volume -= 1;
                             }
                             break;
-                        case "plus.png1":
-                            break;
-                        case "minus.png1":
-                            break;
-
                     }
                 }
             }
         }
     }
 
-    public void resumeGame(){}
+    public void resumeGame(){
+
+    }
     public void accessControls(Window window) {
         if (controls_accessed) {
             glClear(GL_COLOR_BUFFER_BIT);
-            Shader shader = new Shader("project/assets/shader");
-            Texture controlsTexture = new Texture("project/assets/Keyboard_asset.png");
+            Shader shader = new Shader("assets/shader");
+            Texture controlsTexture = new Texture("assets/Keyboard_asset.png");
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-            vertices[0] *= controlsTexture.getWidth() * 0.0007;
-            vertices[3] *= controlsTexture.getWidth() * 0.0007;
-            vertices[6] *= controlsTexture.getWidth() * 0.0007;
-            vertices[9] *= controlsTexture.getWidth() * 0.0007;
-
-            vertices[1] *= controlsTexture.getHeight() * 0.0025;
-            vertices[4] *= controlsTexture.getHeight() * 0.0025;
-            vertices[7] *= controlsTexture.getHeight() * 0.0025;
-            vertices[10] *= controlsTexture.getHeight() * 0.0025;
+            vertices = this.alterVertices(vertices, controlsTexture.getHeight(), controlsTexture.getWidth(), 0.0007, 0.0025);
             Model model = new Model(vertices, textureDocks, indices);
             Matrix4f scale = new Matrix4f();
             this.renderImage(shader, controlsTexture, 0, 0, scale, model);
@@ -242,56 +239,45 @@ public class Main {
     public void accessSettings(Window window){
         if (settings_accessed)  {
             glClear(GL_COLOR_BUFFER_BIT);
-            Shader shader = new Shader("project/assets/shader");
-            Texture[] settingsTextures = new Texture[]{new Texture("project/assets/brightness_button.png"), new Texture("project/assets/volume_button.png")};
+            Shader shader = new Shader("assets/shader");
+            Texture[] settingsTextures = new Texture[]{new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
             Matrix4f scale = new Matrix4f();
             float y = 0;
             for (Texture t : settingsTextures)   {
                 float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-                vertices[0] *= t.getWidth() * 0.002;
-                vertices[3] *= t.getWidth() * 0.002;
-                vertices[6] *= t.getWidth() * 0.002;
-                vertices[9] *= t.getWidth() * 0.002;
-
-                vertices[1] *= t.getHeight() * 0.005;
-                vertices[4] *= t.getHeight() * 0.005;
-                vertices[7] *= t.getHeight() * 0.005;
-                vertices[10] *= t.getHeight() * 0.005;
+                vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
                 Model model = new Model(vertices, textureDocks, indices);
                 this.renderImage(shader, t, -0.5f, y, scale, model);
                 y -= -0.35f;
             }
 
-            Texture[] audioTextures = new Texture[]{new Texture("project/assets/volume_assets/0.png"), new Texture("project/assets/volume_assets/1.png"),new Texture("project/assets/volume_assets/2.png"),
-                    new Texture("project/assets/volume_assets/3.png"), new Texture("project/assets/volume_assets/4.png"), new Texture("project/assets/volume_assets/5.png"),
-                    new Texture("project/assets/volume_assets/plus.png"), new Texture("project/assets/volume_assets/minus.png"),};
+            Texture[] audioTextures = new Texture[]{new Texture("assets/volume_assets/0.png"), new Texture("assets/volume_assets/1.png"),new Texture("assets/volume_assets/2.png"),
+                    new Texture("assets/volume_assets/3.png"), new Texture("assets/volume_assets/4.png"), new Texture("assets/volume_assets/5.png"),
+                    new Texture("assets/volume_assets/plus.png"), new Texture("assets/volume_assets/minus.png"), new Texture("assets/volume_assets/plus1.png"), new Texture("assets/volume_assets/minus1.png")};
 
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-            vertices[0] *= audioTextures[6].getWidth() * 0.002;
-            vertices[3] *= audioTextures[6].getWidth() * 0.002;
-            vertices[6] *= audioTextures[6].getWidth() * 0.002;
-            vertices[9] *= audioTextures[6].getWidth() * 0.002;
-
-            vertices[1] *= audioTextures[6].getHeight() * 0.005;
-            vertices[4] *= audioTextures[6].getHeight() * 0.005;
-            vertices[7] *= audioTextures[6].getHeight() * 0.005;
-            vertices[10] *= audioTextures[6].getHeight() * 0.005;
+            vertices = this.alterVertices(vertices, audioTextures[6].getWidth(), audioTextures[6].getHeight(), 0.002, 0.005);
 
             Model model = new Model(vertices, textureDocks, indices);
             this.renderImage(shader, audioTextures[6], 0f, 0.35f, scale, model);
             this.addButton(0 + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[6].getPath());
             this.renderImage(shader, audioTextures[7], 0.5f, 0.35f, scale, model);
             this.addButton(0.5f + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[7].getPath());
-            this.renderImage(shader, audioTextures[6], 0f, 0f, scale, model);
-            this.addButton(0 + vertices[0], 0f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[6].getPath()+"1");
-            this.renderImage(shader, audioTextures[7], 0.5f, 0f, scale, model);
-            this.addButton(0.5f + vertices[0], 0f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[7].getPath()+"1");
+            this.renderImage(shader, audioTextures[8], 0f, 0f, scale, model);
+            this.addButton(0 + vertices[0], 0f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[8].getPath());
+            this.renderImage(shader, audioTextures[9], 0.5f, 0f, scale, model);
+            this.addButton(0.5f + vertices[0], 0f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[9].getPath());
 
             for (Texture t: audioTextures)  {
                 if (t.getPath().contains(Integer.toString(volume))) {
                     this.renderImage(shader, t, 0.25f, 0.35f, scale, model);
                 }
+                else if (t.getPath().contains(Integer.toString(brightness))) {
+                    this.renderImage(shader, t, 0.25f, 0f, scale, model);
+                }
             }
+
+
             if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
                 settings_accessed = false;
             }
@@ -301,6 +287,19 @@ public class Main {
         System.exit(1);
     }
 
+
+    public float[] alterVertices(float[] vertices, int height, int width, double widthScale, double heightScale) {
+        vertices[0] *= width * widthScale;
+        vertices[3] *= width * widthScale;
+        vertices[6] *= width * widthScale;
+        vertices[9] *= width * widthScale;
+
+        vertices[1] *= height * heightScale;
+        vertices[4] *= height * heightScale;
+        vertices[7] *= height * heightScale;
+        vertices[10] *= height * heightScale;
+        return vertices;
+    }
 
 
 }
