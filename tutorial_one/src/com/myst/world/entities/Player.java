@@ -119,8 +119,9 @@ public class Player {
         volume = volume + change;
     }
 
-    public void playSound(String clipName, Vector2f location) {
-        Audio.getAudio().play(clipName, location);
-    }
+    // called by networking when something should play
+    //public void playSound(String clipName, Vector2f location) {
+    //    Audio.getAudio().play(clipName, location);
+    //}
     // TODO
 }

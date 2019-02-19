@@ -8,10 +8,10 @@ import java.io.IOException;
 
 public class Audio {
 
-    public static final String THEME_CLIP = "theme";
-    public static final String GUN_CLIP = "gun";
-    public static final String HIT_CLIP = "hit";
-    public static final String FOOTSTEPS_CLIP = "footsteps";
+    public static final String THEME = "theme";
+    public static final String GUN = "gun";
+    public static final String HIT = "hit";
+    public static final String FOOTSTEPS = "footsteps";
 
     public static final String WAV = ".wav";
     public static final String PATH = "assets/sounds/";
@@ -19,12 +19,20 @@ public class Audio {
     public static final int MIN_VOLUME = 0;
     public static final int MAX_VOLUME = 5;
 
-    File theme = new File (PATH + THEME_CLIP + WAV);
-    File gun = new File (PATH + GUN_CLIP + WAV);
-    File hit = new File (PATH + HIT_CLIP + WAV);
-    File footsteps = new File (PATH + FOOTSTEPS_CLIP + WAV);
+    File theme = new File (PATH + THEME + WAV);
+    File gun = new File (PATH + GUN + WAV);
+    File hit = new File (PATH + HIT + WAV);
+    File footsteps = new File (PATH + FOOTSTEPS + WAV);
 
-    AudioInputStream audioStream;
+    AudioInputStream themeStream;
+    AudioInputStream gunStream;
+    AudioInputStream hitStream;
+    AudioInputStream footstepsStream;
+
+    boolean muted = false;
+
+    //AudioFormat format = audioStream.getFormat();
+    //DataLine.Info info = new DataLine.Info(Clip.class, format);
 
     Clip themeClip;
     Clip gunClip;
@@ -39,21 +47,21 @@ public class Audio {
 
     private Audio() {
         try {
-            audioStream = AudioSystem.getAudioInputStream(theme);
+            themeStream = AudioSystem.getAudioInputStream(theme);
             themeClip = AudioSystem.getClip();
-            themeClip.open(audioStream);
+            themeClip.open(themeStream);
 
-            audioStream = AudioSystem.getAudioInputStream(gun);
+            gunStream = AudioSystem.getAudioInputStream(gun);
             gunClip = AudioSystem.getClip();
-            gunClip.open(audioStream);
+            gunClip.open(gunStream);
 
-            audioStream = AudioSystem.getAudioInputStream(hit);
+            hitStream = AudioSystem.getAudioInputStream(hit);
             hitClip = AudioSystem.getClip();
-            hitClip.open(audioStream);
+            hitClip.open(hitStream);
 
-            audioStream = AudioSystem.getAudioInputStream(footsteps);
+            footstepsStream = AudioSystem.getAudioInputStream(footsteps);
             footstepsClip = AudioSystem.getClip();
-            footstepsClip.open(audioStream);
+            footstepsClip.open(footstepsStream);
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -70,10 +78,18 @@ public class Audio {
 
     // Object Sender
     public void mute() {
-        if (themeClip.isRunning())
+        muted = !muted;
+
+        if(muted) {
             themeClip.stop();
-        else
+            gunClip.stop();
+            hitClip.stop();
+            footstepsClip.stop();
+        }
+        else {
             themeClip.start();
+        }
+
     }
 
     // Object Sender
@@ -104,19 +120,23 @@ public class Audio {
         themeClip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
-    public void play(String clipName, Vector2f location) {
-        if (themeClip.isRunning()) {
+    // later with ", Vector2f location"
+    public void play(String clipName) {
+        if (!muted) {
             switch(clipName) {
-                case GUN_CLIP:
+                case GUN:
                     // TODO - check location, get volume
+                    gunClip.loop(0);
                     gunClip.start();
                     break;
-                case HIT_CLIP:
+                case HIT:
                     // TODO - check location, get volume
+                    hitClip.loop(0);
                     hitClip.start();
                     break;
-                case FOOTSTEPS_CLIP:
+                case FOOTSTEPS:
                     // TODO - check location, get volume
+                    footstepsClip.loop(0);
                     footstepsClip.start();
                     break;
                 default:
@@ -128,9 +148,6 @@ public class Audio {
     }
 
     public int getVolume(String clipName, Vector2f soundLocation) {
-
-
-
         int volume = Player.getVolume();
         // TODO - calculate how far it is (0-1) * how high the volume is (0-5)
         return volume;

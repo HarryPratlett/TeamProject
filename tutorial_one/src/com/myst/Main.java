@@ -13,6 +13,7 @@ import com.myst.world.map.rendering.Shader;
 import com.myst.world.map.rendering.Tile;
 
 import com.myst.world.map.rendering.TileRenderer;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
 import org.joml.Matrix4f;
 
@@ -20,8 +21,9 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
-import static com.myst.audio.Audio.THEME_CLIP;
+import static com.myst.audio.Audio.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -83,9 +85,13 @@ public class Main {
 
         // TODO
         Audio.getAudio().theme();
+        /*
+        // later with location
+        //Audio.getAudio().play(FOOTSTEPS);
+        //Audio.getAudio().play(GUN);
+        //Audio.getAudio().play(HIT);
+        */
         // TODO
-
-
 
         world.setTile(test_tile2.setSolid(),5,0 );
         world.setTile(test_tile2.setSolid(),6,0 );
@@ -166,7 +172,6 @@ public class Main {
                 frames = 0;
             }
 
-
             debugCurrentTime = Timer.getTime();
             double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
             debugLastTime = debugCurrentTime;
@@ -181,7 +186,6 @@ public class Main {
 //                tiles.renderTile(test_tile,new TileCoords(0,0),shader, new Matrix4f().scale(30),camera);
 
                 world.render(shader,camera, window);
-
 
                 player.render(shader,camera);
 
