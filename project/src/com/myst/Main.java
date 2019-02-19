@@ -9,6 +9,7 @@ import com.myst.world.World;
 import com.myst.world.entities.Player;
 import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
+import com.myst.GUI.*;
 
 import com.myst.world.map.rendering.TileRenderer;
 import org.joml.Vector3f;
@@ -168,6 +169,10 @@ public class Main {
         camera.bindPlayer(player);
 
         while (!window.shouldClose()){
+            if (window.getInput().isKeyPressed(GLFW_KEY_M)) {
+                GUI.main(new String[]{});
+                glClear(GL_COLOR_BUFFER_BIT);
+            }
             renderFrame = false;
 
             double time2 = Timer.getTime();

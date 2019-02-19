@@ -39,12 +39,14 @@ public class GUI {
 
     private Boolean controls_accessed;
     private Boolean settings_accessed;
+    private Boolean close_window;
     int volume;
     int brightness;
 
     public GUI()    {
         controls_accessed = false;
         settings_accessed = false;
+        close_window = false;
         volume = 3;
         brightness = 3;
     }
@@ -93,7 +95,12 @@ public class GUI {
                 GUI.checkButtons(window);
             }
             window.swapBuffers();
+            glfwPollEvents();
 
+            if (GUI.close_window)   {
+                glClear(GL_COLOR_BUFFER_BIT);
+                return;
+            }
             try {
                 Thread.sleep(  100);
             }
@@ -101,6 +108,7 @@ public class GUI {
                 System.exit(1);
             }
         }
+
 
     }
 
@@ -142,7 +150,6 @@ public class GUI {
     }
 
     public void addButton(float x, float y, float width, float height, String filepath) {
-
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
         if(settings_accessed)  {
             settings_buttons.put(bounds, filepath);
@@ -161,10 +168,9 @@ public class GUI {
 
             if (mouseX >= b.getX() && mouseX <= (b.getX()+b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY()-b.getHeight()))  {
                 if (window.getInput().isMouseButtonDown(GLFW_MOUSE_BUTTON_1)){
-
                     String buttonName = buttons.get(b);
                     switch(buttonName) {
-                        case "resume_button.png": this.resumeGame();
+                        case "resume_button.png": this.resumeGame(window);
                             break;
                         case "controls_button.png": this.accessControls(window);
                             controls_accessed = true;
@@ -191,25 +197,16 @@ public class GUI {
                     String buttonName = settings_buttons.get(b);
                     switch(buttonName)  {
                         case "plus1.png":
-                            if (brightness < 5) {
-                                brightness += 1;
-                            }
+                            if (brightness < 5) { brightness += 1; }
                             break;
                         case "minus1.png":
-                            if (brightness > 0) {
-                                brightness -= 1;
-                            }
+                            if (brightness > 0) { brightness -= 1; }
                             break;
                         case "plus.png":
-                            if (volume < 5) {
-                                volume += 1;
-
-                            }
+                            if (volume < 5) { volume += 1;  }
                             break;
                         case "minus.png":
-                            if (volume > 0) {
-                                volume -= 1;
-                            }
+                            if (volume > 0) { volume -= 1; }
                             break;
                     }
                 }
@@ -217,7 +214,8 @@ public class GUI {
         }
     }
 
-    public void resumeGame(){
+    public void resumeGame(Window window){
+        this.close_window = true;
 
     }
     public void accessControls(Window window) {
@@ -252,27 +250,28 @@ public class GUI {
             }
 
             Texture[] audioTextures = new Texture[]{new Texture("assets/volume_assets/0.png"), new Texture("assets/volume_assets/1.png"),new Texture("assets/volume_assets/2.png"),
-                    new Texture("assets/volume_assets/3.png"), new Texture("assets/volume_assets/4.png"), new Texture("assets/volume_assets/5.png"),
-                    new Texture("assets/volume_assets/plus.png"), new Texture("assets/volume_assets/minus.png"), new Texture("assets/volume_assets/plus1.png"), new Texture("assets/volume_assets/minus1.png")};
+                    new Texture("assets/volume_assets/3.png"), new Texture("assets/volume_assets/4.png"), new Texture("assets/volume_assets/5.png")};
+
+            Texture[] alterTextures = new Texture[]{new Texture ("assets/volume_assets/plus.png"), new Texture("assets/volume_assets/minus.png"), new Texture("assets/volume_assets/plus1.png"), new Texture("assets/volume_assets/minus1.png")};
 
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-            vertices = this.alterVertices(vertices, audioTextures[6].getWidth(), audioTextures[6].getHeight(), 0.002, 0.005);
+            vertices = this.alterVertices(vertices, alterTextures[0].getWidth(), alterTextures[0].getHeight(), 0.002, 0.005);
 
             Model model = new Model(vertices, textureDocks, indices);
-            this.renderImage(shader, audioTextures[6], 0f, 0.35f, scale, model);
-            this.addButton(0 + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[6].getPath());
-            this.renderImage(shader, audioTextures[7], 0.5f, 0.35f, scale, model);
-            this.addButton(0.5f + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[7].getPath());
-            this.renderImage(shader, audioTextures[8], 0f, 0f, scale, model);
-            this.addButton(0 + vertices[0], 0f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[8].getPath());
-            this.renderImage(shader, audioTextures[9], 0.5f, 0f, scale, model);
-            this.addButton(0.5f + vertices[0], 0f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], audioTextures[9].getPath());
+            this.renderImage(shader, alterTextures[0], 0f, 0.35f, scale, model);
+            this.addButton(0 + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], alterTextures[0].getPath());
+            this.renderImage(shader, alterTextures[1], 0.5f, 0.35f, scale, model);
+            this.addButton(0.5f + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], alterTextures[1].getPath());
+            this.renderImage(shader, alterTextures[2], 0f, 0f, scale, model);
+            this.addButton(0 + vertices[0], 0f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], alterTextures[2].getPath());
+            this.renderImage(shader, alterTextures[3], 0.5f, 0f, scale, model);
+            this.addButton(0.5f + vertices[0], 0f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], alterTextures[3].getPath());
 
             for (Texture t: audioTextures)  {
                 if (t.getPath().contains(Integer.toString(volume))) {
                     this.renderImage(shader, t, 0.25f, 0.35f, scale, model);
                 }
-                else if (t.getPath().contains(Integer.toString(brightness))) {
+                if (t.getPath().contains(Integer.toString(brightness))) {
                     this.renderImage(shader, t, 0.25f, 0f, scale, model);
                 }
             }
