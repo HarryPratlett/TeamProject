@@ -172,6 +172,7 @@ public class Main {
             if (window.getInput().isKeyPressed(GLFW_KEY_M)) {
                 GUI.main(new String[]{});
                 glClear(GL_COLOR_BUFFER_BIT);
+                window.update();
             }
             renderFrame = false;
 

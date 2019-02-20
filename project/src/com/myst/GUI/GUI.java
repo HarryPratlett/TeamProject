@@ -95,11 +95,10 @@ public class GUI {
                 GUI.checkButtons(window);
             }
             window.swapBuffers();
-            glfwPollEvents();
 
             if (GUI.close_window)   {
+                glfwSetWindowShouldClose(window.getWindow(), true);
                 glClear(GL_COLOR_BUFFER_BIT);
-                return;
             }
             try {
                 Thread.sleep(  100);
