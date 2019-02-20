@@ -109,9 +109,10 @@ public class Main {
         Player player = new Player();
         player.localID = 1;
         player.owner = clientID;
+        
         Bot bot = new Bot(new float[]{
-                -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
-                -0.5f, -0.5f, 0f/*3*/
+                -0.5f, 0.5f, 0f, 0.5f, 0.5f, 0f,    0.5f, -0.5f, 0f,
+                -0.5f, -0.5f, 0f
     },
             new float[] {
             0f, 0f,   1, 0f,  1f, 1f,
@@ -125,7 +126,7 @@ public class Main {
 
         bot.localID = 2;
         bot.owner = cpuID;
-      
+        bot.initialiseAI(world);
         player.transform.pos.add(new Vector3f(1,-1,0));
         bot.transform.pos.add(new Vector3f(5,-1,0));
         Camera camera = new Camera(window.getWidth(), window.getHeight());

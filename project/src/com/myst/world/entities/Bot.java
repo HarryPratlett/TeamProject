@@ -26,12 +26,17 @@ public class Bot extends Entity {
 	}
 
 	public void initialiseAI(World world) {
-		intelligence = new AI(position, world);
+		intelligence = new AI(world);
 	}
 	
 	@Override
 	public void update(float deltaTime, Window window, Camera camera, World world) {
-		//add enemy detection method here, so constantly checks for enemies as well as randomly turning on flashlight.
+		if(intelligence.enemyDetection()) {
+			attack(world);
+			if(attack(world)) {
+				//add server sending here
+			}
+		}
 		this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
 			
 	    AABB[] boxes = new AABB[25];
@@ -89,24 +94,37 @@ public class Bot extends Entity {
 			else if(this.position.x == point.x && this.position.y == point.y) {
 				path.remove(0);
 			}
-			position = point;
+			position = new Vector2f(transform.pos.x, transform.pos.y);
 		}
 	}
 	
 	public void setPath(Vector2f goal) {
-		path = intelligence.pathFind(goal);
+		path = intelligence.pathFind(position, goal);
 		System.out.print(path);
 	}
 	
 	public ArrayList<Vector2f> getPath(){
 		return path;
 	}
-
+	
 	@Override
-	public boolean attack(World world) {
-		return isKillable();
-		// TODO Auto-generated method stub
-		
+	public boolean attack(World world, int entityID) {
+		AABB[] line = new AABB[100];
+		for (int i = 0; i < line.length; i++) {
+			int x = (int) transform.pos.x + i;
+			int y = (int) transform.pos.y + i;
+			line[i] = world.getBoundingBox(x,y);
+		}
+			
+		for(int i = 0; i< line.length; i++) {
+			if(line[i] != null) {
+				Collision collision = boundingBox.getCollision(line[i]);
+				if(collision.isIntersecting) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }

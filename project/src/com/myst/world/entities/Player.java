@@ -1,6 +1,7 @@
 package com.myst.world.entities;
 
 import java.awt.geom.Line2D;
+import java.util.HashMap;
 
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
@@ -28,7 +29,7 @@ public class Player extends Entity{
 //    private static final float[] textureFloats =
 //
 //    private static final int[] indices = ;
-
+    
     public Player(){
         super(new float[]{
             -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
@@ -45,7 +46,6 @@ public class Player extends Entity{
 
         new Vector2f(0.5f,0.5f), new Shader("project/assets/Shader"));
         this.type = PLAYER;
-
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world) {
@@ -64,11 +64,10 @@ public class Player extends Entity{
             transform.pos.y += -MOVEMENT_SPEED * deltaTime;
         }
         if(window.getInput().isMouseButtonDown(0)) {
-        	if(attack(world)) {
+        	if(attack(world), )) {
         		//add code to send hit confirmation to server
         	}
         }
-
         //now that the co-ordinate system has been redone this needs redoing
         this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
 
@@ -86,30 +85,31 @@ public class Player extends Entity{
 
         for (int i = 0; i < boxes.length; i++) {
             if (boxes[i] != null) {
-                Collision data = boundingBox.getCollision(boxes[i]);
-                if (data.isIntersecting) {
-                    boundingBox.correctPosition(boxes[i], data);
-                    transform.pos.set(boundingBox.getCentre(), 0);
-                    boundingBox.getCentre().set(transform.pos.x, transform.pos.y);
+                for(int j = 0; j < entities.keySet().size(); j++) {
+            		Collision data = boundingBox.getCollision(boxes[i]);
+            		if (data.isIntersecting) {
+            			boundingBox.correctPosition(boxes[i], data);
+            			transform.pos.set(boundingBox.getCentre(), 0);
+            			boundingBox.getCentre().set(transform.pos.x, transform.pos.y);
+            		}
                 }
             }
         }
-
     }
 
 	@Override
-	public boolean attack(World world) {
-		
+	public boolean attack(World world, int entityID) {
+		//need to add orientation changes i.e. if player is facing towards negative, make line along negative axis.
 		AABB[] line = new AABB[(int) transform.pos.x + 100];
 		for (int i = 0; i < line.length; i++) {
 			int x = (int) transform.pos.x + i;
-			int y = (int) transform.pos.y + i;
-			line[i] = world.getBoundingBox(x,y);
+			int y = (int) -transform.pos.y + i;
+			line[i] = new AABB(new Vector2f(x,-y),new Vector2f(0f,0f));
 		}
 		
 		for(int i = 0; i< line.length; i++) {
 			if(line[i] != null) {
-				Collision collision = boundingBox.getCollision(line[i]);
+				Collision collision = entities.get(entityID).boundingBox.getCollision(line[i]);
 				if(collision.isIntersecting) {
 					return true;
 				}

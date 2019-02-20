@@ -13,6 +13,7 @@ import com.myst.world.view.Camera;
 import com.myst.world.view.Transform;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 public abstract class Entity implements Serializable {
     protected Model model;
@@ -24,7 +25,8 @@ public abstract class Entity implements Serializable {
     public String owner;
     public Integer localID;
     private boolean killable;
-
+    protected HashMap<Integer, Entity> entities;
+    
     public Entity(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords, Shader shader){
         model = new Model(vertices, texture, indices);
         this.texture = new Texture("assets/survivor1_hold.png");
@@ -33,6 +35,7 @@ public abstract class Entity implements Serializable {
         transform = new Transform();
         transform.scale = new Vector3f(1,1,1);
         boundingBox = new AABB(new Vector2f(transform.pos.x, transform.pos.y), boundingBoxCoords);
+        //add code that receives entity list from server
     }
 
     public abstract void update(float deltaTime, Window window, Camera camera, World world);
@@ -62,7 +65,7 @@ public abstract class Entity implements Serializable {
         this.boundingBox = data.boundingBox;
     }
     
-    public abstract boolean attack(World world);
+    public abstract boolean attack(World world, int entityID);
     
     public boolean isKillable() {
 		return killable;
