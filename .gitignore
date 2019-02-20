@@ -4,5 +4,9 @@
 out/
 *.mvn
 *.iml
+<<<<<<< HEAD
 *.project
 *.classpath
+=======
+bin/
+>>>>>>> afac6b9cd4dcc7c00aa5b988b8f420b525846bb7
