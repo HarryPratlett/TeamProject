@@ -190,7 +190,7 @@ public class GUI {
                         Thread.sleep(50);
                     }
                     catch(Exception e)  {
-                        System.out.println(e);
+                        e.printStackTrace();
                     }
                     String buttonName = settings_buttons.get(b);
                     switch(buttonName)  {
