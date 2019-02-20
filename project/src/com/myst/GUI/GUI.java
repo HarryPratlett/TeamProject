@@ -7,33 +7,31 @@ import com.myst.rendering.Window;
 import com.myst.rendering.Shader;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL;
 import java.util.HashMap;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+
 
 
 public class GUI {
 
-    HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
-    HashMap<Rectangle2D.Float, String> settings_buttons = new HashMap<>();
+    private HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
+    private HashMap<Rectangle2D.Float, String> settings_buttons = new HashMap<>();
 
-    final float[] baseVertices = new float[] {
+    private final float[] baseVertices = new float[] {
             -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
             -1f, -0.5f, 0f/*3*/
     };
 
-    float[] textureDocks = new float[] {
+    private float[] textureDocks = new float[] {
             0f, 0f,   1, 0f,  1f, 1f,
             0f, 1f
     };
 
-    int[] indices = new int[] {
+    private int[] indices = new int[] {
             0,1,2,
             2,3,0
     };
@@ -45,8 +43,8 @@ public class GUI {
     private Boolean close_window;
     private Shader shader;
     private Input input;
-    int volume;
-    int brightness;
+    private int volume;
+    private int brightness;
 
     public GUI(Window window, Input input)    {
         controls_accessed = false;
@@ -188,6 +186,12 @@ public class GUI {
 
             if (mouseX >= b.getX() && mouseX <= (b.getX() + b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY() - b.getHeight())) {
                 if (window.getInput().isMousePressed(GLFW_MOUSE_BUTTON_1)) {
+                    try {
+                        Thread.sleep(50);
+                    }
+                    catch(Exception e)  {
+                        System.out.println(e);
+                    }
                     String buttonName = settings_buttons.get(b);
                     switch(buttonName)  {
                         case "plus1.png":
@@ -232,6 +236,11 @@ public class GUI {
         Texture[] settingsTextures = new Texture[]{new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
         Matrix4f scale = new Matrix4f();
         float y = 0;
+        Texture menuTexture = new Texture("assets/settings_button.png");
+        float[] titleVertices = Arrays.copyOf(baseVertices, baseVertices.length);
+        titleVertices = this.alterVertices(titleVertices, menuTexture.getHeight(), menuTexture.getWidth(), 0.002, 0.005);
+        Model titleModel = new Model(titleVertices, textureDocks, indices);
+        this.renderImage(shader, menuTexture, 0, 0.75f, scale, titleModel);
         for (Texture t : settingsTextures)   {
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
