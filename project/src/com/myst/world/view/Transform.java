@@ -3,7 +3,9 @@ package com.myst.world.view;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public class Transform {
+import java.io.Serializable;
+
+public class Transform implements Serializable {
     public Vector3f pos;
     public Vector3f scale;
 
