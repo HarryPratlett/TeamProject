@@ -1,5 +1,6 @@
 package com.myst.world.entities;
 
+import com.myst.audio.Audio;
 import com.myst.rendering.Shader;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;

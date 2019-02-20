@@ -111,7 +111,7 @@ public class Main {
         player.localID = 1;
         player.owner = clientID;
 
-        Audio audio = new Audio();
+        Audio audio = new Audio(window.getInput());
         audio.theme();
 
         player.transform.pos.add(new Vector3f(1,-1,0));
@@ -165,6 +165,8 @@ public class Main {
                     glfwSetWindowShouldClose(window.getWindow(),true);
                 }
                 camera.updatePosition();
+
+                audio.update();
 
             }
 

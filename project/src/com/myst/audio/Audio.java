@@ -1,5 +1,7 @@
 package com.myst.audio;
+import com.myst.input.Input;
 import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFW;
 
 import javax.sound.sampled.*;
 import java.io.File;
@@ -19,6 +21,8 @@ public class Audio {
     public static final int MAX_VOLUME = 5;
     boolean muted = false;
     int volume = 3;
+
+    private Input input;
 
     File theme = new File (PATH + THEME + WAV);
     File gun = new File (PATH + GUN + WAV);
@@ -44,7 +48,8 @@ public class Audio {
 //        return audio;
 //    }
 
-    public Audio() {
+    public Audio(Input input) {
+        this.input = input;
         try {
             themeStream = AudioSystem.getAudioInputStream(theme);
             themeClip = AudioSystem.getClip();
@@ -73,6 +78,12 @@ public class Audio {
     public static double getPythagoras(int x, int y) {
         double res = Math.sqrt(x ^ 2 + y ^ 2);
         return res;
+    }
+
+    public void update(){
+        if(input.isKeyPressed(GLFW.GLFW_KEY_M)){
+            mute();
+        }
     }
 
     // Object Sender
