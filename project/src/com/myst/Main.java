@@ -65,6 +65,8 @@ public class Main {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        glfwSetCursorPosCallback(window.getWindow(), window.getInput());
+
 
 //        glfwSetWindowPos(window,(videoMode.width() - 640) / 2, (videoMode.height() - 480) / 2);
 
@@ -128,8 +130,7 @@ public class Main {
 
 
 
-
-
+        GUI gui = new GUI(window,window.getInput());
 
 
 
@@ -169,11 +170,7 @@ public class Main {
         camera.bindPlayer(player);
 
         while (!window.shouldClose()){
-            if (window.getInput().isKeyPressed(GLFW_KEY_M)) {
-                GUI.main(new String[]{});
-                glClear(GL_COLOR_BUFFER_BIT);
-                window.update();
-            }
+
             renderFrame = false;
 
             double time2 = Timer.getTime();
@@ -189,16 +186,14 @@ public class Main {
             while (unprocessed >= frame_cap) {
 //                look into effects of containing a thread.sleep();
 
+                window.update();
 //                take away the frame cap so that you account for the time you've taken of the next frame
                 unprocessed -= frame_cap;
 
                 renderFrame = true;
 
-                if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
-                    glfwSetWindowShouldClose(window.getWindow(),true);
-                }
                 camera.updatePosition();
-
+                gui.update();
 
 
 
@@ -219,7 +214,7 @@ public class Main {
 
             player.update((float) timeSinceLastUpdate, window, camera, world);
 
-            window.update();
+
 
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);
@@ -233,6 +228,8 @@ public class Main {
 //                }
 
                 player.render(camera);
+
+                gui.render();
 
                 window.swapBuffers();
 
