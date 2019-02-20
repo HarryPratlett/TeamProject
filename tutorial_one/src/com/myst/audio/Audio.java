@@ -103,7 +103,7 @@ public class Audio {
             if (volume >= MAX_VOLUME) {
                 // nothing
             } else {
-                volume = volume + change;;
+                volume = volume + change;
             }
         }
         /*
