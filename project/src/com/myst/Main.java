@@ -5,6 +5,9 @@ import com.myst.networking.EntityData;
 import com.myst.rendering.Shader;
 import com.myst.world.entities.Enemy;
 import com.myst.world.entities.Entity;
+import com.myst.world.lighting.Darkness;
+import com.myst.world.lighting.FlashlightOn;
+import com.myst.world.lighting.Lighting;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
@@ -51,7 +54,7 @@ public class Main {
 
         ClientConnection connection = new ClientConnection(entities, toRender,"127.0.0.1");
 
-        String clientID = "Base1";
+        String clientID = "Base2";
 
         connection.startConnection(clientID);
 
@@ -136,6 +139,11 @@ public class Main {
 
         camera.bindPlayer(player);
 
+        Darkness dark = new Darkness(window);
+
+
+        Lighting lights = new Lighting(window.getInput(), window);
+
         while (!window.shouldClose()){
 
             renderFrame = false;
@@ -152,16 +160,25 @@ public class Main {
 //            a while is used instead of an if incase the performance is less than 30 FPS
             while (unprocessed >= frame_cap) {
 //                look into effects of containing a thread.sleep();
-
 //                take away the frame cap so that you account for the time you've taken of the next frame
                 unprocessed -= frame_cap;
 
                 renderFrame = true;
 
+                window.update();
+
+
                 if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
                     glfwSetWindowShouldClose(window.getWindow(),true);
                 }
                 camera.updatePosition();
+                debugCurrentTime = Timer.getTime();
+                double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
+                debugLastTime = debugCurrentTime;
+
+                player.update((float) timeSinceLastUpdate, window, camera, world);
+                lights.update();
+
 
             }
 
@@ -172,13 +189,7 @@ public class Main {
             }
 
 
-            debugCurrentTime = Timer.getTime();
-            double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
-            debugLastTime = debugCurrentTime;
 
-            player.update((float) timeSinceLastUpdate, window, camera, world);
-
-            window.update();
 
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);
@@ -191,6 +202,9 @@ public class Main {
                     }
                 }
                 createAndRender(toRender, entities);
+
+                lights.render();
+                dark.render();
 
                 window.swapBuffers();
 
