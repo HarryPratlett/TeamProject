@@ -1,5 +1,4 @@
 package com.myst.audio;
-import com.myst.world.entities.Player;
 import org.joml.Vector2f;
 
 import javax.sound.sampled.*;
@@ -18,6 +17,8 @@ public class Audio {
 
     public static final int MIN_VOLUME = 0;
     public static final int MAX_VOLUME = 5;
+    boolean muted = false;
+    int volume = 3;
 
     File theme = new File (PATH + THEME + WAV);
     File gun = new File (PATH + GUN + WAV);
@@ -28,8 +29,6 @@ public class Audio {
     AudioInputStream gunStream;
     AudioInputStream hitStream;
     AudioInputStream footstepsStream;
-
-    boolean muted = false;
 
     //AudioFormat format = audioStream.getFormat();
     //DataLine.Info info = new DataLine.Info(Clip.class, format);
@@ -79,7 +78,6 @@ public class Audio {
     // Object Sender
     public void mute() {
         muted = !muted;
-
         if(muted) {
             themeClip.stop();
             gunClip.stop();
@@ -89,7 +87,6 @@ public class Audio {
         else {
             themeClip.start();
         }
-
     }
 
     // Object Sender
@@ -97,16 +94,16 @@ public class Audio {
         // TODO - something has to continuously check the volume
         // TODO - OR change it straight away
         if(change < MIN_VOLUME) {
-            if (Player.getVolume() <= MIN_VOLUME) {
+            if (volume <= MIN_VOLUME) {
                 // nothing
             } else {
-                Player.setVolume(change);
+                volume = volume + change;
             }
         } else {
-            if (Player.getVolume() >= MAX_VOLUME) {
+            if (volume >= MAX_VOLUME) {
                 // nothing
             } else {
-                Player.setVolume(change);
+                volume = volume + change;;
             }
         }
         /*
@@ -148,8 +145,8 @@ public class Audio {
     }
 
     public int getVolume(String clipName, Vector2f soundLocation) {
-        int volume = Player.getVolume();
+        int result = volume;
         // TODO - calculate how far it is (0-1) * how high the volume is (0-5)
-        return volume;
+        return result;
     }
 }

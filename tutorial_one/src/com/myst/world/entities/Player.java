@@ -22,10 +22,6 @@ public class Player {
     public Transform transform;
     private final float MOVEMENT_SPEED = 10f;
 
-    // TODO
-    public static int volume = 5;
-    // TODO
-
     public Player(){
 
         float[] vertices = new float[] {
@@ -106,7 +102,7 @@ public class Player {
         model.render();
     }
 
-    // TODO
+    /*
     public AABB getBoundingBox() {
         return boundingBox;
     }
@@ -119,9 +115,9 @@ public class Player {
         volume = volume + change;
     }
 
-    // called by networking when something should play
-    //public void playSound(String clipName, Vector2f location) {
-    //    Audio.getAudio().play(clipName, location);
-    //}
-    // TODO
+
+    public void playSound(String clipName, Vector2f location) {
+        Audio.getAudio().play(clipName, location);
+    }
+    */
 }
