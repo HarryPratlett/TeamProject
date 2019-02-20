@@ -1,5 +1,6 @@
 package com.myst;
 
+import com.myst.audio.Audio;
 import com.myst.helper.Timer;
 import com.myst.networking.EntityData;
 import com.myst.rendering.Shader;
@@ -110,6 +111,8 @@ public class Main {
         player.localID = 1;
         player.owner = clientID;
 
+        Audio audio = new Audio();
+        audio.theme();
 
         player.transform.pos.add(new Vector3f(1,-1,0));
 
