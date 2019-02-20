@@ -21,14 +21,6 @@ public class WorldCoords {
     }
 
     public TileCoords asTileCoords(float tileSize){
-        return new TileCoords((int) (-x / tileSize) , (int) (-y / tileSize));
-    }
-
-    public static int xAsTileCoords(float x, float scale){
-        return (int) (-x / scale);
-    }
-
-    public static int yAsTileCoords(float y, float scale){
-        return (int) (-y / scale);
+        return new TileCoords((int) x , (int) -y);
     }
 }

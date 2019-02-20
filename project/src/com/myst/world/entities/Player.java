@@ -100,7 +100,7 @@ public class Player extends Entity{
 	@Override
 	public boolean attack(World world, int entityID) {
 		//need to add orientation changes i.e. if player is facing towards negative, make line along negative axis.
-		AABB[] line = new AABB[(int) transform.pos.x + 100];
+		AABB[] line = new AABB[100];
 		for (int i = 0; i < line.length; i++) {
 			int x = (int) transform.pos.x + i;
 			int y = (int) -transform.pos.y + i;
