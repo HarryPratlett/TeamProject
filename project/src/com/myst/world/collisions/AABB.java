@@ -3,10 +3,11 @@ package com.myst.world.collisions;
 import com.myst.world.entities.Player;
 import org.joml.Vector2f;
 
+import java.io.Serializable;
+
 //axis aligned bounding box
-public class AABB {
+public class AABB implements Serializable{
     private Vector2f centre, halfExtent;
-    private Player player;
 
     public AABB(Vector2f centre, Vector2f halfExtent){
         this.centre = centre;

@@ -9,6 +9,8 @@ import com.myst.world.collisions.Collision;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
+import static com.myst.world.entities.EntityTypes.PLAYER;
+
 public class Player extends Entity{
 
     private final float MOVEMENT_SPEED = 10f;
@@ -34,6 +36,7 @@ public class Player extends Entity{
                 2,3,0
         },
         new Vector2f(0.5f,0.5f), new Shader("assets/Shader"));
+        this.type = PLAYER;
 
     }
 
