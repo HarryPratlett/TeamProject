@@ -30,14 +30,14 @@ public class Lighting {
     public void update(){
         switch(state){
             case FLASHLIGHT_ON:
-                if(input.isKeyPressed(GLFW.GLFW_KEY_F)){
+                if(input.isKeyPressed(GLFW.GLFW_KEY_L)){
                     state = LightingState.FLASHLIGHT_OFF;
                     System.out.println("I got here on");
                 }
 
                 break;
             case FLASHLIGHT_OFF:
-                if(input.isKeyPressed(GLFW.GLFW_KEY_F)){
+                if(input.isKeyPressed(GLFW.GLFW_KEY_L)){
                     state = LightingState.FLASHLIGHT_ON;
                     System.out.println("I got here off");
                 }
