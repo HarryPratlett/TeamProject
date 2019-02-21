@@ -158,7 +158,7 @@ public class Main {
 
       unprocessed += deltaTime;
       frame_time += deltaTime;
-
+      window.update();
       //            in the case you want to render a frame as you have gone over the frame_cap
       //            a while is used instead of an if incase the performance is less than 30 FPS
       while (unprocessed >= frame_cap) {
@@ -172,9 +172,6 @@ public class Main {
 
         window.update();
 
-        if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
-          glfwSetWindowShouldClose(window.getWindow(), true);
-        }
         camera.updatePosition();
         debugCurrentTime = Timer.getTime();
         double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
