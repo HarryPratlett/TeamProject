@@ -90,7 +90,7 @@ public class GUI {
     }
 
     public void hiddenInput(){
-        if (this.input.isKeyPressed(GLFW_KEY_B)) {
+        if (this.input.isKeyPressed(GLFW_KEY_ESCAPE)) {
             System.out.println("trying to go to menu");
             currentWindow = GUIStates.MAIN_MENU;
         }
