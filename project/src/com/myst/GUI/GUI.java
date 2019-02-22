@@ -26,30 +26,26 @@ public class GUI {
             -1f, -0.5f, 0f/*3*/
     };
 
-    private float[] textureDocks = new float[] {
+    private final float[] textureDocks = new float[] {
             0f, 0f,   1, 0f,  1f, 1f,
             0f, 1f
     };
 
-    private int[] indices = new int[] {
+    private final int[] indices = new int[] {
             0,1,2,
             2,3,0
     };
 
     private Window window;
     private GUIStates currentWindow;
-    private Boolean controls_accessed;
     private Boolean settings_accessed;
-    private Boolean close_window;
     private Shader shader;
     private Input input;
     private int volume;
     private int brightness;
 
     public GUI(Window window, Input input)    {
-        controls_accessed = false;
         settings_accessed = false;
-        close_window = false;
         volume = 3;
         brightness = 3;
         currentWindow = GUIStates.HIDDEN;
@@ -102,7 +98,7 @@ public class GUI {
         }
     }
 
-    public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
+    void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
         Matrix4f target = new Matrix4f();
@@ -162,7 +158,6 @@ public class GUI {
                         case "resume_button.png": this.currentWindow = GUIStates.HIDDEN;
                             break;
                         case "controls_button.png": this.currentWindow = GUIStates.CONTROLS;
-                            controls_accessed = true;
                             break;
                         case "settings_button.png": this.currentWindow = GUIStates.SETTINGS;
                             settings_accessed = true;
@@ -276,14 +271,9 @@ public class GUI {
                 this.renderImage(shader, t, 0.25f, 0f, scale, model);
             }
         }
-
-
-
-
     }
 
-
-    public void exitGame()  {
+    private void exitGame()  {
         System.exit(1);
     }
 
@@ -300,6 +290,5 @@ public class GUI {
         vertices[10] *= height * heightScale;
         return vertices;
     }
-
 
 }
