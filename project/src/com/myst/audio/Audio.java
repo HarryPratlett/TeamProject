@@ -1,27 +1,35 @@
 package com.myst.audio;
-import com.myst.Main;
 import com.myst.input.Input;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 import javax.sound.sampled.*;
+import javax.xml.stream.Location;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 public class Audio {
+
+    Vector2f playerLocation;
+    Vector2f soundLocation;
 
     public static final String THEME = "theme";
     public static final String GUN = "gun";
     public static final String HIT = "hit";
     public static final String FOOTSTEPS = "footsteps";
 
-    public static final String WAV = ".wav";
-    public static final String PATH = "assets/sounds/";
+    private final String WAV = ".wav";
+    private final String PATH = "assets/sounds/";
+
+    public static final int MAP_LENGTH = 100;
+    public static final double MAP_WIDTH = 100;
+    private final double GUN_DIST = 100;
+    private final double HIT_DIST = 50;
+    private final double FOOTSTEPS_DIST = 20;
+    private double distance;
 
     public static final int MIN_VOLUME = 0;
     public static final int MAX_VOLUME = 5;
-
     boolean muted = false;
     int volume = 3;
 
@@ -110,6 +118,13 @@ public class Audio {
         return res;
     }
 
+    public static double calculateDistance(Vector2f playerLocation, Vector2f soundLocation) {
+        double x = playerLocation.x - soundLocation.x;
+        double y = playerLocation.y - soundLocation.y;
+        double res = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return res;
+    }
+
     // Object Sender
     public void mute() {
         muted = !muted;
@@ -162,25 +177,23 @@ public class Audio {
         themeClip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
-    // later with ", Vector2f location"
-    public void play(String clipName) {
+    public void play(String clipName) { //, Vector2f playerLocation, Vector2f soundLocation) {
         if (!muted) {
             switch (clipName) {
                 case GUN:
-                    // TODO - check location, get volume
-                    gunClip.loop(0);
-
+                    if (calculateDistance(playerLocation, soundLocation) < GUN_DIST) {
+                        gunClip.loop(0);
+                    }
                     break;
                 case HIT:
-                    // TODO - check location, get volume
-                    hitClip.loop(0);
-
+                    if (calculateDistance(playerLocation, soundLocation) < HIT_DIST) {
+                        hitClip.loop(0);
+                    }
                     break;
                 case FOOTSTEPS:
                     // TODO - check location, get volume
                     if (footstepsClip.getFramePosition() >= footstepsClip.getFrameLength())
                         footstepsClip.setFramePosition(0);
-
                     footstepsClip.loop(0);
                     break;
                 default:
