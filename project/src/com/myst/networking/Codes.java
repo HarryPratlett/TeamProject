@@ -9,5 +9,5 @@ public enum Codes implements Serializable {
     NO_AVAILABLE_SPACES,
     ERROR,
     SUCCESS,
-    ID_UNAVAILABLE;
+    ID_UNAVAILABLE
 }

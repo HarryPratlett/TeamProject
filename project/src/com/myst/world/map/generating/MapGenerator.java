@@ -93,7 +93,7 @@ public class MapGenerator {
 
 		try {
 			BufferedImage tile_sheet = ImageIO
-					.read(new File("/assets/Tile_sheet/map.png"));
+					.read(new File("/assets/tile_sheet/map.png"));
 			// 100 * 100 PNG
 			// BufferedImage entity_sheet = ImageIO.read(new File(""));
 
