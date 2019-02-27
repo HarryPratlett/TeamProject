@@ -92,8 +92,8 @@ public class MapGenerator {
 		}
 
 		try {
-			BufferedImage tile_sheet = ImageIO
-					.read(new File("/assets/tile_sheet/map.png"));
+			File tileSheet = new File("assets/tile_sheet/map.png");
+			BufferedImage tile_sheet = ImageIO.read(tileSheet);
 			// 100 * 100 PNG
 			// BufferedImage entity_sheet = ImageIO.read(new File(""));
 
@@ -120,7 +120,6 @@ public class MapGenerator {
 
 			e.printStackTrace();
 		}
-
 		for (int i = 0; i < width; i++) {
 			map[0][i] = new Tile(20, textures[20]);
 			map[0][i].setSolid();
