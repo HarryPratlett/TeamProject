@@ -5,6 +5,7 @@ import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
 import com.myst.rendering.Shader;
+import com.myst.audio.Audio;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import java.util.HashMap;
@@ -43,8 +44,9 @@ public class GUI {
     private Input input;
     private int volume;
     private int brightness;
+    private Audio audio;
 
-    public GUI(Window window, Input input)    {
+    public GUI(Window window, Input input, Audio audio)    {
         settings_accessed = false;
         volume = 3;
         brightness = 3;
@@ -52,6 +54,7 @@ public class GUI {
         shader = new Shader("assets/shader");
         this.window = window;
         this.input = input;
+        this.audio = audio;
     }
 
     public void render(){
@@ -197,10 +200,16 @@ public class GUI {
                             if (brightness > 0) { brightness -= 1; }
                             break;
                         case "plus.png":
-                            if (volume < 5) { volume += 1;  }
+                            if (volume < 5) {
+                                volume += 1;
+                                audio.volume(1);
+                            }
                             break;
                         case "minus.png":
-                            if (volume > 0) { volume -= 1; }
+                            if (volume > 0) {
+                                volume -= 1;
+                                audio.volume(-1);
+                            }
                             break;
                     }
                 }

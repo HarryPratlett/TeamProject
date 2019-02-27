@@ -39,7 +39,6 @@ public class Main {
     public static void setUp() {
         Window.setCallbacks();
 
-
         if (!glfwInit()) {
             throw new IllegalStateException("Failed to initialise GLFW");
         }
@@ -140,7 +139,7 @@ public class Main {
 
         camera.bindPlayer(player);
 
-        GUI gui = new GUI(window, window.getInput());
+        GUI gui = new GUI(window, window.getInput(), Audio.getAudio());
 
         Darkness dark = new Darkness(window);
 

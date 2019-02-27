@@ -143,6 +143,7 @@ public class Audio {
         // TODO - something has to continuously check the volume
         // TODO - OR change it straight away
         if (change < MIN_VOLUME) {
+
             if ((volume + change) < MIN_VOLUME) {
                 volume = MIN_VOLUME;
             } else {
