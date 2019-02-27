@@ -1,5 +1,6 @@
 package com.myst.world.entities;
 
+import com.myst.audio.Audio;
 import com.myst.rendering.Shader;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
@@ -44,19 +45,29 @@ public class Player extends Entity{
 //        these needs fixing and entering into an entities class
 //        the entities will then
 
+        boolean moved = false;
+
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
             transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0);
+            moved = true;
         }
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
             transform.pos.x += -MOVEMENT_SPEED * deltaTime;
+            moved = true;
         }
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
             transform.pos.y += MOVEMENT_SPEED * deltaTime;
+            moved = true;
         }
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
             transform.pos.y += -MOVEMENT_SPEED * deltaTime;
+            moved = true;
         }
 
+        if(moved)
+            Audio.getAudio().play(Audio.FOOTSTEPS);
+        else
+            Audio.getAudio().stop(Audio.FOOTSTEPS);
 
         //now that the co-ordinate system has been redone this needs redoing
         this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
@@ -70,8 +81,6 @@ public class Player extends Entity{
                 boxes[i + (j * 5)] = world.getBoundingBox(x, y);
             }
         }
-
-
 
         for (int i = 0; i < boxes.length; i++) {
             if (boxes[i] != null) {
