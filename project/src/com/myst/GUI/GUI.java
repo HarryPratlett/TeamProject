@@ -186,7 +186,7 @@ public class GUI {
             if (mouseX >= b.getX() && mouseX <= (b.getX() + b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY() - b.getHeight())) {
                 if (window.getInput().isMousePressed(GLFW_MOUSE_BUTTON_1)) {
                     try {
-                        Thread.sleep(50);
+                        Thread.sleep(70);
                     }
                     catch(Exception e)  {
                         e.printStackTrace();
@@ -282,7 +282,7 @@ public class GUI {
         }
     }
 
-    private void exitGame()  {
+    public void exitGame()  {
         System.exit(1);
     }
 

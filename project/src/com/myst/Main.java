@@ -2,6 +2,7 @@
 package com.myst;
 
 import com.myst.GUI.GUI;
+import com.myst.GUI.Menu;
 import com.myst.audio.Audio;
 import com.myst.helper.Timer;
 import com.myst.input.Input;
@@ -56,7 +57,7 @@ public class Main {
 
         ClientConnection connection = new ClientConnection(entities, toRender, "127.0.0.1");
 
-        String clientID = "Base2";
+        String clientID = "Base3";
 
         connection.startConnection(clientID);
 
@@ -68,6 +69,8 @@ public class Main {
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        Menu Menu = new Menu(window, window.getInput());
 
 
 //        glfwSetWindowPos(window,(videoMode.width() - 640) / 2, (videoMode.height() - 480) / 2);
@@ -179,8 +182,10 @@ public class Main {
                 Audio.getAudio().update();
 
                 player.update((float) timeSinceLastUpdate, window, camera, world);
+                //Menu.update();
                 lights.update();
                 gui.update();
+
 
 
             }
@@ -203,7 +208,7 @@ public class Main {
                     }
                 }
                 createAndRender(toRender, entities);
-
+                //Menu.renderMenu();
                 lights.render();
                 dark.render();
                 gui.render();
