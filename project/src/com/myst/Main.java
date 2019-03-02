@@ -178,7 +178,6 @@ public class Main {
                 debugCurrentTime = Timer.getTime();
                 double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
                 debugLastTime = debugCurrentTime;
-
                 Audio.getAudio().update();
 
                 player.update((float) timeSinceLastUpdate, window, camera, world);

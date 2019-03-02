@@ -12,12 +12,11 @@ import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 
 import java.awt.geom.Rectangle2D;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
-import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
@@ -60,12 +59,14 @@ public class Menu {
         window.setFullscreen(false);
         window.createWindow("My game");
 
+
         GL.createCapabilities();
 
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        Menu menu = new Menu(window, window.getInput());
+        glClearColor(0f, 0f, 0f, 0f);
+
 
         Boolean renderFrame;
         double frame_cap = 1.0 / 60.0;
@@ -78,7 +79,7 @@ public class Menu {
 
         double debugCurrentTime = Timer.getTime();
         double debugLastTime = Timer.getTime();
-
+        Menu menu = new Menu(window, window.getInput());
         while (!window.shouldClose()) {
 
 
@@ -101,64 +102,70 @@ public class Menu {
 
                 renderFrame = true;
 
-                window.update();
-                menu.update();
+
+
 
                 debugCurrentTime = Timer.getTime();
                 double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
                 debugLastTime = debugCurrentTime;
+                window.update();
+                menu.mainMenuInput();
 
-                if (frame_time >= 1) {
-                    System.out.println(frames);
-                    frame_time = 0;
-                    frames = 0;
-                }
-
-
-                if (renderFrame) {
-                    glClear(GL_COLOR_BUFFER_BIT);
-                    menu.renderMenu();
-                    window.swapBuffers();
-                    frames += 1;
-
-                }
+            }
+            if (frame_time >= 1) {
+                System.out.println(frames);
+                frame_time = 0;
+                frames = 0;
             }
 
+
+            if (renderFrame) {
+                glClear(GL_COLOR_BUFFER_BIT);
+                menu.renderMenu();
+                window.swapBuffers();
+                frames += 1;
+
+            }
+
+
         }
+        //        clears everything we have used from memory
+        glfwTerminate();
+
+//        sloppy and needs tidying
+        System.exit(1);
 
     }
 
-    public void update()    {
-        this.mainMenuInput();
-    }
 
     public void renderMenu()    {
         Texture[] menuTextures = new Texture[]{new Texture("assets/main_menu/singleplayer_button.png"),
-                new Texture("assets/singleplayer_button.png"), new Texture("assets/quit_button.png")};
+                new Texture("assets/main_menu/multiplayer_button.png"), new Texture("assets/main_menu/quit_button.png")};
         float x = 0;
-        float y = 0.55f;
-        Matrix4f scale = new Matrix4f();
+        float y = 0.5f;
+
         for (Texture t: menuTextures)   {
-
-
-            float[] vertices = this.alterVertices(baseVertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
-            shader.bind();
-            t.bind(0);
-            Matrix4f target = new Matrix4f();
+            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+            vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
             Model model = new Model(vertices, textureDocks, indices);
-
-            Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x,y,0));
-            scale.mul(tile_pos, target);
-
-
-            shader.setUniform("sampler",0);
-            shader.setUniform("projection", target);
-            model.render();
-            y += (-0.35f);
+            renderImage(shader, t, x, y, new Matrix4f(), model);
             this.addButton(0 + baseVertices[0], y + baseVertices[1], baseVertices[3] - baseVertices[0], baseVertices[1] - baseVertices[7], t.getPath());
-
+            y += (-0.35f);
         }
+    }
 
+    public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
+        shader.bind();
+        texture.bind(0);
+        Matrix4f target = new Matrix4f();
+
+        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x,y,0));
+        scale.mul(tile_pos, target);
+
+
+        shader.setUniform("sampler",0);
+        shader.setUniform("projection", target);
+        model.render();
     }
 
     public void addButton(float x, float y, float width, float height, String filepath) {
@@ -181,6 +188,7 @@ public class Menu {
                         case "multiplayer_button.png":
                             break;
                         case "quit_button.png":
+                            System.exit(1);
                             break;
                     }
                 }
