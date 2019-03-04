@@ -1,6 +1,6 @@
 package com.myst.GUI;
 
-import com.myst.audio.Audio;
+
 import com.myst.helper.Timer;
 import com.myst.input.Input;
 import com.myst.rendering.Model;
@@ -10,9 +10,11 @@ import com.myst.rendering.Texture;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
+import sun.font.TrueTypeFont;
+
 
 import java.awt.geom.Rectangle2D;
-import java.lang.reflect.Array;
+import java.awt.Font;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -41,6 +43,9 @@ public class Menu {
     private Input input;
     private MenuStates currentWindow;
     private Boolean multiplayerAccessed;
+    private Boolean joinGameAccessed;
+    private TrueTypeFont font;
+    private Font awtFont;
 
     public Menu(Window window, Input input)   {
         this.window = window;
@@ -48,6 +53,8 @@ public class Menu {
         this.input = input;
         this.currentWindow = MenuStates.MAIN_MENU;
         this.multiplayerAccessed = false;
+        //this.awtFont = new Font("Times New Roman", Font.BOLD, 24);
+
     }
 
     public static void main(String[] args)  {
@@ -143,6 +150,9 @@ public class Menu {
                 break;
             case HIDDEN:
                 break;
+            case JOIN_GAME:
+                this.renderJoinGame();
+                break;
         }
     }
 
@@ -154,6 +164,8 @@ public class Menu {
             case MULTIPLAYER:
                 multiplayerInput();
                 break;
+            case JOIN_GAME:
+                break;
             case HIDDEN:
                 break;
         }
@@ -164,7 +176,6 @@ public class Menu {
         glClear(GL_COLOR_BUFFER_BIT);
         Texture[] menuTextures = new Texture[]{new Texture("assets/main_menu/singleplayer_button.png"),
                 new Texture("assets/main_menu/multiplayer_button.png"), new Texture("assets/main_menu/quit_button.png")};
-
         setupImages(menuTextures, 0f, 0.5f);
     }
 
@@ -172,8 +183,16 @@ public class Menu {
         glClear(GL_COLOR_BUFFER_BIT);
         Texture[] multiplayerTextures = new Texture[]{new Texture("assets/main_menu/host_game_button.png"),
         new Texture("assets/main_menu/join_game_button.png")};
+        setupImages(multiplayerTextures, 0f, 0.33f);
+    }
 
-        setupImages(multiplayerTextures, 0f, 0.5f);
+    public void renderJoinGame()    {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        Texture[] joinGameTextures = new Texture[]
+                {new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"), new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png")};
+        setupImages(Arrays.copyOfRange(joinGameTextures, 0, 2), -0.5f, 0.25f);
+        setupImages(Arrays.copyOfRange(joinGameTextures, 2, 4), 0.5f, 0.25f);
     }
 
     public void addButton(float x, float y, float width, float height, String filepath) {
@@ -202,6 +221,12 @@ public class Menu {
                             System.out.println("pressed");
                             this.currentWindow = MenuStates.MULTIPLAYER;
                             multiplayerAccessed = true;
+                            try {
+                                Thread.sleep(80);
+
+                            }catch(Exception e) {
+                                e.printStackTrace();
+                            }
                             break;
                         case "quit_button.png":
                             System.exit(1);
@@ -220,16 +245,22 @@ public class Menu {
 
             if (mouseX >= b.getX() && mouseX <= (b.getX()+b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY()-b.getHeight()))  {
                 if (window.getInput().isMouseButtonDown(GLFW_MOUSE_BUTTON_1)){
-                    String buttonName = menuButtons.get(b);
+                    String buttonName = multiplayerButtons.get(b);
                     switch(buttonName) {
                         case "host_game_button.png":
                             System.exit(1);
                             break;
                         case "join_game_button.png":
+                            joinGameAccessed = true;
+                            multiplayerAccessed = false;
+                            this.currentWindow = MenuStates.JOIN_GAME;
                             break;
                     }
                 }
             }
+        }
+        if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
+            currentWindow = MenuStates.MAIN_MENU;
         }
     }
 
@@ -254,7 +285,7 @@ public class Menu {
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
             Model model = new Model(vertices, textureDocks, indices);
             renderImage(shader, t, xPos, yPos, new Matrix4f(), model);
-            this.addButton(0 + baseVertices[0], yPos + baseVertices[1], baseVertices[3] - baseVertices[0], baseVertices[1] - baseVertices[7], t.getPath());
+            this.addButton(0 + vertices[0], yPos + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
             yPos += (-0.35f);
         }
     }
