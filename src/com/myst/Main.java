@@ -1,5 +1,5 @@
 package com.myst;
-import com.myst.animation.Keymanager;
+
 import com.myst.GUI.GUI;
 import com.myst.helper.Timer;
 import com.myst.networking.EntityData;
@@ -42,12 +42,7 @@ public class Main {
     }
   }
     
-     //Input
-	private Keymanager keymanager;
-
-	public Keymanager getKeymanager(){
-		return keymanager;
-	}
+  
 	
 
 	
@@ -150,6 +145,7 @@ public class Main {
 
     camera.bindPlayer(player);
 
+    
     GUI gui = new GUI(window, window.getInput());
 
     Darkness dark = new Darkness(window);
@@ -187,6 +183,8 @@ public class Main {
         debugLastTime = debugCurrentTime;
 
         player.update((float) timeSinceLastUpdate, window, camera, world);
+        
+        
         lights.update();
         gui.update();
 

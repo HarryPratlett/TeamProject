@@ -14,7 +14,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Server {
-  private static final int PORT = 3464;
+  private static final int PORT = 3465;
   private static final int MAX_CLIENTS = 8;
 
   /**

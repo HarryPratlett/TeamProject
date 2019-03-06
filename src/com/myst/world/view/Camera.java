@@ -12,6 +12,7 @@ public class Camera {
     private int width;
     private int height;
     private Player player;
+    
     public int scale = 40;
 
     public Camera(int width, int height){
@@ -21,17 +22,6 @@ public class Camera {
         this.height = height;
 }
 
-    public void setPosition(Vector3f position){
-        this.position = position;
-    }
-
-    public void bindPlayer(Player player){
-        this.player = player;
-    }
-
-    public void unBindPlayer(){
-        this.player = null;
-    }
 
 
 //    now that the co-ordinate system has been redone so must this
@@ -62,11 +52,24 @@ public class Camera {
         return target;
     }
 
+    
     public int getWidth(){
         return width;
     }
 
     public int getHeight(){
         return height;
+    }
+
+    public void setPosition(Vector3f position){
+        this.position = position;
+    }
+
+    public void bindPlayer(Player player){
+        this.player = player;
+    }
+
+    public void unBindPlayer(){
+        this.player = null;
     }
 }
