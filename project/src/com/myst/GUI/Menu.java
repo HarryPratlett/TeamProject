@@ -10,11 +10,15 @@ import com.myst.rendering.Texture;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
-import sun.font.TrueTypeFont;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.util.ResourceLoader;
 
 
 import java.awt.geom.Rectangle2D;
 import java.awt.Font;
+
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -22,6 +26,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+
 
 public class Menu {
     private final float[] baseVertices = new float[] {
@@ -38,14 +43,18 @@ public class Menu {
     };
     private HashMap<Rectangle2D.Float, String> menuButtons = new HashMap<>();
     private HashMap<Rectangle2D.Float, String> multiplayerButtons = new HashMap<>();
+    private HashMap<Rectangle2D.Float, String> joinGameButtons = new HashMap<>();
     private Window window;
     private Shader shader;
     private Input input;
     private MenuStates currentWindow;
     private Boolean multiplayerAccessed;
     private Boolean joinGameAccessed;
-    private TrueTypeFont font;
-    private Font awtFont;
+    private Boolean typing;
+    private String ipAddress;
+    private String port;
+    private static TrueTypeFont font1;
+    private static Font font;
 
     public Menu(Window window, Input input)   {
         this.window = window;
@@ -53,78 +62,81 @@ public class Menu {
         this.input = input;
         this.currentWindow = MenuStates.MAIN_MENU;
         this.multiplayerAccessed = false;
-        //this.awtFont = new Font("Times New Roman", Font.BOLD, 24);
+        this.joinGameAccessed = false;
+        this.ipAddress = "";
+        this.port = "";
+        //this.font = new Font("Times New Roman", Font.BOLD, 24);
+
 
     }
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         Window.setCallbacks();
 
         if (!glfwInit()) {
             throw new IllegalStateException("Failed to initialise GLFW");
         }
-        Window window = new Window();
-        window.setFullscreen(false);
-        window.createWindow("My game");
 
-        GL.createCapabilities();
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glClearColor(0f, 0f, 0f, 0f);
+            Window window = new Window();
+            window.setFullscreen(false);
+            window.createWindow("My game");
 
-        Boolean renderFrame;
-        double frame_cap = 1.0 / 60.0;
+            GL.createCapabilities();
+            glEnable(GL_TEXTURE_2D);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glClearColor(0f, 0f, 0f, 0f);
+            Boolean renderFrame;
+            double frame_cap = 1.0 / 60.0;
 
-        double time = Timer.getTime();
-        double unprocessed = 0;
+            double time = Timer.getTime();
+            double unprocessed = 0;
 
-        double frame_time = 0;
-        int frames = 0;
+            double frame_time = 0;
+            int frames = 0;
 
-        double debugCurrentTime = Timer.getTime();
-        double debugLastTime = Timer.getTime();
-        Menu menu = new Menu(window, window.getInput());
+            double debugCurrentTime = Timer.getTime();
+            double debugLastTime = Timer.getTime();
+            Menu menu = new Menu(window, window.getInput());
+            while (!window.shouldClose()) {
 
-        while (!window.shouldClose()) {
-
-            renderFrame = false;
-            double time2 = Timer.getTime();
-            double deltaTime = time2 - time;
-            time = time2;
-            unprocessed += deltaTime;
-            frame_time += deltaTime;
+                renderFrame = false;
+                double time2 = Timer.getTime();
+                double deltaTime = time2 - time;
+                time = time2;
+                unprocessed += deltaTime;
+                frame_time += deltaTime;
 //            in the case you want to render a frame as you have gone over the frame_cap
 //            a while is used instead of an if incase the performance is less than 30 FPS
-            while (unprocessed >= frame_cap) {
+                while (unprocessed >= frame_cap) {
 //                look into effects of containing a thread.sleep();
 //                take away the frame cap so that you account for the time you've taken of the next frame
-                unprocessed -= frame_cap;
-                renderFrame = true;
-                debugCurrentTime = Timer.getTime();
-                double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
-                debugLastTime = debugCurrentTime;
-                window.update();
-                menu.update();
+                    unprocessed -= frame_cap;
+                    renderFrame = true;
+                    debugCurrentTime = Timer.getTime();
+                    double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
+                    debugLastTime = debugCurrentTime;
+                    window.update();
+                    menu.update();
 
+                }
+                if (frame_time >= 1) {
+                    System.out.println(frames);
+                    frame_time = 0;
+                    frames = 0;
+                }
+                if (renderFrame) {
+                    glClear(GL_COLOR_BUFFER_BIT);
+                    menu.render();
+                    window.swapBuffers();
+                    frames += 1;
+                }
             }
-            if (frame_time >= 1) {
-                System.out.println(frames);
-                frame_time = 0;
-                frames = 0;
-            }
-            if (renderFrame) {
-                glClear(GL_COLOR_BUFFER_BIT);
-                menu.render();
-                window.swapBuffers();
-                frames += 1;
-            }
-        }
-        //        clears everything we have used from memory
-        glfwTerminate();
+            //        clears everything we have used from memory
+            glfwTerminate();
 //        sloppy and needs tidying
-        System.exit(1);
-    }
+            System.exit(1);
+        }
 
     public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
@@ -159,12 +171,13 @@ public class Menu {
     public void update(){
         switch(currentWindow){
             case MAIN_MENU:
-                mainMenuInput();
+                this.mainMenuInput();
                 break;
             case MULTIPLAYER:
-                multiplayerInput();
+                this.multiplayerInput();
                 break;
             case JOIN_GAME:
+                this.joinGameInput();
                 break;
             case HIDDEN:
                 break;
@@ -174,6 +187,7 @@ public class Menu {
 
     public void renderMenu()    {
         glClear(GL_COLOR_BUFFER_BIT);
+        this.renderBackground();
         Texture[] menuTextures = new Texture[]{new Texture("assets/main_menu/singleplayer_button.png"),
                 new Texture("assets/main_menu/multiplayer_button.png"), new Texture("assets/main_menu/quit_button.png")};
         setupImages(menuTextures, 0f, 0.5f);
@@ -181,6 +195,7 @@ public class Menu {
 
     public void renderMultiplayer() {
         glClear(GL_COLOR_BUFFER_BIT);
+        this.renderBackground();
         Texture[] multiplayerTextures = new Texture[]{new Texture("assets/main_menu/host_game_button.png"),
         new Texture("assets/main_menu/join_game_button.png")};
         setupImages(multiplayerTextures, 0f, 0.33f);
@@ -188,7 +203,7 @@ public class Menu {
 
     public void renderJoinGame()    {
         glClear(GL_COLOR_BUFFER_BIT);
-
+        this.renderBackground();
         Texture[] joinGameTextures = new Texture[]
                 {new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"), new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png")};
         setupImages(Arrays.copyOfRange(joinGameTextures, 0, 2), -0.5f, 0.25f);
@@ -199,6 +214,9 @@ public class Menu {
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
         if (multiplayerAccessed)    {
             multiplayerButtons.put(bounds, filepath);
+        }
+        else if(joinGameAccessed)   {
+            joinGameButtons.put(bounds, filepath);
         }
         else    {
             menuButtons.put(bounds, filepath);
@@ -264,6 +282,31 @@ public class Menu {
         }
     }
 
+    public void joinGameInput()   {
+        for (Rectangle2D.Float b : joinGameButtons.keySet())   {
+
+            double mouseX = ((this.input.getMouseCoordinates()[0])/(window.getWidth()/2))-1;
+            double mouseY = -(((this.input.getMouseCoordinates()[1])/(window.getHeight()/2))-1);
+
+            if (mouseX >= b.getX() && mouseX <= (b.getX()+b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY()-b.getHeight()))  {
+                if (window.getInput().isMouseButtonDown(GLFW_MOUSE_BUTTON_1)){
+                    String buttonName = joinGameButtons.get(b);
+                    switch(buttonName) {
+                        case "text_book_1.png":
+                            this.takeInput(new String());
+                            break;
+                        case "text_book_2.png":
+                            System.exit(2);
+                            break;
+                    }
+                }
+            }
+        }
+        if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
+            currentWindow = MenuStates.MULTIPLAYER;
+        }
+    }
+
     public float[] alterVertices(float[] vertices, int height, int width, double widthScale, double heightScale) {
         vertices[0] *= width * widthScale;
         vertices[3] *= width * widthScale;
@@ -288,5 +331,25 @@ public class Menu {
             this.addButton(0 + vertices[0], yPos + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
             yPos += (-0.35f);
         }
+    }
+
+    public void takeInput(String chosenInput) {
+        try {
+            InputStream inputStream = ResourceLoader.getResourceAsStream("munro.ttf");
+            Font awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+            awtFont2 = awtFont2.deriveFont(24f);
+            font1 = new TrueTypeFont(awtFont2, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        font1.drawString(0, 0, "hello");
+    }
+
+    public void renderBackground()  {
+        Texture background = new Texture("assets/main_menu/NighBg.png");
+        float [] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+        vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);
+        Model model = new Model(vertices, textureDocks, indices);
+        this.renderImage(shader, background, 0, 0, new Matrix4f(), model);
     }
 }
