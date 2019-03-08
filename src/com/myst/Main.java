@@ -116,8 +116,8 @@ public class Main {
         //player.localID = 1;
         //player.owner = clientID;
         Bot bot = new Bot(new float[]{
-                -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
-                -0.5f, -0.5f, 0f/*3*/
+                -0.5f, 0.5f, 0f, 0.5f, 0.5f, 0f,    0.5f, -0.5f, 0f,
+                -0.5f, -0.5f, 0f
     },
             new float[] {
             0f, 0f,   1, 0f,  1f, 1f,
@@ -200,7 +200,6 @@ public class Main {
                 lights.update();
                 gui.update();
 
-
             }
 
             if (frame_time >= 1) {
@@ -208,7 +207,6 @@ public class Main {
                 frame_time = 0;
                 frames = 0;
             }
-
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);
 

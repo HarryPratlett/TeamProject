@@ -87,8 +87,9 @@ public class Enemy extends Entity{
 
     }
 
+
 	@Override
-	public boolean attack(World world) {
+	public boolean attack(World world, int entityID) {
 		// TODO Auto-generated method stub
 		return false;
 	}

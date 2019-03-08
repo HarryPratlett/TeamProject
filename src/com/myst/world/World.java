@@ -100,7 +100,7 @@ public class World {
 //        int h = height * scale * 2;
 //
 //        if(pos.x > -(window.getWidth() / 2) + scale){
-//            pos.x = -(window.getWidth() / 2) + scale;
+//            pos.x = -(window.getWidth() / 2) + sc, AABB boundingBoxale;
 //        }
 
     }
@@ -117,7 +117,14 @@ public class World {
             bounding_boxes[x][y] = null;
         }
     }
-
+    
+    public void setOccupiedTile(int x, int y) {
+    	bounding_boxes[x][y] = new AABB(new Vector2f(x,-y), new Vector2f(0.5f, 0.5f));
+    }
+    
+    public void setUnoccupiedTile(int x, int y) {
+    	bounding_boxes[x][y] = null;
+    }
 
     public Tile getTile(TileCoords coords){
         try{

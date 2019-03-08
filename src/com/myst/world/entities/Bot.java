@@ -102,12 +102,25 @@ public class Bot extends Entity {
 	public ArrayList<Vector3f> getPath(){
 		return path;
 	}
-
+	
 	@Override
-	public boolean attack(World world) {
-		return isKillable();
-		// TODO Auto-generated method stub
-		
+	public boolean attack(World world, int entityID) {
+		AABB[] line = new AABB[100];
+		for (int i = 0; i < line.length; i++) {
+			int x = (int) transform.pos.x + i;
+			int y = (int) transform.pos.y + i;
+			line[i] = world.getBoundingBox(x,y);
+		}
+			
+		for(int i = 0; i< line.length; i++) {
+			if(line[i] != null) {
+				Collision collision = boundingBox.getCollision(line[i]);
+				if(collision.isIntersecting) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }
