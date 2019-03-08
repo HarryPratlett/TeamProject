@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.joml.Matrix4f;
 import static org.lwjgl.opengl.GL20.*;
@@ -64,6 +65,12 @@ public class Shader {
             glUniform1i(location, value);
         }
     }
+    public void setUniform(String name, float value){
+        int location = glGetUniformLocation(program, name);
+        if (location != -1){
+            glUniform1f(location, value);
+        }
+    }
 
     public void setUniform(String name, Matrix4f value){
         int location = glGetUniformLocation(program, name);
@@ -71,6 +78,27 @@ public class Shader {
         value.get(buffer);
         if (location != -1){
             glUniformMatrix4fv(location,false,buffer);
+        }
+    }
+
+    public void setUniform(String name, float[] value){
+        int location = glGetUniformLocation(program, name);
+        if (location != -1){
+            glUniform2fv(location,value);
+        }
+    }
+
+    public void setUniformArray(String name, float[] value){
+        int location = glGetUniformLocation(program, name);
+        if (location != -1){
+            glUniform1fv(location,value);
+        }
+    }
+
+    public void setUniform(String name, int[] value){
+        int location = glGetUniformLocation(program, name);
+        if (location != -1){
+            glUniform1iv(location,value);
         }
     }
 

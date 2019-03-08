@@ -5,6 +5,7 @@ import com.myst.networking.EntityData;
 import com.myst.rendering.Shader;
 import com.myst.world.entities.Enemy;
 import com.myst.world.entities.Entity;
+import com.myst.world.entities.EntityTypes;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
@@ -15,9 +16,11 @@ import com.myst.world.map.rendering.Tile;
 import com.myst.networking.clientside.ClientConnection;
 
 import com.myst.world.map.rendering.TileRenderer;
-import org.joml.Vector3f;
+import com.myst.world.view.Transform;
+import org.joml.*;
 import org.lwjgl.opengl.GL;
 
+import javax.xml.transform.TransformerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,9 +33,6 @@ public class Main {
 
     public static void setUp(){
         Window.setCallbacks();
-
-
-
         if (!glfwInit()){
             throw new IllegalStateException("Failed to initialise GLFW");
         }
@@ -51,7 +51,7 @@ public class Main {
 
         ClientConnection connection = new ClientConnection(entities, toRender,"127.0.0.1");
 
-        String clientID = "Base1";
+        String clientID = "Base2";
 
         connection.startConnection(clientID);
 
@@ -106,6 +106,7 @@ public class Main {
         World world = new World(tiles, map);
 
         Player player = new Player();
+        player.lightSource = true;
 
         player.localID = 1;
         player.owner = clientID;
@@ -180,16 +181,56 @@ public class Main {
 
             window.update();
 
+
+
+
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);
+
+                float[] lightPositions = new float[16];
+                int[] lightsOn = new int[8];
+                float[] lightRadiai = new float[8];
+
+                for(int i=0;i <lightsOn.length;i++){
+                    lightsOn[i] = 0;
+                    lightRadiai[i] = 0;
+                }
+
+//                getting which players have their lights on and then passing that to opengl
+//                this is for the shadows and lighting
+                int d=0;
+                for(String owner: entities.keySet()){
+                    if(d>7)break;
+                    for(Integer entityID: entities.get(owner).keySet()){
+                        if(d>7)break;
+                        if(entities.get(owner).get(entityID).getData().lightSource){
+                            Matrix4f projection = entities.get(owner).get(entityID).transform.getProjection(camera.getProjection());
+                            Vector4f lightPos = new Vector4f(0,0,0,1).mul(projection);
+                            lightRadiai[d] = entities.get(owner).get(entityID).lightDistance;
+                            lightPositions[d*2] = lightPos.x * 2;
+                            lightPositions[d*2 + 1] = lightPos.y * 2;
+                            lightsOn[d] = 1;
+                            d++;
+                        }
+                    }
+                }
+
+                shader.setUniform("lightPositions", lightPositions);
+                shader.setUniform("lightsOn", lightsOn);
+                shader.setUniformArray("lightRadius", lightRadiai);
+
+                shader.setUniform("winHeight", window.getHeight());
+                shader.setUniform("winWidth", window.getWidth());
 
                 world.render(shader,camera, window);
 
                 for(String owner: entities.keySet()){
                     for(Integer entityID: entities.get(owner).keySet()){
-                        entities.get(owner).get(entityID).render(camera);
+                        entities.get(owner).get(entityID).render(camera, shader);
                     }
                 }
+
+
                 createAndRender(toRender, entities);
 
                 window.swapBuffers();
@@ -199,6 +240,7 @@ public class Main {
             }
 
         }
+
 
 //        clears everything we have used from memory
         glfwTerminate();

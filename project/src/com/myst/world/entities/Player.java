@@ -9,6 +9,7 @@ import com.myst.world.collisions.Collision;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
+
 import static com.myst.world.entities.EntityTypes.PLAYER;
 
 public class Player extends Entity{
@@ -35,9 +36,9 @@ public class Player extends Entity{
                 0,1,2,
                 2,3,0
         },
-        new Vector2f(0.5f,0.5f), new Shader("assets/Shader"));
+        new Vector2f(0.5f,0.5f));
         this.type = PLAYER;
-
+        this.visibleToEnemy = true;
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world) {
@@ -55,6 +56,15 @@ public class Player extends Entity{
         }
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
             transform.pos.y += -MOVEMENT_SPEED * deltaTime;
+        }
+        if (window.getInput().isKeyPressed(GLFW.GLFW_KEY_F)){
+            if(this.lightDistance == 0.25f){
+                this.lightDistance = 2.5f;
+                this.visibleToEnemy = true;
+            }else{
+                this.lightDistance = 0.25f;
+                this.visibleToEnemy = false;
+            }
         }
 
 

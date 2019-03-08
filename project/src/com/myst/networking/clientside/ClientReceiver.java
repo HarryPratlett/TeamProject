@@ -75,11 +75,13 @@ public class ClientReceiver extends Thread {
         }
         for(Integer i: myEntities.keySet()){
             if (myEntities.get(i) != null){
-                toSend.add(myEntities.get(i).getData());
-//                System.out.println("sending to Server:");
-//                System.out.println("entity owned by " + myEntities.get(i).getData().ownerID);
-//                System.out.println("entity with ID " + myEntities.get(i).getData().localID);
-//                System.out.println("with position" + myEntities.get(i).getData().transform.pos);
+                EntityData data= myEntities.get(i).getData();
+                if(myEntities.get(i).visibleToEnemy){
+                    data.lightSource = true;
+                } else{
+                    data.lightSource = false;
+                }
+                toSend.add(data);
             }
         }
         Message msg = new Message(Codes.UPDATE_SERVER,toSend);
@@ -109,7 +111,7 @@ public class ClientReceiver extends Thread {
                     }
                 }
                 else if (!entity.ownerID.equals(clientID)) {
-                    entities.get(entity.ownerID).get(entity.localID).transform = entityData.get(i).transform;
+                    entities.get(entity.ownerID).get(entity.localID).readInEntityData(entityData.get(i));
                 }
             }
         }

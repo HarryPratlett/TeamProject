@@ -35,7 +35,6 @@ public class ServerReceiver extends Thread {
       while (true) {
         try {
           Message userMessage = (Message) myClient.readObject();
-//          System.out.println("received data from client");
           switch(userMessage.header){
             case UPDATE_SERVER:
               updateWorld(userMessage.data);
