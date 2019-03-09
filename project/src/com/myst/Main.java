@@ -13,6 +13,7 @@ import com.myst.world.entities.Player;
 import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
 
+
 import com.myst.networking.clientside.ClientConnection;
 
 import com.myst.world.map.rendering.TileRenderer;
@@ -21,6 +22,7 @@ import org.joml.*;
 import org.lwjgl.opengl.GL;
 
 import javax.xml.transform.TransformerFactory;
+import java.lang.Math;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;

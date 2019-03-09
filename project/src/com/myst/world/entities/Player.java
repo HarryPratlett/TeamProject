@@ -45,6 +45,8 @@ public class Player extends Entity{
 //        these needs fixing and entering into an entities class
 //        the entities will then
 
+
+
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
             transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0);
         }
