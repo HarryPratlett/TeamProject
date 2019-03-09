@@ -82,6 +82,8 @@ public class Player extends Entity{
             }
         }
 
+
+
         for (int i = 0; i < boxes.length; i++) {
             if (boxes[i] != null) {
                 Collision data = boundingBox.getCollision(boxes[i]);

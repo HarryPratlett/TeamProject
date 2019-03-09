@@ -35,32 +35,32 @@ public class Audio {
 
     private Input input;
 
-    File theme = new File(PATH + THEME + WAV);
-    File gun = new File(PATH + GUN + WAV);
-    File hit = new File(PATH + HIT + WAV);
-    File footsteps = new File(PATH + FOOTSTEPS + WAV);
+    private File theme = new File(PATH + THEME + WAV);
+    private File gun = new File(PATH + GUN + WAV);
+    private File hit = new File(PATH + HIT + WAV);
+    private File footsteps = new File(PATH + FOOTSTEPS + WAV);
 
-    AudioInputStream themeStream;
-    AudioInputStream gunStream;
-    AudioInputStream hitStream;
-    AudioInputStream footstepsStream;
+    private AudioInputStream themeStream;
+    private AudioInputStream gunStream;
+    private AudioInputStream hitStream;
+    private AudioInputStream footstepsStream;
 
-    Clip themeClip;
-    Clip gunClip;
-    Clip hitClip;
-    Clip footstepsClip;
+    private Clip themeClip;
+    private Clip gunClip;
+    private Clip hitClip;
+    private Clip footstepsClip;
 
-    FloatControl themeGainControl;
-    FloatControl gunGainControl;
-    FloatControl hitGainControl;
-    FloatControl footstepsGainControl;
+    private FloatControl themeGainControl;
+    private FloatControl gunGainControl;
+    private FloatControl hitGainControl;
+    private FloatControl footstepsGainControl;
 
-    float themeRange;
-    float gunRange;
-    float hitRange;
-    float footstepsRange;
+    private float themeRange;
+    private float gunRange;
+    private float hitRange;
+    private float footstepsRange;
 
-    float gain;
+    private float gain;
 
     private static Audio audio = new Audio();
 
