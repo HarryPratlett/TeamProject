@@ -46,6 +46,14 @@ public class Player extends Entity{
 //        the entities will then
 
 
+        double xMouse = ((window.getInput().getMouseCoordinates()[0] * 2) / window.getWidth()) - 1;
+        double yMouse = -(((window.getInput().getMouseCoordinates()[1] * 2) / window.getHeight()) - 1);
+
+        transform.rotation = (float) Math.atan(yMouse / xMouse);
+
+        if (xMouse < 0){
+            transform.rotation += Math.PI;
+        }
 
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
             transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0);
