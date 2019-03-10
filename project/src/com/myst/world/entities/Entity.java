@@ -35,7 +35,7 @@ public abstract class Entity implements Serializable {
         transform.scale = new Vector3f(1,1,1);
         boundingBox = new AABB(new Vector2f(transform.pos.x, transform.pos.y), boundingBoxCoords);
         this.lightSource = false;
-        this.lightDistance = 25f;
+        this.lightDistance = 2.5f;
     }
 
     public abstract void update(float deltaTime, Window window, Camera camera, World world);
