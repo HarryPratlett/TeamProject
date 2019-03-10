@@ -10,7 +10,6 @@ import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
-import com.myst.rendering.Shader;
 import com.myst.world.view.Camera;
 
 public class Bot extends Entity {
@@ -19,8 +18,8 @@ public class Bot extends Entity {
 	private final float MOVEMENT_SPEED = 1f;
 	private ArrayList<Vector3f> path;
 	
-	public Bot(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords, Shader shader) {
-		super(vertices, texture, indices, boundingBoxCoords, shader);
+	public Bot(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords) {
+		super(vertices, texture, indices, boundingBoxCoords);
 		type = EntityTypes.BOT;
 	}
 

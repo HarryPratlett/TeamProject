@@ -1,18 +1,11 @@
-
 package com.myst;
 
-import com.myst.GUI.GUI;
-import com.myst.audio.Audio;
 import com.myst.helper.Timer;
-import com.myst.input.Input;
 import com.myst.networking.EntityData;
 import com.myst.rendering.Shader;
-import com.myst.world.entities.Bot;
 import com.myst.world.entities.Enemy;
 import com.myst.world.entities.Entity;
-import com.myst.world.lighting.Darkness;
-import com.myst.world.lighting.FlashlightOn;
-import com.myst.world.lighting.Lighting;
+import com.myst.world.entities.EntityTypes;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
@@ -23,43 +16,40 @@ import com.myst.world.map.rendering.Tile;
 import com.myst.networking.clientside.ClientConnection;
 
 import com.myst.world.map.rendering.TileRenderer;
-import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
+import com.myst.world.view.Transform;
+import org.joml.*;
 import org.lwjgl.opengl.GL;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import java.util.HashMap;
 
+import javax.xml.transform.TransformerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Main {
 
 
-    public static void setUp() {
+    public static void setUp(){
         Window.setCallbacks();
-
-
-        if (!glfwInit()) {
+        if (!glfwInit()){
             throw new IllegalStateException("Failed to initialise GLFW");
         }
     }
 
 
-    public static void main(String[] args) {
-        setUp();
 
+    public static void main(String[] args){
+        setUp();
 
         Window window = new Window();
 
-        ConcurrentHashMap<String, HashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
+        ConcurrentHashMap<String,HashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
 //        only the main can render and create items so this array hands stuff to the main to render
-        ConcurrentHashMap<String, HashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
+        ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
 
-        ClientConnection connection = new ClientConnection(entities, toRender, "127.0.0.1");
+        ClientConnection connection = new ClientConnection(entities, toRender,"127.0.0.1");
 
         String clientID = "Base2";
 
@@ -67,6 +57,7 @@ public class Main {
 
         window.setFullscreen(false);
         window.createWindow("My game");
+
         GL.createCapabilities();
 
         glEnable(GL_TEXTURE_2D);
@@ -78,70 +69,60 @@ public class Main {
 
 //        glfwShowWindow(window);
 
+        glClearColor(0f,0f,0f, 0f);
 
-        glClearColor(0f, 0f, 0f, 0f);
+        Shader shader = new Shader("assets/shader");
 
-        Shader shader = new Shader("assets/Shader");
         String[] textures = new String[21];
         String path = ("assets/tile/");
-        textures[0] = path + "tile_01";
-        textures[1] = path + "tile_02";
-        textures[2] = path + "tile_03";
-        textures[3] = path + "tile_04";
-        textures[4] = path + "tile_05";
-        textures[5] = path + "tile_06";
-        textures[6] = path + "tile_07";
-        textures[7] = path + "tile_08";
-        textures[8] = path + "tile_09";
-        textures[9] = path + "tile_10";
-        textures[10] = path + "tile_11";
-        textures[11] = path + "tile_12";
-        textures[12] = path + "tile_13";
-        textures[13] = path + "tile_14";
-        textures[14] = path + "tile_15";
-        textures[15] = path + "tile_16";
-        textures[16] = path + "tile_17";
-        textures[17] = path + "tile_18";
-        textures[18] = path + "tile_19";
-        textures[19] = path + "tile_20";
-        textures[20] = path + "tile_479";
+        textures[0] = path+"tile_01";
+        textures[1] = path+"tile_02";
+        textures[2] = path+"tile_03";
+        textures[3] = path+"tile_04";
+        textures[4] = path+"tile_05";
+        textures[5] = path+"tile_06";
+        textures[6] = path+"tile_07";
+        textures[7] = path+"tile_08";
+        textures[8] = path+"tile_09";
+        textures[9] = path+"tile_10";
+        textures[10] = path+"tile_11";
+        textures[11] = path+"tile_12";
+        textures[12] = path+"tile_13";
+        textures[13] = path+"tile_14";
+        textures[14] = path+"tile_15";
+        textures[15] = path+"tile_16";
+        textures[16] = path+"tile_17";
+        textures[17] = path+"tile_18";
+        textures[18] = path+"tile_19";
+        textures[19] = path+"tile_20";
+        textures[20] = path+"tile_479";
 
-        Tile[][] map = new MapGenerator(textures).generateMap(100, 100);
+
+        Tile[][] map = new MapGenerator(textures).generateMap(100,100);
+
 
         TileRenderer tiles = new TileRenderer(textures);
 
         World world = new World(tiles, map);
-        
-        Player player = new Player();
-        //player.localID = 1;
-        //player.owner = clientID;
-        Bot bot = new Bot(new float[]{
-                -0.5f, 0.5f, 0f, 0.5f, 0.5f, 0f,    0.5f, -0.5f, 0f,
-                -0.5f, -0.5f, 0f
-    },
-            new float[] {
-            0f, 0f,   1, 0f,  1f, 1f,
-            0f, 1f
-    },
-    new int[] {
-            0,1,2,
-            2,3,0
-    },
-    new Vector2f(0.5f,0.5f), new Shader("assets/Shader"));
 
-        bot.localID = 1;
-        bot.owner = clientID;
-        player.transform.pos.add(new Vector3f(1, -1, 0));
-        bot.transform.pos.add(new Vector3f(5, -1, 0));
-        bot.initialiseAI(world);
+        Player player = new Player();
+        player.lightSource = true;
+
+        player.localID = 1;
+        player.owner = clientID;
+
+
+        player.transform.pos.add(new Vector3f(1,-1,0));
+
         Camera camera = new Camera(window.getWidth(), window.getHeight());
 
-        entities.put(clientID, new HashMap<Integer, Entity>());
-        HashMap<Integer, Entity> myEntities = entities.get(clientID);
-        
-        myEntities.put(bot.localID, bot);
+        entities.put(clientID, new HashMap<Integer,Entity>());
 
-        double frame_cap = 1.0 / 60.0;
+        HashMap<Integer, Entity> myEntities = entities.get(clientID);
+
+        myEntities.put(player.localID, player);
+
+        double frame_cap = 1.0/60.0;
 
         double time = Timer.getTime();
         double unprocessed = 0;
@@ -154,17 +135,9 @@ public class Main {
         double debugCurrentTime = Timer.getTime();
         double debugLastTime = Timer.getTime();
 
-        camera.bindPlayer(bot);
+        camera.bindPlayer(player);
 
-        GUI gui = new GUI(window, window.getInput());
-
-        Darkness dark = new Darkness(window);
-
-        Audio.getAudio().initInput(window.getInput());
-
-        Lighting lights = new Lighting(window.getInput(), window);
-        bot.setPath(new Vector3f(15,-5,0));
-        while (!window.shouldClose()) {
+        while (!window.shouldClose()){
 
             renderFrame = false;
 
@@ -180,25 +153,16 @@ public class Main {
 //            a while is used instead of an if incase the performance is less than 30 FPS
             while (unprocessed >= frame_cap) {
 //                look into effects of containing a thread.sleep();
+
 //                take away the frame cap so that you account for the time you've taken of the next frame
                 unprocessed -= frame_cap;
 
                 renderFrame = true;
 
-                window.update();
-
-
+                if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
+                    glfwSetWindowShouldClose(window.getWindow(),true);
+                }
                 camera.updatePosition();
-                debugCurrentTime = Timer.getTime();
-                double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
-                debugLastTime = debugCurrentTime;
-
-                Audio.getAudio().update();
-
-                player.update((float) timeSinceLastUpdate, window, camera, world);
-                bot.update((float) timeSinceLastUpdate, window, camera, world);
-                lights.update();
-                gui.update();
 
             }
 
@@ -207,21 +171,68 @@ public class Main {
                 frame_time = 0;
                 frames = 0;
             }
+
+
+            debugCurrentTime = Timer.getTime();
+            double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
+            debugLastTime = debugCurrentTime;
+
+           // player.update((float) timeSinceLastUpdate, window, camera, world);
+
+            window.update();
+
+
+
+
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);
 
-                world.render(shader, camera, window);
+                float[] lightPositions = new float[16];
+                int[] lightsOn = new int[8];
+                float[] lightRadiai = new float[8];
 
-                for (String owner : entities.keySet()) {
-                    for (Integer entityID : entities.get(owner).keySet()) {
-                        entities.get(owner).get(entityID).render(camera);
+                for(int i=0;i <lightsOn.length;i++){
+                    lightsOn[i] = 0;
+                    lightRadiai[i] = 0;
+                }
+
+//                getting which players have their lights on and then passing that to opengl
+//                this is for the shadows and lighting
+                int d=0;
+                for(String owner: entities.keySet()){
+                    if(d>7)break;
+                    for(Integer entityID: entities.get(owner).keySet()){
+                        if(d>7)break;
+                        if(entities.get(owner).get(entityID).getData().lightSource){
+                            Matrix4f projection = entities.get(owner).get(entityID).transform.getProjection(camera.getProjection());
+                            Vector4f lightPos = new Vector4f(0,0,0,1).mul(projection);
+                            lightRadiai[d] = entities.get(owner).get(entityID).lightDistance;
+                            lightPositions[d*2] = lightPos.x * 2;
+                            lightPositions[d*2 + 1] = lightPos.y * 2;
+                            lightsOn[d] = 1;
+                            d++;
+                        }
                     }
                 }
+
+                shader.setUniform("lightPositions", lightPositions);
+                shader.setUniform("lightsOn", lightsOn);
+                shader.setUniformArray("lightRadius", lightRadiai);
+
+                shader.setUniform("winHeight", window.getHeight());
+                shader.setUniform("winWidth", window.getWidth());
+
+                world.render(shader,camera, window);
+
+                for(String owner: entities.keySet()){
+                    for(Integer entityID: entities.get(owner).keySet()){
+                        entities.get(owner).get(entityID).render(camera, shader);
+                    }
+                }
+
+
                 createAndRender(toRender, entities);
 
-                lights.render();
-                dark.render();
-                gui.render();
                 window.swapBuffers();
 
                 frames += 1;
@@ -229,7 +240,7 @@ public class Main {
             }
 
         }
-        System.out.println(bot.transform.pos.toString());
+
 
 //        clears everything we have used from memory
         glfwTerminate();
@@ -239,19 +250,18 @@ public class Main {
     }
 
 
-    //    make this render all the objects in the hashmap then set the hasmap to null
-    public static void createAndRender(ConcurrentHashMap<String, HashMap<Integer, EntityData>> items, ConcurrentHashMap<String, HashMap<Integer, Entity>> entities) {
-        for (String owner : items.keySet()) {
-            for (Integer id : items.get(owner).keySet()) {
-                EntityData entitiesData = items.get(owner).get(id);
-                if (entitiesData != null) {
+//    make this render all the objects in the hashmap then set the hasmap to null
+    public static void createAndRender(ConcurrentHashMap<String,HashMap<Integer, EntityData>> items,ConcurrentHashMap<String,HashMap<Integer, Entity>> entities){
+        for(String owner: items.keySet()){
+            for(Integer id: items.get(owner).keySet()){
+                EntityData entitysData = items.get(owner).get(id);
+                if (entitysData != null){
                     Entity ent = new Enemy();
-                    ent.readInEntityData(entitiesData);
+                    ent.readInEntityData(entitysData);
                     entities.get(owner).put(id, ent);
-                    items.get(owner).put(id, null);
+                    items.get(owner).put(id,null);
                 }
             }
         }
     }
 }
-

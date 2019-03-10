@@ -85,7 +85,17 @@ public class ClientConnectionThread extends Thread {
           clientTable.addClient(clientID);
           BlockingQueue<Object> clientqueue = clientTable.getQueue(clientID);
           world.addClient(clientID);
-
+          if(world.getWorldData().size() < 8) {
+        	  while(world.getWorldData().size()<8) {
+        		  world.addClient("Bot"+(8-world.getWorldData().size()));
+        	  }
+          }
+          
+          if(world.getWorldData().size() > 8) {
+        	  while(world.getWorldData().size() > 8) {
+        		  world.removeBot();
+        	  }
+          }
           ServerSender serverSender = new ServerSender(clientqueue, toClient, clientID, world);
           ServerReceiver serverReceiver = new ServerReceiver(clientID, fromClient, clientTable, serverSender, world);
 

@@ -55,7 +55,7 @@ public class MapNode implements Comparable<MapNode> {
 		
 		else {
 			int x = (int)Math.abs(position.x - goal.x);
-			int y = (int)Math.abs(position.y - goal.y);
+			int y = (int)Math.abs((-position.y) - (-goal.y));
 			return x + y;
 		}
 	}

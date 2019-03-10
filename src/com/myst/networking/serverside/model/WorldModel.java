@@ -1,7 +1,7 @@
 package com.myst.networking.serverside.model;
 
 import com.myst.networking.EntityData;
-
+import com.myst.world.entities.EntityTypes;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,6 +38,15 @@ public class WorldModel {
 
     public void addClient(String clientID){
         entities.put(clientID, new ArrayList<>());
+    }
+    
+    public void removeBot() {
+    	for(String entityKey: entities.keySet()) {
+    		if(entities.get(entityKey).get(0).type == EntityTypes.BOT) {
+    			entities.remove(entityKey);
+    			return;
+    		}
+    	}
     }
 
 //    simply returns all the data stored by the world model in a form for networking to send
