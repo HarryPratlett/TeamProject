@@ -78,13 +78,17 @@ public class MapGenerator {
 											map[x1 + 2][y1 + 2] = new Tile(m1 - 1, textures[m1]);
 											map[x1][y1 + 2] = new Tile(m1 - 1, textures[m1]);
 										}
+
 									}
 								}
 							}
 						}
+
 					}
+
 				}
 			}
+
 		}
 
 		try {
