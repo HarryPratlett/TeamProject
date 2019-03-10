@@ -32,9 +32,18 @@ public class ClientSender extends Thread {
                 if(sendQueue) {
                     sendQueue = false;
                     while (!queue.isEmpty()) {
-                        Message toSend = (Message) queue.take();
-                        toServer.writeObject(toSend);
-                        toServer.reset();
+        //            convert entities to entity data objects
+        //            send the entity data objects
+//                        I only cast the object to message for debugging purposes
+                            Message toSend = (Message) queue.take();
+//                            if(toSend.header == Codes.UPDATE_SERVER){
+//                                EntityData[] entities =(EntityData[]) toSend.data;
+//                                System.out.println("Sending from the sender");
+//                                System.out.println(entities[0].transform.pos);
+//                            }
+//                            System.out.println(toSend.hashCode());
+                            toServer.writeObject(toSend);
+                            toServer.reset();
                     }
                 }
             }

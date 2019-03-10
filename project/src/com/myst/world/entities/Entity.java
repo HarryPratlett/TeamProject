@@ -19,31 +19,29 @@ public abstract class Entity implements Serializable {
     public Transform transform;
     protected Texture texture;
     public AABB boundingBox;
+    private Shader shader;
     protected EntityTypes type;
     public String owner;
-    public boolean lightSource;
-    public float lightDistance;
     public Integer localID;
-    public boolean visibleToEnemy;
 
 
 
-    public Entity(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords){
+    public Entity(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords, Shader shader){
         model = new Model(vertices, texture, indices);
         this.texture = new Texture("assets/survivor1_hold.png");
+
+        this.shader = shader;
         transform = new Transform();
         transform.scale = new Vector3f(1,1,1);
         boundingBox = new AABB(new Vector2f(transform.pos.x, transform.pos.y), boundingBoxCoords);
-        this.lightSource = false;
-        this.lightDistance = 2.5f;
     }
 
     public abstract void update(float deltaTime, Window window, Camera camera, World world);
 
-    public void render(Camera camera, Shader shader){
-        shader.bind();
-        shader.setUniform("sampler", 0);
-        shader.setUniform("projection", transform.getProjection(camera.getProjection()));
+    public void render(Camera camera){
+        this.shader.bind();
+        this.shader.setUniform("sampler", 0);
+        this.shader.setUniform("projection", transform.getProjection(camera.getProjection()));
         texture.bind(0);
         model.render();
     }
@@ -55,8 +53,6 @@ public abstract class Entity implements Serializable {
         data.ownerID = this.owner;
         data.boundingBox = this.boundingBox;
         data.transform = this.transform;
-        data.lightSource = this.lightSource;
-        data.lightDistance = this.lightDistance;
         return data;
     }
 
@@ -65,8 +61,6 @@ public abstract class Entity implements Serializable {
         this.localID = data.localID;
         this.transform = data.transform;
         this.boundingBox = data.boundingBox;
-        this.lightSource = data.lightSource;
-        this.lightDistance = data.lightDistance;
     }
 
 }

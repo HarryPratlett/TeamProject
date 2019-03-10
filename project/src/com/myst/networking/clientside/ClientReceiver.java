@@ -16,15 +16,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ClientReceiver extends Thread {
     private ClientSender toServer;
     private ObjectInputStream fromServer;
-    private ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities;
-    private ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender;
+    private ConcurrentHashMap<String,HashMap<Integer, Entity>> entities;
+    private ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender;
     private String clientID;
 
 //    convert entity[] into hash map potentially currently the arrays indexes corresponds to the entity's ID
     public ClientReceiver(ObjectInputStream fromServer,
                           ClientSender toServer,
-                          ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities,
-                          ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender,
+                          ConcurrentHashMap<String,HashMap<Integer, Entity>> entities,
+                          ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender,
                           String clientID){
         this.fromServer = fromServer;
         this.toServer = toServer;
@@ -67,7 +67,7 @@ public class ClientReceiver extends Thread {
 //    sends the entities positions to the server
     private void sendEntities(){
 //        this needs refactoring
-        ConcurrentHashMap<Integer, Entity> myEntities = this.entities.get(clientID);
+        HashMap<Integer, Entity> myEntities = this.entities.get(clientID);
         ArrayList<EntityData> toSend = new ArrayList<EntityData>();
         if(myEntities ==  null){
 //            this is sloppy and needs tidying once debugging has finished
@@ -75,13 +75,11 @@ public class ClientReceiver extends Thread {
         }
         for(Integer i: myEntities.keySet()){
             if (myEntities.get(i) != null){
-                EntityData data= myEntities.get(i).getData();
-                if(myEntities.get(i).visibleToEnemy){
-                    data.lightSource = true;
-                } else{
-                    data.lightSource = false;
-                }
-                toSend.add(data);
+                toSend.add(myEntities.get(i).getData());
+//                System.out.println("sending to Server:");
+//                System.out.println("entity owned by " + myEntities.get(i).getData().ownerID);
+//                System.out.println("entity with ID " + myEntities.get(i).getData().localID);
+//                System.out.println("with position" + myEntities.get(i).getData().transform.pos);
             }
         }
         Message msg = new Message(Codes.UPDATE_SERVER,toSend);
@@ -100,9 +98,9 @@ public class ClientReceiver extends Thread {
                 EntityData entity = entityData.get(i);
 //                System.out.println(entityData.get(i).transform.pos);
                 if(entities.get(entity.ownerID) == null){
-                    entities.put(entity.ownerID, new ConcurrentHashMap<Integer,Entity>());
+                    entities.put(entity.ownerID, new HashMap<Integer,Entity>());
                     if(toRender.get(entity.ownerID) == null){
-                        toRender.put(entity.ownerID, new ConcurrentHashMap<Integer,EntityData>());
+                        toRender.put(entity.ownerID, new HashMap<Integer,EntityData>());
                     }
                 }
                 if(entities.get(entity.ownerID).get(entity.localID) == null){
@@ -111,7 +109,7 @@ public class ClientReceiver extends Thread {
                     }
                 }
                 else if (!entity.ownerID.equals(clientID)) {
-                    entities.get(entity.ownerID).get(entity.localID).readInEntityData(entityData.get(i));
+                    entities.get(entity.ownerID).get(entity.localID).transform = entityData.get(i).transform;
                 }
             }
         }

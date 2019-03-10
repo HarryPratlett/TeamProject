@@ -41,6 +41,7 @@ public class GUI {
     private Boolean controls_accessed;
     private Boolean settings_accessed;
     private Boolean close_window;
+    private Shader shader;
     private Input input;
     private int volume;
     private int brightness;
@@ -52,20 +53,21 @@ public class GUI {
         volume = 3;
         brightness = 3;
         currentWindow = GUIStates.HIDDEN;
+        shader = new Shader("assets/shader");
         this.window = window;
         this.input = input;
     }
 
-    public void render(Shader shader){
+    public void render(){
         switch(currentWindow){
             case MAIN_MENU:
-                this.renderGUI(shader);
+                this.renderGUI();
                 break;
             case CONTROLS:
-                this.renderControls(shader);
+                this.renderControls();
                 break;
             case SETTINGS:
-                this.renderSettings(shader);
+                this.renderSettings();
                 break;
         }
     }
@@ -116,7 +118,7 @@ public class GUI {
 
     }
 
-    public void renderGUI(Shader shader) {
+    public void renderGUI() {
 
             Texture[] menuTextures = new Texture[]{
                     new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
@@ -215,9 +217,10 @@ public class GUI {
     }
 
 
-    public void renderControls(Shader shader) {
+    public void renderControls() {
 
         glClear(GL_COLOR_BUFFER_BIT);
+        Shader shader = new Shader("assets/shader");
         Texture controlsTexture = new Texture("assets/Keyboard_asset.png");
         float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, controlsTexture.getHeight(), controlsTexture.getWidth(), 0.0007, 0.0025);
@@ -227,9 +230,10 @@ public class GUI {
 
 
     }
-    public void renderSettings(Shader shader){
+    public void renderSettings(){
 
         glClear(GL_COLOR_BUFFER_BIT);
+        Shader shader = new Shader("assets/shader");
         Texture[] settingsTextures = new Texture[]{new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
         Matrix4f scale = new Matrix4f();
         float y = 0;

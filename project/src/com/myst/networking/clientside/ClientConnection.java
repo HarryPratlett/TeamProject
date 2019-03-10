@@ -34,11 +34,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ClientConnection{
   private static final int PORT = 4444;
   private String hostname;
-  private ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities;
-  private ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender;
+  private ConcurrentHashMap<String,HashMap<Integer, Entity>> entities;
+  private ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender;
 
-  public ClientConnection(ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities,
-                          ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender,
+  public ClientConnection(ConcurrentHashMap<String,HashMap<Integer, Entity>> entities,
+                          ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender,
                           String host){
     this.hostname = host;
     this.entities = entities;

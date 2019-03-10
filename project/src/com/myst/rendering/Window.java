@@ -34,14 +34,18 @@ public class Window {
         GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
         window = glfwCreateWindow(width,height,title,fullscreen ? glfwGetPrimaryMonitor() : 0,0);
+
         if (window == 0){
             throw new IllegalStateException("Failed to create window");
         }
         if (!fullscreen) {
             glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
+
             glfwShowWindow(window);
         }
+
         glfwMakeContextCurrent(window);
+
         input = new Input(window);
         glfwSetCursorPosCallback(window, input);
     }

@@ -60,8 +60,5 @@ public class Input extends GLFWCursorPosCallback {
         for (int i =32; i < GLFW_KEY_LAST; i++){
             keys[i] = isKeyDown(i);
         }
-        for (int i=0; i < GLFW_MOUSE_BUTTON_LAST; i++){
-            buttons[i] = isMouseButtonDown(i);
-        }
     }
 }
