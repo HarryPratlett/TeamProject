@@ -2,6 +2,8 @@ package com.myst.world.entities;
 
 import com.myst.audio.Audio;
 import com.myst.rendering.Shader;
+import com.myst.world.collisions.Bullet;
+import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
@@ -10,9 +12,13 @@ import com.myst.world.collisions.Collision;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
+
+import java.util.ArrayList;
+
 import static com.myst.world.entities.EntityTypes.PLAYER;
 
 public class Player extends Entity{
+    private ArrayList<Line> bullets;
 
     private final float MOVEMENT_SPEED = 10f;
 
@@ -23,7 +29,7 @@ public class Player extends Entity{
 //
 //    private static final int[] indices = ;
 
-    public Player(){
+    public Player(ArrayList<Line> bullets){
         super(new float[]{
             -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
                     -0.5f, -0.5f, 0f/*3*/
@@ -36,9 +42,10 @@ public class Player extends Entity{
                 0,1,2,
                 2,3,0
         },
-        new Vector2f(0.5f,0.5f), new Shader("assets/Shader"));
+        new Vector2f(0.5f,0.5f));
         this.type = PLAYER;
-
+        this.visibleToEnemy = true;
+        this.bullets = bullets;
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world) {
@@ -46,6 +53,15 @@ public class Player extends Entity{
 //        the entities will then
 
         boolean moved = false;
+
+        double xMouse = ((window.getInput().getMouseCoordinates()[0] * 2) / window.getWidth()) - 1;
+        double yMouse = -(((window.getInput().getMouseCoordinates()[1] * 2) / window.getHeight()) - 1);
+
+        transform.rotation = (float) Math.atan(yMouse / xMouse);
+
+        if (xMouse < 0){
+            transform.rotation += Math.PI;
+        }
 
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
             transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0);
@@ -62,6 +78,21 @@ public class Player extends Entity{
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
             transform.pos.y += -MOVEMENT_SPEED * deltaTime;
             moved = true;
+        }
+        if (window.getInput().isKeyPressed(GLFW.GLFW_KEY_F)){
+            if(this.lightDistance == 0.25f){
+                this.lightDistance = 2.5f;
+                this.visibleToEnemy = true;
+            }else{
+                this.lightDistance = 0.25f;
+                this.visibleToEnemy = false;
+            }
+        }
+
+        if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)){
+            Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) xMouse,(float) -yMouse));
+            bullets.add(line);
+            System.out.println("mouse pressed");
         }
 
         if(moved)
