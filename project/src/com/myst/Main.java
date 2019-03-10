@@ -11,6 +11,7 @@ import com.myst.world.collisions.Bullet;
 import com.myst.world.collisions.Line;
 import com.myst.world.entities.Enemy;
 import com.myst.world.entities.Entity;
+import com.myst.world.lighting.Darkness;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
@@ -22,6 +23,7 @@ import com.myst.world.map.rendering.Tile;
 import com.myst.networking.clientside.ClientConnection;
 
 import com.myst.world.map.rendering.TileRenderer;
+import javafx.scene.effect.Lighting;
 import org.joml.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -148,11 +150,11 @@ player.localID = IDCounter;
 
         GUI gui = new GUI(window, window.getInput());
 
-        Darkness dark = new Darkness(window);
+//        Darkness dark = new Darkness(window);
 
         Audio.getAudio().initInput(window.getInput());
 
-        Lighting lights = new Lighting(window.getInput(), window);
+//        Lighting lights = new Lighting(window.getInput(), window);
 
         while (!window.shouldClose()) {
 
@@ -337,7 +339,7 @@ calculateBullets(myEntities, playerBullets, map);
 
       for(int i=0;i <lightsOn.length;i++){
           lightsOn[i] = 0;
-          lightRadiai[i] = 0;
+          lightRadiai[i] = 40;
       }
 
 //                getting which players have their lights on and then passing that to opengl
