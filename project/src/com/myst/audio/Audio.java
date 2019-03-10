@@ -23,9 +23,9 @@ public class Audio {
 
     public static final int MAP_LENGTH = 100;
     public static final double MAP_WIDTH = 100;
-    private final double GUN_DIST = 100;
-    private final double HIT_DIST = 50;
-    private final double FOOTSTEPS_DIST = 20;
+    private final double GUN_DIST = 70;
+    private final double HIT_DIST = 35;
+    private final double FOOTSTEPS_DIST = 10;
     private double distance;
 
     public static final int MIN_VOLUME = 0;
@@ -68,6 +68,9 @@ public class Audio {
         return audio;
     }
 
+    /**
+     * creating streams, clips, gain, calculating volume range
+     */
     private Audio() {
 
         try {
@@ -109,15 +112,20 @@ public class Audio {
         theme();
     }
 
+    /**
+     * initialising input
+     * @param input - input
+     */
     public void initInput(Input input) {
         this.input = input;
     }
 
-    public static double getPythagoras(int x, int y) {
-        double res = Math.sqrt(x ^ 2 + y ^ 2);
-        return res;
-    }
-
+    /**
+     * calculating the distance between the player and sound source
+     * @param playerLocation - location of the player
+     * @param soundLocation - location of the sound source
+     * @return
+     */
     public static double calculateDistance(Vector2f playerLocation, Vector2f soundLocation) {
         double x = playerLocation.x - soundLocation.x;
         double y = playerLocation.y - soundLocation.y;
@@ -125,7 +133,9 @@ public class Audio {
         return res;
     }
 
-    // Object Sender
+    /**
+     * muting the client
+     */
     public void mute() {
         muted = !muted;
         if (muted) {
@@ -138,10 +148,11 @@ public class Audio {
         }
     }
 
-    // Object Sender
+    /**
+     * changing the volume
+     * @param change how much the volume is increased / decreased
+     */
     public void volume(int change) {
-        // TODO - something has to continuously check the volume
-        // TODO - OR change it straight away
         if (change < MIN_VOLUME) {
             if ((volume + change) < MIN_VOLUME) {
                 volume = MIN_VOLUME;
@@ -156,39 +167,42 @@ public class Audio {
             }
         }
 
-        //System.out.println(themeRange);
         gain = (themeRange / MAX_VOLUME * volume) + themeGainControl.getMinimum();
         themeGainControl.setValue(gain);
 
-        //System.out.println(gunRange);
         gain = (gunRange / MAX_VOLUME * volume) + gunGainControl.getMinimum();
         gunGainControl.setValue(gain);
 
-        //System.out.println(hitRange);
         gain = (hitRange / MAX_VOLUME * volume) + hitGainControl.getMinimum();
         hitGainControl.setValue(gain);
 
-        //System.out.println(footstepsRange);
         gain = (footstepsRange / MAX_VOLUME * volume) + footstepsGainControl.getMinimum();
         footstepsGainControl.setValue(gain);
     }
 
+    /**
+     * playing the theme song
+     */
     public void theme() {
         themeClip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
+    /**
+     * playing a clip
+     * @param clipName - name of the clip
+     */
     public void play(String clipName) { //, Vector2f playerLocation, Vector2f soundLocation) {
         if (!muted) {
             switch (clipName) {
                 case GUN:
-                    if (calculateDistance(playerLocation, soundLocation) < GUN_DIST) {
-                        gunClip.loop(0);
-                    }
+                    //if (calculateDistance(playerLocation, soundLocation) < GUN_DIST) {}
+                    if (gunClip.getFramePosition() >= gunClip.getFrameLength())
+                        gunClip.setFramePosition(0);
+                    gunClip.loop(0);
                     break;
                 case HIT:
-                    if (calculateDistance(playerLocation, soundLocation) < HIT_DIST) {
-                        hitClip.loop(0);
-                    }
+                    //if (calculateDistance(playerLocation, soundLocation) < HIT_DIST) {}
+                    hitClip.loop(0);
                     break;
                 case FOOTSTEPS:
                     // TODO - check location, get volume
@@ -199,17 +213,25 @@ public class Audio {
                 default:
                     //none
             }
-        } else {
-            // muted, do nothing
         }
     }
 
-    public int getVolume(String clipName, Vector2f soundLocation) {
+    /**
+     * calculating the volume depending on sound source location
+     * @param clipName - the name of the clip
+     * @param soundLocation - the location of sound source
+     * @return
+     */
+    public int calculateVolume(String clipName, Vector2f soundLocation) {
         int result = volume;
         // TODO - calculate how far it is (0-1) * how high the volume is (0-5)
         return result;
     }
 
+    /**
+     * stopping a track
+     * @param clipName - the name of the clip
+     */
     public void stop(String clipName) {
         switch (clipName) {
             case THEME:
@@ -229,6 +251,10 @@ public class Audio {
         }
     }
 
+    /**
+     * checking if the key M is pressed
+     * if true, calls mute
+     */
     public void update() {
         if(input.isKeyPressed(GLFW.GLFW_KEY_M)){
             mute();
