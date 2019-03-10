@@ -118,7 +118,6 @@ public class Main {
     player.lightSource = true;
     player.transform.pos.add(new Vector3f(1,-1,0));
 
-
     player.localID = IDCounter;
     player.owner = clientID;
 

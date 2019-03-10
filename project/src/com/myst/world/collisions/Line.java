@@ -3,9 +3,12 @@ package com.myst.world.collisions;
 import org.joml.Matrix3f;
 import org.joml.Vector2f;
 
-public class Line {
+import java.io.Serializable;
+
+public class Line implements Serializable {
     public Vector2f vector;
     public Vector2f position;
+
 
     public Line( Vector2f position, Vector2f vector){
         this.vector = vector;
@@ -77,5 +80,45 @@ public class Line {
         }
 
         return lTwoLambda;
+    }
+
+    public Float distanceTo(Line line2){
+        if(this.vector.x == line2.vector.x && this.vector.y == line2.vector.y){
+            return null;
+        }
+
+        float[][] gaussMatrix = new float[3][2];
+        gaussMatrix[2][0] = line2.position.x - this.position.x;
+        gaussMatrix[2][1] = line2.position.y - this.position.y;
+        gaussMatrix[0][0] = this.vector.x;
+        gaussMatrix[0][1] = this.vector.y;
+        gaussMatrix[1][0] = -line2.vector.x;
+        gaussMatrix[1][1] = -line2.vector.y;
+
+
+//        eliminating 0 1
+        float n = -gaussMatrix[0][1] / gaussMatrix[0][0];
+        gaussMatrix[0][1] = 0;
+        gaussMatrix[1][1] = gaussMatrix[1][1] + (n * gaussMatrix[1][0]);
+        gaussMatrix[2][1] = gaussMatrix[2][1] + (n * gaussMatrix[2][0]);
+
+//        eliminating 1 0
+        n = -gaussMatrix[1][0] / gaussMatrix[1][1];
+        gaussMatrix[1][0] = 0;
+        gaussMatrix[2][0] = gaussMatrix[2][0] + (n * gaussMatrix[2][1]);
+
+//        calculating the coefficients
+        float lTwoLambda = gaussMatrix[2][1] / gaussMatrix[1][1];
+        float lOneLambda = gaussMatrix[2][0] / gaussMatrix[0][0];
+
+        if(lOneLambda < 0){
+            return null;
+        }
+
+        float xDistance = lOneLambda * this.vector.x;
+        float yDistance = lOneLambda * this.vector.y;
+
+        float distance = (float) Math.sqrt((xDistance*xDistance) + (yDistance*yDistance));
+        return distance;
     }
 }
