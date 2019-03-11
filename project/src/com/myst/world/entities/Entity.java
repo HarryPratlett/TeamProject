@@ -27,7 +27,23 @@ public abstract class Entity implements Serializable {
     protected Texture texture3;
     protected Texture texture4;
     protected Texture texture5;
+   
     protected Texture texture6;
+    protected Texture texture7;
+    protected Texture texture8;
+    protected Texture texture9;
+   
+    protected Texture texture10;   
+    protected Texture texture11;
+    protected Texture texture12;
+    protected Texture texture13;
+    
+    protected Texture texture14;
+    protected Texture texture15;
+    protected Texture texture16;
+    protected Texture texture17;
+    
+    //Zombie
     
     protected Texturenew texturenew;
    
@@ -47,13 +63,29 @@ public abstract class Entity implements Serializable {
     public Entity(float[] vertices,float[] texture,int[] indices, Vector2f boundingBoxCoords, Shader shader) {
     	
     	model = new Model(vertices,texture, indices);
-    	
+    	//survior1_gun
     	this.texture =new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun.png");
     	this.texture2 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun_up.png");
     	this.texture3 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun_left.png");
     	this.texture4 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun.png");
     	this.texture5 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun_down.png");
+    	//survior1_machine
+    	this.texture6 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_machine_up.png");
+    	this.texture7 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_machine_left.png");
+    	this.texture8 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_machine_right.png");
+    	this.texture9 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_machine_down.png");
+    	//manBlue_gun
+    	this.texture10 = new Texture("assets/topdown-shooter/PNG/Man Blue/manBlue_gun_up.png");
+    	this.texture11= new Texture("assets/topdown-shooter/PNG/Man Blue/manBlue_gun_left.png");
+    	this.texture12= new Texture("assets/topdown-shooter/PNG/Man Blue/manBlue_gun_right.png");
+    	this.texture13= new Texture("assets/topdown-shooter/PNG/Man Blue/manBlue_gun_down.png");
+    	//manBlue_machine
+    	this.texture14= new Texture("assets/topdown-shooter/PNG/Man Blue/manBlue_machine_up.png");
+    	this.texture15= new Texture("assets/topdown-shooter/PNG/Man Blue/manBlue_machine_left.png");
+    	this.texture16= new Texture("assets/topdown-shooter/PNG/Man Blue/manBlue_machine_right.png");
+    	this.texture17= new Texture("assets/topdown-shooter/PNG/Man Blue/manBlue_machine_down.png");
     	
+    	//
     	this.shader = shader;
         transform = new Transform();
         transform.scale = new Vector3f(1,1,1);
