@@ -28,6 +28,7 @@ public abstract class Entity implements Serializable {
     private boolean killable;
     protected HashMap<Integer, Entity> entities;
     public boolean visibleToEnemy;
+    private boolean renderMe;
 
 
 

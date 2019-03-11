@@ -14,6 +14,8 @@ public class Window {
 
     private boolean fullscreen;
 
+    GLFWVidMode vidMode;
+
 
     public static void setCallbacks(){
         glfwSetErrorCallback(new GLFWErrorCallback() {
@@ -32,22 +34,25 @@ public class Window {
     public void createWindow(String title){
 //        gets information about the monitor
         GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        this.vidMode = videoMode;
 
         window = glfwCreateWindow(width,height,title,fullscreen ? glfwGetPrimaryMonitor() : 0,0);
-
         if (window == 0){
             throw new IllegalStateException("Failed to create window");
         }
         if (!fullscreen) {
             glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
-
             glfwShowWindow(window);
         }
+<<<<<<< HEAD:src/com/myst/rendering/Window.java
 
 
         glfwMakeContextCurrent(window);
 
 
+=======
+        glfwMakeContextCurrent(window);
+>>>>>>> networking:project/src/com/myst/rendering/Window.java
         input = new Input(window);
         glfwSetCursorPosCallback(window, input);
     }
@@ -74,10 +79,26 @@ public class Window {
     }
 
     public int getWidth(){
-        return this.width;
+        int[] width = new int[1];
+        int[] height = new int[1];
+        glfwGetWindowSize(this.window,width,height);
+
+        return width[0];
     }
     public int getHeight(){
-        return this.height;
+        int[] width = new int[1];
+        int[] height = new int[1];
+        glfwGetWindowSize(this.window,width,height);
+
+        return height[0];
+    }
+
+    public int getScreenWidth(){
+        return vidMode.width();
+    }
+
+    public int getScreenHeight(){
+        return vidMode.height();
     }
 
     public long getWindow(){

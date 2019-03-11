@@ -5,6 +5,9 @@ uniform sampler2D sampler;
 uniform int winHeight;
 uniform int winWidth;
 
+uniform int widthResolution;
+uniform int heightResolution;
+
 uniform vec2 lightPositions[8];
 uniform int lightsOn[8];
 uniform float lightRadius[8];
@@ -16,8 +19,8 @@ void main(){
 
     gl_FragColor = vec4(0,0,0,1);
 
-    float screenCoordX = (gl_FragCoord.x / winWidth -1 ) * 2;
-    float screenCoordY = (gl_FragCoord.y / winHeight -1 ) * 2;
+    float screenCoordX = (gl_FragCoord.x / winWidth -1 ) * (widthResolution / winWidth);
+    float screenCoordY = (gl_FragCoord.y / winHeight -1 ) * (heightResolution / winHeight);
     float smallestDistRatio = 1;
 
     bool inLight = false;
