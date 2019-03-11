@@ -24,6 +24,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -46,6 +47,12 @@ public class Main {
 
     public static void main(String[] args) {
         setUp();
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
+        System.out.println(width);
+        System.out.println(height);
 
         Window window = new Window();
 
