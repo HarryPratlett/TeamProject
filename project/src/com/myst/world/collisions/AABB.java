@@ -14,8 +14,12 @@ public class AABB implements Serializable{
     public AABB(Vector2f centre, Vector2f halfExtent){
         this.centre = centre;
         this.halfExtent = halfExtent;
-        hitboxLineOne = new Line(centre.add(halfExtent),new Vector2f(-1,0));
-        hitboxLineTwo = new Line(centre.add(halfExtent),new Vector2f(0,-1));
+        Vector2f hitboxLineOneCentre = new Vector2f();
+        Vector2f hitboxLineTwoCentre = new Vector2f();
+        centre.add(halfExtent, hitboxLineOneCentre);
+        centre.add(halfExtent, hitboxLineTwoCentre);
+        hitboxLineOne = new Line(hitboxLineOneCentre,new Vector2f(-1,0));
+        hitboxLineTwo = new Line(hitboxLineTwoCentre,new Vector2f(0,-1));
     }
 
 

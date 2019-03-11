@@ -34,6 +34,8 @@ public class Main {
 
     static int IDCounter = 0;
     static String clientID = "Base2";
+    static int resHeight;
+    static int resWidth;
 
   public static void setUp(){
     Window.setCallbacks();
@@ -66,8 +68,8 @@ public class Main {
     window.setFullscreen(false);
     window.createWindow("My game");
 
-    int resHeight =window.getScreenHeight();
-    int resWidth  =window.getScreenWidth();
+    resHeight =window.getScreenHeight();
+    resWidth  =window.getScreenWidth();
 
 
 
@@ -182,14 +184,14 @@ public class Main {
         window.update();
 
 
-        camera.updatePosition();
+
         debugCurrentTime = Timer.getTime();
         double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
         debugLastTime = debugCurrentTime;
 
         player.update((float) timeSinceLastUpdate, window, camera, world);
         gui.update();
-        calculateBullets(myEntities, playerBullets, map);
+//        calculateBullets(myEntities, playerBullets, map);
         playerBullets.clear();
 
       }
@@ -198,7 +200,8 @@ public class Main {
         frame_time = 0;
         frames = 0;
       }
-    
+
+      camera.updatePosition();
       if (renderFrame) {
           glClear(GL_COLOR_BUFFER_BIT);
 
@@ -378,7 +381,7 @@ public class Main {
           Entity ent = new Enemy();
           ent.readInEntityData(entitysData);
           entities.get(owner).put(id, ent);
-          items.get(owner).put(id,null);
+          items.get(owner).remove(id);
         }
       }
     }
