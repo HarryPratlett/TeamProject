@@ -3,6 +3,7 @@ package com.myst.GUI;
 
 import com.myst.helper.Timer;
 import com.myst.input.Input;
+import com.myst.input.KeyboardHandler;
 import com.myst.rendering.Model;
 import com.myst.rendering.Shader;
 import com.myst.rendering.Window;
@@ -54,11 +55,12 @@ public class Menu {
     private MenuStates currentWindow;
     private Boolean multiplayerAccessed;
     private Boolean joinGameAccessed;
-    private Boolean typing;
+    private Boolean isIpAddress;
     private String ipAddress;
     private Shader shaderInvis;
     private String port;
-    private int change;
+    private GLFWKeyCallback keyCallback;
+
 
 
 
@@ -77,9 +79,7 @@ public class Menu {
         this.ipAddress = "";
         this.port = "";
         //this.font = new Font("Times New Roman", Font.BOLD, 24);
-        this.change = 0;
-        this.typing = true;
-
+        this.keyCallback = new KeyboardHandler();
 
 
     }
@@ -178,6 +178,11 @@ public class Menu {
             case JOIN_GAME:
                 this.renderJoinGame();
                 break;
+            case ENTERING:
+                this.renderJoinGame();
+                this.takeInput();
+                this.renderText(ipAddress);
+                this.renderText(port);
         }
     }
 
@@ -194,6 +199,8 @@ public class Menu {
                 joinGameAccessed = true;
                 this.joinGameInput();
                 break;
+            case ENTERING:
+                this.takeInput();
             case HIDDEN:
                 break;
         }
@@ -312,10 +319,12 @@ public class Menu {
                     String buttonName = joinGameButtons.get(b);
                     switch(buttonName) {
                         case "text_box_1.png":
-                            this.takeInput(new String());
+                            this.currentWindow = MenuStates.ENTERING;
+                            this.isIpAddress = true;
                             break;
                         case "text_box_2.png":
-                            System.exit(2);
+                            this.currentWindow = MenuStates.ENTERING;
+                            this.isIpAddress = false;
                             break;
                     }
                 }
@@ -347,7 +356,7 @@ public class Menu {
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
             Model model = new Model(vertices, textureDocks, indices);
-            renderImage(shaderInvis, t, xPos, yPos, new Matrix4f(), model);
+            renderImage(shader, t, xPos, yPos, new Matrix4f(), model);
             if(isButton) {
                 this.addButton(0 + vertices[0], yPos + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
             }
@@ -355,34 +364,45 @@ public class Menu {
         }
     }
 
-    public void takeInput(String chosenInput) {
+    public void takeInput() {
         glfwPollEvents();
-        if (!window.getInput().isKeyDown(GLFW_KEY_0))   {
-            chosenInput += Integer.toString(2);
-
-        }
-        /*    for (int i = 48; i <= 57; i++) {
-                if (window.getInput().isKeyPressed(i)) {
-                    chosenInput += glfwGetKeyName(i, 0);
+        if(isIpAddress) {
+            for (int i = 48; i <= 57; i++) {
+                if (KeyboardHandler.isKeyDown(i)) {
+                     this.ipAddress += glfwGetKeyName(i, 0);
                 }
-            }*/
-            renderText(chosenInput);
-            if(window.getInput().isMousePressed(GLFW_MOUSE_BUTTON_1))  {
-                typing = false;
             }
+        }
+        else    {
+            for (int i = 48; i <= 57; i++) {
+                if (KeyboardHandler.isKeyDown(i)) {
+                    this.port += glfwGetKeyName(i, 0);
+                }
+            }
+        }
+
     }
 
     public void renderText(String input)    {
         char[] charInput = input.toCharArray();
-        float x = 0.5f;
+        float x = 0.17f;
         for(char c : charInput) {
-            Texture texture = new Texture("assets/main_menu/IP.png");
-            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-            vertices = this.alterVertices(vertices, texture.getHeight(), texture.getWidth(), 0.001, 0.006);
-            Model model = new Model(vertices, textureDocks, indices);
-            this.renderImage(shader, texture, x, 0.25f, new Matrix4f(), model);
-            System.out.println("rendering");
-            x = x + 0.05f;
+            Texture texture;
+            if (Character.toString(c) == ".")   {
+                texture = new Texture("assets/main_menu/typing/dot.png");
+                float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+                vertices = this.alterVertices(vertices, texture.getHeight(), texture.getWidth(), 0.005, 0.006);
+                Model model = new Model(vertices, textureDocks, indices);
+                this.renderImage(shader, texture, x, 0.25f, new Matrix4f(), model);
+            }
+            else {
+                texture = new Texture("assets/main_menu/typing/" + Character.toString(c) + ".png");
+                float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+                vertices = this.alterVertices(vertices, texture.getHeight(), texture.getWidth(), 0.002, 0.006);
+                Model model = new Model(vertices, textureDocks, indices);
+                this.renderImage(shader, texture, x, 0.25f, new Matrix4f(), model);
+            }
+            x = x + 0.065f;
         }
     }
 
@@ -394,7 +414,7 @@ public class Menu {
         Model model = new Model(vertices, textureDocks, indices);
 
         this.renderImage(shader, background, 0, 0, new Matrix4f(), model);
-        change += 1;
+
 
         /*if(change == 100) {
             Random rand = new Random();

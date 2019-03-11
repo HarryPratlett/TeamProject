@@ -68,6 +68,7 @@ public class GUI {
             case SETTINGS:
                 this.renderSettings();
                 break;
+
         }
     }
 

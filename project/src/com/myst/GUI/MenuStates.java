@@ -4,5 +4,6 @@ public enum MenuStates {
     HIDDEN,
     MAIN_MENU,
     MULTIPLAYER,
-    JOIN_GAME;
+    JOIN_GAME,
+    ENTERING;
 }
