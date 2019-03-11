@@ -11,9 +11,11 @@ import org.lwjgl.glfw.GLFW;
 
 import static com.myst.world.entities.EntityTypes.PLAYER;
 
+import java.awt.image.BufferedImage;
+
 public class Enemy extends Entity{
 
-    private final float MOVEMENT_SPEED = 10f;
+    private final float MOVEMENT_SPEED = 8f;
 
 //    private static final float[] vertices =
 //
@@ -42,7 +44,25 @@ public class Enemy extends Entity{
         this.type = PLAYER;
 
     }
-
+  //animation
+    protected float xMove, yMove;
+/*
+    private BufferedImage getCurrentAnimationFrame(){
+		if(xMove < 0){
+			return ;
+					//animLeft.getCurrentFrame();
+		}else if(xMove > 0){
+			return ;
+			//animRight.getCurrentFrame();
+		}else if(yMove < 0){
+			return ;
+			//animUp.getCurrentFrame();
+		}else{
+			return ;
+			//animDown.getCurrentFrame();
+		}
+	}*/
+    
     public void update(float deltaTime, Window window, Camera camera, World world) {
 //        these needs fixing and entering into an entities class
 //        the entities will then

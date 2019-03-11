@@ -112,25 +112,25 @@ public class Player extends Entity{
         //right
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {      
         	transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0); 
-        	this.texture=this.texture5;
+        	this.texture=this.texture4;
         	xMove=1;yMove=0;
         	
         }
         //left
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
-            this.texture = this.texture2;
+            this.texture = this.texture3;
             transform.pos.x += -MOVEMENT_SPEED * deltaTime;
             xMove=-1;yMove=0;
         }
         //up
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
-        	this.texture = this.texture4;
+        	this.texture = this.texture2;
             transform.pos.y += MOVEMENT_SPEED * deltaTime;
             xMove=0;yMove=1;
         }
         //down
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
-        	this.texture =this.texture3 ;
+        	this.texture =this.texture5 ;
             transform.pos.y += -MOVEMENT_SPEED * deltaTime;
             xMove=0;yMove=-1;
         }

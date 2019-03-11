@@ -48,11 +48,11 @@ public abstract class Entity implements Serializable {
     	
     	model = new Model(vertices,texture, indices);
     	
-    	this.texture =new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_machine.png");
-    	this.texture2 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_stand.png");
-    	this.texture3 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun.png");
-    	this.texture4 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_hold.png");
-    	this.texture5 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_stand.png");
+    	this.texture =new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun.png");
+    	this.texture2 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun_up.png");
+    	this.texture3 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun_left.png");
+    	this.texture4 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun.png");
+    	this.texture5 = new Texture("assets/topdown-shooter/PNG/Survivor 1/survivor1_gun_down.png");
     	
     	this.shader = shader;
         transform = new Transform();
