@@ -56,6 +56,7 @@ public class Menu {
     private Boolean joinGameAccessed;
     private Boolean typing;
     private String ipAddress;
+    private Shader shaderInvis;
     private String port;
     private int change;
 
@@ -67,6 +68,8 @@ public class Menu {
     public Menu(Window window, Input input)   {
         this.window = window;
         this.shader = new Shader ("assets/shader");
+        this.shaderInvis = new Shader("assets/shader2");
+        shaderInvis.setUniform("opacity", 1f);
         this.input = input;
         this.currentWindow = MenuStates.MAIN_MENU;
         this.multiplayerAccessed = false;
@@ -202,7 +205,7 @@ public class Menu {
         this.renderBackground();
         Texture[] menuTextures = new Texture[]{new Texture("assets/main_menu/singleplayer_button.png"),
                 new Texture("assets/main_menu/multiplayer_button.png"), new Texture("assets/main_menu/quit_button.png")};
-        setupImages(menuTextures, 0f, 0.5f);
+        setupImages(menuTextures, 0f, 0.5f, true);
     }
 
     public void renderMultiplayer() {
@@ -210,7 +213,7 @@ public class Menu {
         this.renderBackground();
         Texture[] multiplayerTextures = new Texture[]{new Texture("assets/main_menu/host_game_button.png"),
         new Texture("assets/main_menu/join_game_button.png")};
-        setupImages(multiplayerTextures, 0f, 0.33f);
+        setupImages(multiplayerTextures, 0f, 0.33f, true);
     }
 
     public void renderJoinGame()    {
@@ -218,8 +221,8 @@ public class Menu {
         this.renderBackground();
         Texture[] joinGameTextures = new Texture[]
                 {new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"), new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png")};
-        setupImages(Arrays.copyOfRange(joinGameTextures, 0, 2), -0.5f, 0.25f);
-        setupImages(Arrays.copyOfRange(joinGameTextures, 2, 4), 0.5f, 0.25f);
+        setupImages(Arrays.copyOfRange(joinGameTextures, 0, 2), -0.5f, 0.25f, false);
+        setupImages(Arrays.copyOfRange(joinGameTextures, 2, 4), 0.5f, 0.25f, true);
     }
 
     public void addButton(float x, float y, float width, float height, String filepath) {
@@ -337,15 +340,17 @@ public class Menu {
         return vertices;
     }
 
-    public void setupImages(Texture[] textureArray, Float x, Float y)  {
+    public void setupImages(Texture[] textureArray, Float x, Float y, Boolean isButton)  {
         Float xPos = x;
         Float yPos = y;
         for (Texture t: textureArray)   {
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
             Model model = new Model(vertices, textureDocks, indices);
-            renderImage(shader, t, xPos, yPos, new Matrix4f(), model);
-            this.addButton(0 + vertices[0], yPos + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
+            renderImage(shaderInvis, t, xPos, yPos, new Matrix4f(), model);
+            if(isButton) {
+                this.addButton(0 + vertices[0], yPos + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
+            }
             yPos += (-0.35f);
         }
     }
@@ -353,7 +358,7 @@ public class Menu {
     public void takeInput(String chosenInput) {
         glfwPollEvents();
         if (!window.getInput().isKeyDown(GLFW_KEY_0))   {
-            chosenInput += Integer.toString(0);
+            chosenInput += Integer.toString(2);
 
         }
         /*    for (int i = 48; i <= 57; i++) {
@@ -370,15 +375,13 @@ public class Menu {
     public void renderText(String input)    {
         char[] charInput = input.toCharArray();
         float x = 0.5f;
-        Texture[] charTextures = new Texture[charInput.length];
         for(char c : charInput) {
-            Texture texture = new Texture("assets/main_menu/typing/" + Character.toString(c) + ".png");
-        }
-        for (Texture t: charTextures)   {
+            Texture texture = new Texture("assets/main_menu/IP.png");
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-            vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.004, 0.006);
+            vertices = this.alterVertices(vertices, texture.getHeight(), texture.getWidth(), 0.001, 0.006);
             Model model = new Model(vertices, textureDocks, indices);
-            renderImage(shader, t, x, 0.25f, new Matrix4f(), model);
+            this.renderImage(shader, texture, x, 0.25f, new Matrix4f(), model);
+            System.out.println("rendering");
             x = x + 0.05f;
         }
     }
