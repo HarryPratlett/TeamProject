@@ -25,6 +25,7 @@ public abstract class Entity implements Serializable {
     public float lightDistance;
     public Integer localID;
     public boolean visibleToEnemy;
+    private boolean renderMe;
 
 
 
@@ -41,11 +42,13 @@ public abstract class Entity implements Serializable {
     public abstract void update(float deltaTime, Window window, Camera camera, World world);
 
     public void render(Camera camera, Shader shader){
-        shader.bind();
-        shader.setUniform("sampler", 0);
-        shader.setUniform("projection", transform.getProjection(camera.getProjection()));
-        texture.bind(0);
-        model.render();
+        if(renderMe) {
+            shader.bind();
+            shader.setUniform("sampler", 0);
+            shader.setUniform("projection", transform.getProjection(camera.getProjection()));
+            texture.bind(0);
+            model.render();
+        }
     }
 
 //    used in networking to get the entity data

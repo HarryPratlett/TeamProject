@@ -50,6 +50,7 @@ public class Main {
   public static void main(String[] args){
     setUp();
 
+
     Window window = new Window();
 
     ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
@@ -64,6 +65,12 @@ public class Main {
 
     window.setFullscreen(false);
     window.createWindow("My game");
+
+    int resHeight =window.getScreenHeight();
+    int resWidth  =window.getScreenWidth();
+
+
+
 
     GL.createCapabilities();
 
@@ -159,6 +166,8 @@ public class Main {
 
       unprocessed += deltaTime;
       frame_time += deltaTime;
+
+
 
 
 //            in the case you want to render a frame as you have gone over the frame_cap
@@ -351,6 +360,9 @@ public class Main {
       environmentShader.setUniform("lightPositions", lightPositions);
       environmentShader.setUniform("lightsOn", lightsOn);
       environmentShader.setUniformArray("lightRadius", lightRadiai);
+
+      environmentShader.setUniform("widthResolution", resWidth);
+      environmentShader.setUniform("heightResolution", resHeight);
 
       environmentShader.setUniform("winHeight", window.getHeight());
       environmentShader.setUniform("winWidth", window.getWidth());

@@ -18,7 +18,6 @@ import static com.myst.world.entities.EntityTypes.PLAYER;
 
 public class Player extends Entity{
     private ArrayList<Line> bullets;
-
     private final float MOVEMENT_SPEED = 10f;
 
 //    private static final float[] vertices =
@@ -60,6 +59,7 @@ public class Player extends Entity{
         if (xMouse < 0){
             transform.rotation += Math.PI;
         }
+
 
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
             transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0);
