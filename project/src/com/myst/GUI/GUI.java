@@ -118,7 +118,7 @@ public class GUI {
     }
 
     public void renderGUI() {
-
+            this.renderBackground();
             Texture[] menuTextures = new Texture[]{
                     new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
                     new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
@@ -237,6 +237,7 @@ public class GUI {
     public void renderSettings(){
 
         glClear(GL_COLOR_BUFFER_BIT);
+        this.renderBackground();
         Shader shader = new Shader("assets/shader");
         Texture[] settingsTextures = new Texture[]{new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
         Matrix4f scale = new Matrix4f();
@@ -300,4 +301,11 @@ public class GUI {
         return vertices;
     }
 
+    public void renderBackground()  {
+        Texture background = new Texture("assets/main_menu/NighBg.png");
+        float [] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+        vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);
+        Model model = new Model(vertices, textureDocks, indices);
+        this.renderImage(shader, background, 0, 0, new Matrix4f(), model);
+    }
 }
