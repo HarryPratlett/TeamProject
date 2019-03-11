@@ -33,7 +33,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Main {
 
     static int IDCounter = 0;
-    static String clientID = "Base2";
+    static String clientID = "Base1";
     static int resHeight;
     static int resWidth;
 
@@ -71,7 +71,8 @@ public class Main {
     resHeight =window.getScreenHeight();
     resWidth  =window.getScreenWidth();
 
-
+    System.out.println(window.getHeight());
+    System.out.println(window.getWidth());
 
 
     GL.createCapabilities();
@@ -199,6 +200,7 @@ public class Main {
         System.out.println(frames);
         frame_time = 0;
         frames = 0;
+        System.gc();
       }
 
       camera.updatePosition();
@@ -351,7 +353,7 @@ public class Main {
               if(entities.get(owner).get(entityID).getData().lightSource){
                   Matrix4f projection = entities.get(owner).get(entityID).transform.getProjection(camera.getProjection());
                   Vector4f lightPos = new Vector4f(0,0,0,1).mul(projection);
-                  lightRadiai[d] = entities.get(owner).get(entityID).lightDistance;
+                    lightRadiai[d] = entities.get(owner).get(entityID).lightDistance;
                   lightPositions[d*2] = lightPos.x * 2;
                   lightPositions[d*2 + 1] = lightPos.y * 2;
                   lightsOn[d] = 1;
