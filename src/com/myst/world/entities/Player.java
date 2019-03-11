@@ -1,5 +1,6 @@
 package com.myst.world.entities;
 import com.myst.animation.*;
+import com.myst.rendering.Model;
 import com.myst.rendering.Shader;
 import com.myst.rendering.Texture;
 import com.myst.world.view.Camera;
@@ -25,34 +26,18 @@ public class Player extends Entity{
     private final float MOVEMENT_SPEED = 10f;
     
     public Player(){
-
-        super(new float[]{
-            -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
-                    -0.5f, -0.5f, 0f/*3*/
-        },
-                new float[] {
-                0f, 0f,   1, 0f,  1f, 1f,
-                0f, 1f
-        },
-                new float[] {
-                        0f, 0f,   1, 0f,  1f, 1f,
-                        0f, 1f
-                },     new float[] {
-                        0f, 0f,   1, 0f,  1f, 1f,
-                        0f, 1f
-                },     new float[] {
-                        0f, 0f,   1, 0f,  1f, 1f,
-                        0f, 1f
-                }, new float[] {
-                        0f, 0f,   1, 0f,  1f, 1f,
-                        0f, 1f
-                }, new float[] {
-                        0f, 0f,   1, 0f,  1f, 1f,
-                        0f, 1f
-                },new int[] {
-                0,1,2,
-                2,3,0
-        },
+    	 super(new float[]{
+    	            -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
+    	                    -0.5f, -0.5f, 0f/*3*/
+    	        },
+    	                new float[] {
+    	                0f, 0f,   1, 0f,  1f, 1f,
+    	                0f, 1f
+    	        },
+    	        new int[] {
+    	                0,1,2,
+    	                2,3,0
+    	        },
         
 
         new Vector2f(0.5f,0.5f), new Shader("assets/Shader"));
@@ -63,7 +48,7 @@ public class Player extends Entity{
     			animUp = new animation(500,Assets.p1_up);
     			animLeft = new animation(500,Assets.p1_left);
     			animRight = new animation(500,Assets.p1_right);
-    			
+    		
 
     }
     
@@ -118,36 +103,34 @@ public class Player extends Entity{
 		, (int)transform.pos.x, (int)transform.pos.y, 
 		32, 32, null
 		);
-	}
-    
+	}   
    // , (int) (x - handler.getGameCamera().getxOffset()), (int) (y - handler.getGameCamera().getyOffset()), 
    
-    
-    
+ 
     public void update(float deltaTime, Window window, Camera camera, World world) {
 
         //right
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {      
-        	transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0);
-        	//this.texture=this.texture2;
+        	transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0); 
+        	this.texture=this.texture5;
         	xMove=1;yMove=0;
         	
         }
         //left
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
-            //this.texture = this.texture2;
+            this.texture = this.texture2;
             transform.pos.x += -MOVEMENT_SPEED * deltaTime;
             xMove=-1;yMove=0;
         }
         //up
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
-        	//this.texture = this.texture4;
+        	this.texture = this.texture4;
             transform.pos.y += MOVEMENT_SPEED * deltaTime;
             xMove=0;yMove=1;
         }
         //down
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
-        	//this.texture =this.texture2 ;
+        	this.texture =this.texture3 ;
             transform.pos.y += -MOVEMENT_SPEED * deltaTime;
             xMove=0;yMove=-1;
         }

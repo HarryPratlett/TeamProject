@@ -31,22 +31,8 @@ public class Enemy extends Entity{
     	                0f, 0f,   1, 0f,  1f, 1f,
     	                0f, 1f
     	        },
-    	                new float[] {
-    	                        0f, 0f,   1, 0f,  1f, 1f,
-    	                        0f, 1f
-    	                },     new float[] {
-    	                        0f, 0f,   1, 0f,  1f, 1f,
-    	                        0f, 1f
-    	                },     new float[] {
-    	                        0f, 0f,   1, 0f,  1f, 1f,
-    	                        0f, 1f
-    	                }, new float[] {
-    	                        0f, 0f,   1, 0f,  1f, 1f,
-    	                        0f, 1f
-    	                }, new float[] {
-    	                        0f, 0f,   1, 0f,  1f, 1f,
-    	                        0f, 1f
-    	                },new int[] {
+    	               
+    	             new int[] {
     	                0,1,2,
     	                2,3,0
     	        },
