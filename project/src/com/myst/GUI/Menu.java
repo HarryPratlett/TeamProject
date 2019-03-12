@@ -3,7 +3,6 @@ package com.myst.GUI;
 
 import com.myst.helper.Timer;
 import com.myst.input.Input;
-import com.myst.input.KeyboardHandler;
 import com.myst.rendering.Model;
 import com.myst.rendering.Shader;
 import com.myst.rendering.Window;
@@ -12,12 +11,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import sun.nio.ch.IOUtil;
 
 
 import java.awt.geom.Rectangle2D;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
@@ -27,10 +23,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-
-
-
-
 
 
 public class Menu {
@@ -59,7 +51,6 @@ public class Menu {
     private String ipAddress;
     private Shader shaderInvis;
     private String port;
-    private GLFWKeyCallback keyCallback;
 
 
 
@@ -78,10 +69,6 @@ public class Menu {
         this.joinGameAccessed = false;
         this.ipAddress = "";
         this.port = "";
-        //this.font = new Font("Times New Roman", Font.BOLD, 24);
-        this.keyCallback = new KeyboardHandler();
-
-
     }
 
     public static void main(String[] args) {
@@ -180,7 +167,6 @@ public class Menu {
                 break;
             case ENTERING:
                 this.renderJoinGame();
-                this.takeInput();
                 this.renderText(ipAddress);
                 this.renderText(port);
         }
@@ -365,18 +351,70 @@ public class Menu {
     }
 
     public void takeInput() {
+        if (input.isKeyPressed(GLFW_KEY_ESCAPE))    {
+            this.currentWindow = MenuStates.JOIN_GAME;
+        }
+
         glfwPollEvents();
         if(isIpAddress) {
-            for (int i = 48; i <= 57; i++) {
-                if (KeyboardHandler.isKeyDown(i)) {
-                     this.ipAddress += glfwGetKeyName(i, 0);
+            if (this.ipAddress.length() <= 10) {
+                if (input.isKeyPressed(GLFW_KEY_1)) {
+                    this.ipAddress += "1";
+                } else if (input.isKeyPressed(GLFW_KEY_2)) {
+                    this.ipAddress += "2";
+                } else if (input.isKeyPressed(GLFW_KEY_3)) {
+                    this.ipAddress += "3";
+                } else if (input.isKeyPressed(GLFW_KEY_4)) {
+                    this.ipAddress += "4";
+                } else if (input.isKeyPressed(GLFW_KEY_5)) {
+                    this.ipAddress += "5";
+                } else if (input.isKeyPressed(GLFW_KEY_6)) {
+                    this.ipAddress += "6";
+                } else if (input.isKeyPressed(GLFW_KEY_7)) {
+                    this.ipAddress += "7";
+                } else if (input.isKeyPressed(GLFW_KEY_8)) {
+                    this.ipAddress += "8";
+                } else if (input.isKeyPressed(GLFW_KEY_9)) {
+                    this.ipAddress += "9";
+                } else if (input.isKeyPressed(GLFW_KEY_0)) {
+                    this.ipAddress += "0";
+                } else if (input.isKeyPressed(GLFW_KEY_PERIOD)) {
+                    this.ipAddress += ".";
+                }
+            }
+            if (input.isKeyPressed(GLFW_KEY_BACKSPACE))  {
+                if (this.ipAddress.length() >= 1) {
+                    this.ipAddress = this.ipAddress.substring(0, ipAddress.length() - 1);
                 }
             }
         }
-        else    {
-            for (int i = 48; i <= 57; i++) {
-                if (KeyboardHandler.isKeyDown(i)) {
-                    this.port += glfwGetKeyName(i, 0);
+        else if (!isIpAddress)    {
+            if (this.port.length() <= 5) {
+                if (input.isKeyPressed(GLFW_KEY_1)) {
+                    this.port += "1";
+                } else if (input.isKeyPressed(GLFW_KEY_2)) {
+                    this.port += "2";
+                } else if (input.isKeyPressed(GLFW_KEY_3)) {
+                    this.port += "3";
+                } else if (input.isKeyPressed(GLFW_KEY_4)) {
+                    this.port += "4";
+                } else if (input.isKeyPressed(GLFW_KEY_5)) {
+                    this.port += "5";
+                } else if (input.isKeyPressed(GLFW_KEY_6)) {
+                    this.port += "6";
+                } else if (input.isKeyPressed(GLFW_KEY_7)) {
+                    this.port += "7";
+                } else if (input.isKeyPressed(GLFW_KEY_8)) {
+                    this.port += "8";
+                } else if (input.isKeyPressed(GLFW_KEY_9)) {
+                    this.port += "9";
+                } else if (input.isKeyPressed(GLFW_KEY_0)) {
+                    this.port += "0";
+                }
+            }
+            else if (input.isKeyPressed(GLFW_KEY_BACKSPACE))  {
+                if (this.port.length() >= 1) {
+                    this.port = this.port.substring(0, port.length() - 1);
                 }
             }
         }
@@ -388,7 +426,7 @@ public class Menu {
         float x = 0.17f;
         for(char c : charInput) {
             Texture texture;
-            if (Character.toString(c) == ".")   {
+            if (Character.toString(c).equals("."))   {
                 texture = new Texture("assets/main_menu/typing/dot.png");
                 float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
                 vertices = this.alterVertices(vertices, texture.getHeight(), texture.getWidth(), 0.005, 0.006);
