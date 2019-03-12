@@ -22,6 +22,9 @@ public abstract class Entity implements Serializable {
     public Transform transform;
     protected int width, height;
     
+    //used to change character
+    protected int change;
+    
     protected Texture texture; 
     protected Texture texture2;
     protected Texture texture3;
