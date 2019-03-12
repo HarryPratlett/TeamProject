@@ -6,8 +6,6 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 
 public class Input extends GLFWCursorPosCallback {
 
-
-
     private long window;
 
     private boolean keys[];

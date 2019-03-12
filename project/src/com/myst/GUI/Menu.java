@@ -9,14 +9,10 @@ import com.myst.rendering.Window;
 import com.myst.rendering.Texture;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
-
-
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Random;
 
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -49,20 +45,12 @@ public class Menu {
     private Boolean joinGameAccessed;
     private Boolean isIpAddress;
     private String ipAddress;
-    private Shader shaderInvis;
     private String port;
-
-
-
-
-
 
 
     public Menu(Window window, Input input)   {
         this.window = window;
         this.shader = new Shader ("assets/shader");
-        this.shaderInvis = new Shader("assets/shader2");
-        shaderInvis.setUniform("opacity", 1f);
         this.input = input;
         this.currentWindow = MenuStates.MAIN_MENU;
         this.multiplayerAccessed = false;
@@ -132,9 +120,8 @@ public class Menu {
                     frames += 1;
                 }
             }
-            //        clears everything we have used from memory
+
             glfwTerminate();
-//        sloppy and needs tidying
             System.exit(1);
         }
 
@@ -167,8 +154,9 @@ public class Menu {
                 break;
             case ENTERING:
                 this.renderJoinGame();
-                this.renderText(ipAddress);
-                this.renderText(port);
+                this.renderText(ipAddress, 0.17f, 0.25f);
+                this.renderText(port, 0.35f, -0.10f);
+                break;
         }
     }
 
@@ -186,6 +174,7 @@ public class Menu {
                 this.joinGameInput();
                 break;
             case ENTERING:
+                this.joinGameInput();
                 this.takeInput();
             case HIDDEN:
                 break;
@@ -245,12 +234,6 @@ public class Menu {
                             break;
                         case "multiplayer_button.png":
                             this.currentWindow = MenuStates.MULTIPLAYER;
-                            try {
-                                Thread.sleep(100);
-
-                            }catch(Exception e) {
-                                e.printStackTrace();
-                            }
                             break;
                         case "quit_button.png":
                             System.exit(1);
@@ -277,12 +260,6 @@ public class Menu {
                         case "join_game_button.png":
                             multiplayerAccessed = false;
                             this.currentWindow = MenuStates.JOIN_GAME;
-                            try {
-                                Thread.sleep(80);
-
-                            }catch(Exception e) {
-                                e.printStackTrace();
-                            }
                             break;
                     }
                 }
@@ -317,8 +294,10 @@ public class Menu {
             }
         }
         if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
-            joinGameAccessed = false;
-            currentWindow = MenuStates.MULTIPLAYER;
+            this.ipAddress = "";
+            this.port = "";
+            this.joinGameAccessed = false;
+            this.currentWindow = MenuStates.MULTIPLAYER;
         }
     }
 
@@ -336,13 +315,12 @@ public class Menu {
     }
 
     public void setupImages(Texture[] textureArray, Float x, Float y, Boolean isButton)  {
-        Float xPos = x;
         Float yPos = y;
         for (Texture t: textureArray)   {
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
             Model model = new Model(vertices, textureDocks, indices);
-            renderImage(shader, t, xPos, yPos, new Matrix4f(), model);
+            renderImage(shader, t, x, yPos, new Matrix4f(), model);
             if(isButton) {
                 this.addButton(0 + vertices[0], yPos + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
             }
@@ -351,10 +329,6 @@ public class Menu {
     }
 
     public void takeInput() {
-        if (input.isKeyPressed(GLFW_KEY_ESCAPE))    {
-            this.currentWindow = MenuStates.JOIN_GAME;
-        }
-
         glfwPollEvents();
         if(isIpAddress) {
             if (this.ipAddress.length() <= 10) {
@@ -389,7 +363,7 @@ public class Menu {
             }
         }
         else if (!isIpAddress)    {
-            if (this.port.length() <= 5) {
+            if (this.port.length() <= 4) {
                 if (input.isKeyPressed(GLFW_KEY_1)) {
                     this.port += "1";
                 } else if (input.isKeyPressed(GLFW_KEY_2)) {
@@ -412,7 +386,7 @@ public class Menu {
                     this.port += "0";
                 }
             }
-            else if (input.isKeyPressed(GLFW_KEY_BACKSPACE))  {
+            if (input.isKeyPressed(GLFW_KEY_BACKSPACE))  {
                 if (this.port.length() >= 1) {
                     this.port = this.port.substring(0, port.length() - 1);
                 }
@@ -421,9 +395,9 @@ public class Menu {
 
     }
 
-    public void renderText(String input)    {
+    public void renderText(String input, float x, float y)    {
         char[] charInput = input.toCharArray();
-        float x = 0.17f;
+
         for(char c : charInput) {
             Texture texture;
             if (Character.toString(c).equals("."))   {
@@ -431,47 +405,24 @@ public class Menu {
                 float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
                 vertices = this.alterVertices(vertices, texture.getHeight(), texture.getWidth(), 0.005, 0.006);
                 Model model = new Model(vertices, textureDocks, indices);
-                this.renderImage(shader, texture, x, 0.25f, new Matrix4f(), model);
+                this.renderImage(shader, texture, x, y, new Matrix4f(), model);
             }
             else {
                 texture = new Texture("assets/main_menu/typing/" + Character.toString(c) + ".png");
                 float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
                 vertices = this.alterVertices(vertices, texture.getHeight(), texture.getWidth(), 0.002, 0.006);
                 Model model = new Model(vertices, textureDocks, indices);
-                this.renderImage(shader, texture, x, 0.25f, new Matrix4f(), model);
+                this.renderImage(shader, texture, x, y, new Matrix4f(), model);
             }
             x = x + 0.065f;
         }
     }
 
     public void renderBackground()  {
-
         Texture background = new Texture("assets/main_menu/NighBg0.jpg");
         float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);
         Model model = new Model(vertices, textureDocks, indices);
-
         this.renderImage(shader, background, 0, 0, new Matrix4f(), model);
-
-
-        /*if(change == 100) {
-            Random rand = new Random();
-            int n = rand.nextInt(3);
-
-            Texture changeBackground = new Texture("assets/main_menu/NighBg" + Integer.toString(n) + ".jpg");
-            float[] newVertices = Arrays.copyOf(baseVertices, baseVertices.length);
-            newVertices = this.alterVertices(newVertices, changeBackground.getHeight(), changeBackground.getWidth(), 0.001, 0.003);
-            Model newModel = new Model(newVertices, textureDocks, indices);
-            this.renderImage(shader, changeBackground, 0, 0, new Matrix4f(), newModel);
-            background = changeBackground;
-            change = 0;
-        }   else    {
-
-            this.renderImage(shader, background, 0, 0, new Matrix4f(), model);
-            change += 1;
-
-
-        }*/
-
     }
 }

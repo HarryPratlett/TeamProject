@@ -1,4 +1,14 @@
+/**
+ * This program generates the GUI that appears when the users presses the escape key during the game.
+ * The user can access the controls, settings and exit the game from this menu. They can also resume the game if they
+ * wish. The volume and brightness can be altered within the settings.
+ *
+ * @author Harry Pratlett
+ * @version 1.0
+ * @since 2019-03-12
+ */
 package com.myst.GUI;
+
 
 import com.myst.input.Input;
 import com.myst.rendering.Model;
@@ -14,7 +24,6 @@ import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-
 
 
 public class GUI {
@@ -46,6 +55,9 @@ public class GUI {
     private int brightness;
     private Audio audio;
 
+    /** @param window The window which the GUI will be displayed in
+     * @param input The input via which the mouse and keyboard inputs are taken
+     * @param audio The audio which is played and can be changed in settings**/
     public GUI(Window window, Input input, Audio audio)    {
         settings_accessed = false;
         volume = 3;
@@ -57,6 +69,9 @@ public class GUI {
         this.audio = audio;
     }
 
+    /** This is the main method that will render each of the potential windows in the GUI. It is called in the Main
+     * class of this project. The window that is rendered depends on currentWindow.
+     */
     public void render(){
         switch(currentWindow){
             case MAIN_MENU:
@@ -72,6 +87,10 @@ public class GUI {
         }
     }
 
+    /** This is other main method of the class which will update what needs to be rendered on screen. This is done by
+     * calling other methods which will detect input on screen that will cause certain actions like changing the window
+     * to be done in these methods
+     */
     public void update(){
         switch(currentWindow){
             case MAIN_MENU:
@@ -102,7 +121,7 @@ public class GUI {
         }
     }
 
-    void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
+    public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
         Matrix4f target = new Matrix4f();
@@ -114,8 +133,6 @@ public class GUI {
         shader.setUniform("sampler",0);
         shader.setUniform("projection", target);
         model.render();
-
-
     }
 
     public void renderGUI() {
