@@ -110,7 +110,6 @@ public class GUI {
 
     public void hiddenInput(){
         if (this.input.isKeyPressed(GLFW_KEY_ESCAPE)) {
-            System.out.println("trying to go to menu");
             currentWindow = GUIStates.MAIN_MENU;
         }
     }
@@ -121,6 +120,15 @@ public class GUI {
         }
     }
 
+    /**
+     * This is the main method for rendering images onto the canvas
+     * @param shader
+     * @param texture The image which will be rendered onto the screen
+     * @param x The x co-ordinate of where the image will be rendered
+     * @param y The y co-ordinate of where the image will be rendered
+     * @param scale The scale of the image with regards to sizing
+     * @param model
+     */
     public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
@@ -155,6 +163,14 @@ public class GUI {
 
     }
 
+    /**
+     * This method adds a button when buttons have been rendered and we want input
+     * @param x X co-ordinate of the button
+     * @param y Y co-ordinae of the button
+     * @param width Width of the buttons clickable area
+     * @param height Height of the buttons clickable area
+     * @param filepath The filepath of the button so it can be added to a hashmap which can be searched later
+     */
     public void addButton(float x, float y, float width, float height, String filepath) {
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
         if(settings_accessed)  {
@@ -165,7 +181,9 @@ public class GUI {
         }
     }
 
-
+    /**
+     * Handles the input in the main menu of the gui
+     */
     public void mainMenuInput()   {
         for (Rectangle2D.Float b : buttons.keySet())   {
 
@@ -195,6 +213,9 @@ public class GUI {
 
     }
 
+    /**
+     * Handles the input in the settings menu of the GUI
+     */
     public void settingsMenuInput() {
         for (Rectangle2D.Float b : settings_buttons.keySet()) {
 
@@ -238,7 +259,9 @@ public class GUI {
         }
     }
 
-
+    /**
+     * Renders the controls image
+     */
     public void renderControls() {
 
         glClear(GL_COLOR_BUFFER_BIT);
@@ -249,9 +272,11 @@ public class GUI {
         Model model = new Model(vertices, textureDocks, indices);
         Matrix4f scale = new Matrix4f();
         this.renderImage(shader, controlsTexture, 0, 0, scale, model);
-
-
     }
+
+    /**
+     * Renders the settings menu
+     */
     public void renderSettings(){
 
         glClear(GL_COLOR_BUFFER_BIT);
@@ -301,11 +326,23 @@ public class GUI {
         }
     }
 
+    /**
+     * Neater method to exit the game
+     */
     public void exitGame()  {
         System.exit(1);
     }
 
 
+    /**
+     * Alters a given float arrays variables
+     * @param vertices The float array that will be altered
+     * @param height The height of the image we want these vertices to be scaled to
+     * @param width The width of the image we want the vertices to be scaled to
+     * @param widthScale The scale of the width
+     * @param heightScale The scale of the height
+     * @return Returns an altered float array of the vertices given
+     */
     public float[] alterVertices(float[] vertices, int height, int width, double widthScale, double heightScale) {
         vertices[0] *= width * widthScale;
         vertices[3] *= width * widthScale;
@@ -319,6 +356,9 @@ public class GUI {
         return vertices;
     }
 
+    /**
+     * Renders the background in all parts except controls
+     */
     public void renderBackground()  {
         Texture background = new Texture("assets/main_menu/NighBg.png");
         float [] vertices = Arrays.copyOf(baseVertices, baseVertices.length);

@@ -43,6 +43,7 @@ public class Menu {
     private MenuStates currentWindow;
     private Boolean multiplayerAccessed;
     private Boolean joinGameAccessed;
+    private Boolean hostGameAccessed;
     private Boolean isIpAddress;
     private String ipAddress;
     private String port;
@@ -147,6 +148,9 @@ public class Menu {
             case MULTIPLAYER:
                 this.renderMultiplayer();
                 break;
+            case HOST_GAME:
+                this.renderHostGame();
+                break;
             case HIDDEN:
                 break;
             case JOIN_GAME:
@@ -169,7 +173,12 @@ public class Menu {
                 multiplayerAccessed = true;
                 this.multiplayerInput();
                 break;
+            case HOST_GAME:
+                //todo add the render text of the ip and port passed by the main and then add ok button at bottom
+                hostGameAccessed = true;
+                this.hostGameInput();
             case JOIN_GAME:
+                //todo add the submit button and checks when integrating
                 joinGameAccessed = true;
                 this.joinGameInput();
                 break;
@@ -187,7 +196,7 @@ public class Menu {
         this.renderBackground();
         Texture[] menuTextures = new Texture[]{new Texture("assets/main_menu/singleplayer_button.png"),
                 new Texture("assets/main_menu/multiplayer_button.png"), new Texture("assets/main_menu/quit_button.png")};
-        setupImages(menuTextures, 0f, 0.5f, true);
+        setupImages(menuTextures, 0f, 0.35f, true);
     }
 
     public void renderMultiplayer() {
@@ -198,6 +207,13 @@ public class Menu {
         setupImages(multiplayerTextures, 0f, 0.33f, true);
     }
 
+    public void renderHostGame()    {
+        glClear(GL_COLOR_BUFFER_BIT);
+        this.renderBackground();
+        Texture[] hostGameTextures = new Texture[]{new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"), new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png")};
+        setupImages(Arrays.copyOfRange(hostGameTextures, 0, 2), -0.5f, 0.25f, false);
+        setupImages(Arrays.copyOfRange(hostGameTextures, 2, 4), 0.5f, 0.25f, false);
+    }
     public void renderJoinGame()    {
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground();
@@ -233,6 +249,11 @@ public class Menu {
                         case "singleplayer_button.png":
                             break;
                         case "multiplayer_button.png":
+                            try {
+                                Thread.sleep(70);
+                            } catch (Exception e)   {
+                                e.printStackTrace();
+                            }
                             this.currentWindow = MenuStates.MULTIPLAYER;
                             break;
                         case "quit_button.png":
@@ -255,7 +276,8 @@ public class Menu {
                     String buttonName = multiplayerButtons.get(b);
                     switch(buttonName) {
                         case "host_game_button.png":
-                            System.exit(1);
+                            multiplayerAccessed = false;
+                            this.currentWindow = MenuStates.HOST_GAME;
                             break;
                         case "join_game_button.png":
                             multiplayerAccessed = false;
@@ -269,6 +291,9 @@ public class Menu {
             multiplayerAccessed = false;
             currentWindow = MenuStates.MAIN_MENU;
         }
+    }
+
+    public void hostGameInput() {
     }
 
     public void joinGameInput()   {
