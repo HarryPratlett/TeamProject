@@ -7,6 +7,8 @@ import javax.sound.sampled.*;
 import javax.xml.stream.Location;
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Audio {
 
@@ -99,9 +101,9 @@ public class Audio {
         }
 
         themeGainControl = (FloatControl) themeClip.getControl(FloatControl.Type.MASTER_GAIN);
-        gunGainControl = (FloatControl) themeClip.getControl(FloatControl.Type.MASTER_GAIN);
-        hitGainControl = (FloatControl) themeClip.getControl(FloatControl.Type.MASTER_GAIN);
-        footstepsGainControl = (FloatControl) themeClip.getControl(FloatControl.Type.MASTER_GAIN);
+        gunGainControl = (FloatControl) gunClip.getControl(FloatControl.Type.MASTER_GAIN);
+        hitGainControl = (FloatControl) hitClip.getControl(FloatControl.Type.MASTER_GAIN);
+        footstepsGainControl = (FloatControl) footstepsClip.getControl(FloatControl.Type.MASTER_GAIN);
 
         themeRange = themeGainControl.getMaximum() - themeGainControl.getMinimum();
         gunRange = gunGainControl.getMaximum() - gunGainControl.getMinimum();

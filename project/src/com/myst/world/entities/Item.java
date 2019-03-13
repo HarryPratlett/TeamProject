@@ -1,5 +1,6 @@
 package com.myst.world.entities;
 
+import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.view.Camera;
@@ -11,7 +12,7 @@ import static com.myst.world.entities.EntityTypes.ITEM;
 
 public class Item extends Entity {
 
-    final public String TEST = "tile_444.png";
+    final public String TEST = "tile_451.png";
     final public String HEALTH = "health";
     final public String COIN = "coin";
 
@@ -37,10 +38,12 @@ public class Item extends Entity {
                 new Vector2f(0.5f, 0.5f));
         this.type = ITEM;
         this.visibleToEnemy = true;
+        this.texture = new Texture(PATH + TEST);
         }
 
     @Override
     public void update(float deltaTime, Window window, Camera camera, World world) {
 
     }
+
 }
