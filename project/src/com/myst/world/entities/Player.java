@@ -9,11 +9,15 @@ import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
+import com.myst.world.view.Transform;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.myst.world.entities.EntityTypes.PLAYER;
 
@@ -21,6 +25,9 @@ public class Player extends Entity{
     private ArrayList<Line> bullets;
 
     private final float MOVEMENT_SPEED = 10f;
+
+    private float maxHealth = 100;
+    private float health = 100;
 
 //    private static final float[] vertices =
 //
@@ -48,7 +55,34 @@ public class Player extends Entity{
         this.bullets = bullets;
     }
 
+    public float getHealth() {
+        return health;
+    }
+
+    public void setHealth(float health) {
+        if(health < 0) health = 0;
+        if(health > maxHealth) health = maxHealth;
+
+        this.health = health;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public void heal(int heal) {
+        setHealth(health + heal);
+    }
+
+    public void damage(int dmg) {
+        setHealth(health - dmg);
+    }
+
     public void update(float deltaTime, Window window, Camera camera, World world) {
+        update(deltaTime, window, camera, world, new ArrayList<>());
+    }
+
+    public void update(float deltaTime, Window window, Camera camera, World world, ArrayList<Entity> entities) {
 //        these needs fixing and entering into an entities class
 //        the entities will then
 
@@ -86,6 +120,14 @@ public class Player extends Entity{
             }else{
                 this.lightDistance = 0.25f;
                 this.visibleToEnemy = false;
+            }
+        }
+
+        for(Entity e : entities) {
+            if(e.getType() == EntityTypes.ITEM) {
+                Transform itemPos = e.transform;
+                transform.pos.x();
+
             }
         }
 

@@ -12,15 +12,16 @@ import static com.myst.world.entities.EntityTypes.ITEM;
 
 public class Item extends Entity {
 
-    final public String TEST = "tile_451.png";
-    final public String HEALTH = "health";
-    final public String COIN = "coin";
+
+    final public String HEALTH_UP = "apple";
+    final public String HEALTH_DOWN = "healthDown";
 
     final private String PATH = ("assets/items/");
     final private String PNG = (".png");
 
-    //private File health = new File(PATH + HEALTH + PNG);
-    //private File coin = new File(PATH + COIN + PNG);
+
+    private File healthUp = new File(PATH + HEALTH_UP + PNG);
+    private File healthDown = new File(PATH + HEALTH_DOWN + PNG);
 
     public Item() {
         super(new float[]{
@@ -38,7 +39,7 @@ public class Item extends Entity {
                 new Vector2f(0.5f, 0.5f));
         this.type = ITEM;
         this.visibleToEnemy = true;
-        this.texture = new Texture(PATH + TEST);
+        this.texture = new Texture(PATH + HEALTH_UP + PNG);
         }
 
     @Override

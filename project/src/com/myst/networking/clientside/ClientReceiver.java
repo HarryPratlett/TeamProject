@@ -97,18 +97,18 @@ public class ClientReceiver extends Thread {
 //        System.out.println("Entity data length " + entityData.size());
         for (int i = 0; i < entityData.size(); i++) {
             if (entityData.get(i) != null) {
+//                System.out.println(entityData.get(i).ownerID + " => " + entityData.get(i).localID);
                 EntityData entity = entityData.get(i);
 //                System.out.println(entityData.get(i).transform.pos);
-                if(entities.get(entity.ownerID) == null){
-                    entities.put(entity.ownerID, new ConcurrentHashMap<Integer,Entity>());
-                    if(toRender.get(entity.ownerID) == null){
-                        toRender.put(entity.ownerID, new ConcurrentHashMap<Integer,EntityData>());
-                    }
+                if(!toRender.containsKey(entity.ownerID)){
+                    toRender.put(entity.ownerID, new ConcurrentHashMap<Integer,EntityData>());
                 }
-                if(entities.get(entity.ownerID).get(entity.localID) == null){
-                    if(toRender.get(entity.ownerID).get(entity.localID) == null){
+                if(!entities.containsKey(entity.ownerID)){
+                    entities.put(entity.ownerID, new ConcurrentHashMap<Integer,Entity>());
+
+                }
+                if(!entities.get(entity.ownerID).containsKey(entity.localID)){
                         toRender.get(entity.ownerID).put(entity.localID, entity);
-                    }
                 }
                 else if (!entity.ownerID.equals(clientID)) {
                     entities.get(entity.ownerID).get(entity.localID).readInEntityData(entityData.get(i));

@@ -29,6 +29,8 @@ import org.lwjgl.opengl.GL;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -155,10 +157,9 @@ public class Main {
 
 //        Lighting lights = new Lighting(window.getInput(), window);
 
-        Item item = new Item();
-        item.transform.pos.x = player.transform.pos.x + 2;
-        item.transform.pos.y = player.transform.pos.y - 1;
-        myEntities.put(9999, item);
+//        Item item = new Item();
+//        item.transform.pos.add(1, -2, 0);
+//        myEntities.put(44, item);
 
         while (!window.shouldClose()) {
 
@@ -188,7 +189,16 @@ public class Main {
                 debugLastTime = debugCurrentTime;
 
                 Audio.getAudio().update();
-                player.update((float) timeSinceLastUpdate, window, camera, world);
+
+                ArrayList<Entity> entitiesForPlayer = new ArrayList<>();
+
+                entities.values().forEach(integerEntityConcurrentHashMap -> {
+                    for(Entity e : integerEntityConcurrentHashMap.values()) {
+                        entitiesForPlayer.add(e);
+                    }
+                });
+
+                player.update((float) timeSinceLastUpdate, window, camera, world, entitiesForPlayer);
 
                 gui.update();
                 calculateBullets(myEntities, playerBullets, map);
@@ -363,10 +373,11 @@ public class Main {
             for (Integer id : items.get(owner).keySet()) {
                 EntityData entitiesData = items.get(owner).get(id);
                 if (entitiesData != null) {
-                    Entity ent = new Enemy();
+
+                    Entity ent = new Item();
                     ent.readInEntityData(entitiesData);
                     entities.get(owner).put(id, ent);
-                    items.get(owner).put(id, null);
+                    items.get(owner).remove(id);
                 }
             }
         }

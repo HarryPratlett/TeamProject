@@ -48,7 +48,11 @@ public abstract class Entity implements Serializable {
         model.render();
     }
 
-//    used in networking to get the entity data
+    public EntityTypes getType() {
+        return type;
+    }
+
+    //    used in networking to get the entity data
     public EntityData getData(){
         EntityData data = new EntityData();
         data.localID = this.localID;
