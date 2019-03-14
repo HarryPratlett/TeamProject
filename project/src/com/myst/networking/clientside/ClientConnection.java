@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientConnection{
-  private static final int PORT = 3465;
+  private static final int PORT = 3466;
   private String hostname;
   private ConcurrentHashMap<String,HashMap<Integer, Entity>> entities;
   private ConcurrentHashMap<String,HashMap<Integer, EntityData>> toRender;

@@ -21,7 +21,7 @@ import java.awt.Graphics;
 change character by pressing key v
 charac==0--->survivor1
 charac==1--->manBlue
-charac==2--->
+
 
 change weapon by pressing key c
 change==0--->gun
@@ -38,7 +38,7 @@ public class Player extends Entity{
 	//Animations
 	private animation animDown, animUp, animLeft, animRight;
 		
-    private final float MOVEMENT_SPEED = 10f;
+    private final float MOVEMENT_SPEED = 12f;
     
     public Player(){
     	 super(new float[]{
@@ -70,10 +70,10 @@ public class Player extends Entity{
     //animation
     protected float xMove, yMove;
     //change weapon by pressing c
-    protected int change=0;
+    public int change=0;
     protected int count=0;
     //change character by pressing v
-    protected int charac=0;
+    public int charac=0;
     protected int count1=0;
     
     private BufferedImage getCurrentAnimationFrame(){
@@ -97,9 +97,9 @@ public class Player extends Entity{
 
     public void update(float deltaTime, Window window, Camera camera, World world) {
 
-        //right
+        //right////////////////////////////////////////////////////////////////////////////////////////////
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {      
-        	transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0); 
+        	
         	
         	if(charac==0) {
         	     if(change==0) {
@@ -110,6 +110,7 @@ public class Player extends Entity{
         		    //survivor1_machine
         	        this.texture=this.texture8;}     	
         	}
+        	
         	if(charac==1) {
         		 if(change==0) {
          		    //manBlue_gun
@@ -120,11 +121,14 @@ public class Player extends Entity{
          	        this.texture=this.texture16;} 
         	}
         	
+        	transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0); 
         	xMove=1;yMove=0;
         	
         }
         
-        //left
+        
+        
+        //left/////////////////////////////////////////////////////////////////////////////////////////////
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
         	
         	if(charac==0) {
@@ -151,19 +155,19 @@ public class Player extends Entity{
             xMove=-1;yMove=0;
         }
         
-        //up
+        
+        
+        //up///////////////////////////////////////////////////////////////////////////////////////////////
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
         	
         	if(charac==0) {
         	        if(change==0) {
         		    //survivor1_gun
-        	        this.texture = this.texture2;
-        	        }
+        	        this.texture = this.texture2;}
         	
         	       if(change==1) {
         		   //survivor1_machine
-        	       this.texture=this.texture6;
-        	        }
+        	       this.texture=this.texture6;}
         	}
         	
         	if(charac==1) {
@@ -181,7 +185,9 @@ public class Player extends Entity{
             xMove=0;yMove=1;
         }
         
-        //down
+        
+        
+        //down/////////////////////////////////////////////////////////////////////////////////////////////
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
         	        		
         		if(charac==0) {
@@ -209,35 +215,42 @@ public class Player extends Entity{
         }
         
         
+        
+        
         //change weapon
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_C)) {
         	
-        	count=count+1;
+        	count=count+1;//count times of pressing C
+        	
         	//make sure when press the third time it will change to gun
         	if(count>1)
-        	{count=count%2;}
+        	{count=count-2;}
+        	
         	
         	if(count==1)
-        		change=1;
+        		change=1;//change to machine
         	if(count==0)
-        		change=0;
+        		change=0;//change to gun
         	
         	
         	//change the weapon as soon as press the C
+        	
         	//need to identify current position
         	if(charac==0) {
-        	//up or down
-        	if(xMove==0) {
-        		if(yMove>0)//up
+        	
+        		//up or down
+        	 if(xMove==0) {
+        		if(yMove==1)//up
         			{if(change==1)this.texture=this.texture6;
         			 if(change==0)this.texture=this.texture2;}
         		else {//down
         			 if(change==1)this.texture=this.texture9;
         			 if(change==0)this.texture=this.texture5;}
         	}
-        	else//left or right
+        	
+        	 else//left or right
         	{
-        		if(xMove>0)//right
+        		if(xMove==1)//right
         		    {if(change==1)this.texture=this.texture8;
         		     if(change==0)this.texture=this.texture4;}
         		else {//left
@@ -246,9 +259,11 @@ public class Player extends Entity{
         		}
         	}
            }
+        	
+        	
         	if(charac==1) {
         		if(xMove==0) {
-            		if(yMove>0)//up
+            		if(yMove==1)//up
             			{if(change==1)this.texture=this.texture14;
             			 if(change==0)this.texture=this.texture10;}
             		else {//down
@@ -257,7 +272,7 @@ public class Player extends Entity{
             	}
             	else//left or right
             	{
-            		if(xMove>0)//right
+            		if(xMove==1)//right
             		    {if(change==1)this.texture=this.texture16;
             		     if(change==0)this.texture=this.texture12;}
             		else {//left
@@ -269,55 +284,57 @@ public class Player extends Entity{
         }
 
         
+        
+        
+        
+        
         //change character by pressing key V
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_V)) {
-        	//reset the value of change
-        	count=0;
-        	change=0;
+        	
         	
         	count1=count1+1;
         	//if keep pressing V,make sure after the last will be the first one
         	if(count1>1)
-        	{count1=count1%2;}
+        	{count1=count1-2;}
+        	
         	//when count1=1, change to manBlue
         	if(count1==1)
         		charac=1;
         	if(count1==0)
         		charac=0;
+        	
         	//change character as soon as press key v
         	//need to specify current direction
         	//up or down
         	if(charac==1) {
         	if(xMove==0) {
-        		if(yMove>0)//up
+        		if(yMove==1)//up
         			{this.texture=this.texture10;}
         		else {//down
         			this.texture=this.texture13;}
         	}
         	else//left or right
         	{
-        		if(xMove>0)//right
+        		if(xMove==1)//right
         		{this.texture=this.texture12;}
         		else {//left
-        			this.texture=this.texture11;
-        		}
+        		this.texture=this.texture11;}
         	}
         	}
         	
         	if(charac==0) {
         		if(xMove==0) {
-            		if(yMove>0)//up
+            		if(yMove==1)//up
             			{this.texture=this.texture2;}
             		else {//down
             			this.texture=this.texture5;}
             	}
             	else//left or right
             	{
-            		if(xMove>0)//right
+            		if(xMove==1)//right
             		{this.texture=this.texture4;}
             		else {//left
-            			this.texture=this.texture3;
-            		}
+            		this.texture=this.texture3;}
             	}
         	}
         	
