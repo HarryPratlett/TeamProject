@@ -1,6 +1,11 @@
 package com.myst.networking.serverside.model;
 
+import com.myst.audio.Audio;
+import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
+import com.myst.networking.Message;
+import com.myst.networking.serverside.PlayAudioData;
+import com.myst.networking.serverside.ServerSender;
 import com.myst.world.entities.EntityType;
 
 import java.util.ArrayList;
@@ -16,9 +21,25 @@ public class WorldModel {
     private ArrayList<EntityData> itemsData;
     private int entityCount;
 
+    private ArrayList<ServerSender> senders;
+
     public WorldModel() {
         this.entities = new ConcurrentHashMap<>();
         this.entityCount = 0;
+
+        senders = new ArrayList<>();
+    }
+
+    public void addSender(ServerSender sender) {
+        senders.add(sender);
+    }
+
+    public void playSound(String clipName) {
+        Message soundMessage = new Message(Codes.PLAY_AUDIO, new PlayAudioData(clipName));
+
+        for(ServerSender sender : senders) {
+            sender.addMessage(soundMessage);
+        }
     }
 
     public void update() {
@@ -30,6 +51,8 @@ public class WorldModel {
             float playerY = playerData.transform.pos.y;
 
             for (EntityData itemData : itemsData) {
+                if(!itemData.exists) continue;
+
                 float itemX = itemData.transform.pos.x;
                 float itemY = itemData.transform.pos.y;
 
@@ -39,12 +62,13 @@ public class WorldModel {
                             case ITEM_APPLE:
                                 itemData.exists = false;
                                 setHealthOfPlayerData(playerData, playerData.health + 10);
-//                                Audio.getAudio().play(Audio.APPLE);
+                                playSound(Audio.APPLE);
                                 break;
                             case ITEM_SPIKES_HIDDEN:
                                 if (!itemData.hidden) {
                                     itemData.spikeTimer = System.currentTimeMillis();
                                     itemData.hidden = true;
+                                    playSound(Audio.SPIKES);
                                 }
                                 break;
                             case ITEM_SPIKES_REVEALED:
@@ -55,6 +79,7 @@ public class WorldModel {
                                     if (canTakeSpikeDamage(playerData)) {
                                         setHealthOfPlayerData(playerData, playerData.health - 10);
                                         playerData.lastSpikeDamage = System.currentTimeMillis();
+                                        playSound(Audio.HIT);
                                     }
                                 }
 

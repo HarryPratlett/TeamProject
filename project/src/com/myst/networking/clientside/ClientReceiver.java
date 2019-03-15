@@ -1,8 +1,10 @@
 package com.myst.networking.clientside;
 
+import com.myst.audio.Audio;
 import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
 import com.myst.networking.Message;
+import com.myst.networking.serverside.PlayAudioData;
 import com.myst.world.entities.Enemy;
 import com.myst.world.entities.Entity;
 import com.myst.world.entities.Player;
@@ -52,7 +54,7 @@ public class ClientReceiver extends Thread {
                         System.exit(1);
                         break;
                     case PLAY_AUDIO:
-
+                        playAudio((PlayAudioData) msg.data);
                     default:
                         break;
                 }
@@ -66,9 +68,9 @@ public class ClientReceiver extends Thread {
         }
     }
 
-//    public void playAudio(PlayAudioData playAudioData) {
-//
-//    }
+    public void playAudio(PlayAudioData playAudioData) {
+        Audio.getAudio().play(playAudioData.clipName);
+    }
 
 //    sends the entities positions to the server
     private void sendEntities(){
