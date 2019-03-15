@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.junit.Assert;
 import org.junit.Test;
 import org.lwjgl.opengl.GL;
@@ -19,6 +20,7 @@ import com.myst.rendering.Shader;
 import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
 import com.myst.world.view.Camera;
+import com.myst.world.view.Transform;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -43,7 +45,7 @@ public class JUnitTests {
 	    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	    glClearColor(0f,0f,0f, 0f);
-	    Shader shader = new Shader("assets/Shader");
+	    Shader shader = new Shader("project/assets/Shader");
         String[] textures = new String[21];
         String path = ("assets/tile/");
         textures[0] = path + "tile_01";
@@ -80,23 +82,25 @@ public class JUnitTests {
 	@Test
 	public void correctPathShouldBeFound() {
 		initialiseWorld();
-		Vector2f start = new Vector2f();
-		Vector2f end = new Vector2f();
-		start.set(0, 0);
-		end.set(10,0);
-		AI sim = new AI(start, world);
-		ArrayList<Vector2f> path = new ArrayList<Vector2f>();
+		Vector3f start = new Vector3f();
+		Vector3f end = new Vector3f();
+		Transform transform = new Transform();
+		start.set(0f, 0f,1f);
+		end.set(10f,0f,1f);
+		transform.pos = start;
+		AI sim = new AI(transform, world);
+		ArrayList<Vector3f> path = new ArrayList<Vector3f>();
 		path.add(start);
-		path.add(new Vector2f(1,0));
-		path.add(new Vector2f(2,0));
-		path.add(new Vector2f(3,0));
-		path.add(new Vector2f(4,0));
-		path.add(new Vector2f(5,0));
-		path.add(new Vector2f(6,0));
-		path.add(new Vector2f(7,0));
-		path.add(new Vector2f(8,0));
-		path.add(new Vector2f(9,0));
-		path.add(new Vector2f(10,0));
+		path.add(new Vector3f(1,0,1));
+		path.add(new Vector3f(2,0,1));
+		path.add(new Vector3f(3,0,1));
+		path.add(new Vector3f(4,0,1));
+		path.add(new Vector3f(5,0,1));
+		path.add(new Vector3f(6,0,1));
+		path.add(new Vector3f(7,0,1));
+		path.add(new Vector3f(8,0,1));
+		path.add(new Vector3f(9,0,1));
+		path.add(new Vector3f(10,0,1));
 		Assert.assertEquals(path, sim.pathFind(end));
 		
 	}

@@ -73,8 +73,6 @@ public abstract class Entity implements Serializable {
         this.lightDistance = data.lightDistance;
     }
     
-    public abstract boolean attack(World world, int entityID);
-    
     public boolean isKillable() {
 		return killable;
 	}

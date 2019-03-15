@@ -10,7 +10,6 @@ import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
 import com.myst.audio.Audio;
 import com.myst.rendering.Shader;
-import com.myst.world.collisions.Bullet;
 import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
 import com.myst.world.view.Transform;
@@ -35,13 +34,8 @@ public class Player extends Entity{
 //    private static final float[] textureFloats =
 //
 //    private static final int[] indices = ;
-<<<<<<< HEAD:src/com/myst/world/entities/Player.java
-    
-    public Player(){
-=======
 
     public Player(ArrayList<Line> bullets){
->>>>>>> networking:project/src/com/myst/world/entities/Player.java
         super(new float[]{
             -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
                     -0.5f, -0.5f, 0f/*3*/
@@ -64,9 +58,7 @@ public class Player extends Entity{
 //        these needs fixing and entering into an entities class
 //        the entities will then
 
-<<<<<<< HEAD:src/com/myst/world/entities/Player.java
         boolean moved = false;
-=======
 
         double xMouse = ((window.getInput().getMouseCoordinates()[0] * 2) / window.getWidth()) - 1;
         double yMouse = -(((window.getInput().getMouseCoordinates()[1] * 2) / window.getHeight()) - 1);
@@ -78,9 +70,9 @@ public class Player extends Entity{
         }
 
 
->>>>>>> networking:project/src/com/myst/world/entities/Player.java
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
-            transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0);
+            transform.pos.add(MOVEMENT_SPEED * deltaTime, 0
+            		, 0);
             moved = true;
         }
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
@@ -105,12 +97,10 @@ public class Player extends Entity{
             }
         }
 
-<<<<<<< HEAD:src/com/myst/world/entities/Player.java
         if(moved)
             Audio.getAudio().play(Audio.FOOTSTEPS);
         else
             Audio.getAudio().stop(Audio.FOOTSTEPS);
-=======
         if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)){
             Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) xMouse,(float) -yMouse));
             bullets.add(line);
@@ -118,7 +108,6 @@ public class Player extends Entity{
         }
 
 
->>>>>>> networking:project/src/com/myst/world/entities/Player.java
         //now that the co-ordinate system has been redone this needs redoing
         this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
 
@@ -146,7 +135,6 @@ public class Player extends Entity{
         }
     }
 
-	@Override
 	public boolean attack(World world, int entityID) {
 		//need to add orientation changes i.e. if player is facing towards negative, make line along negative axis.
 		AABB[] line = new AABB[100];

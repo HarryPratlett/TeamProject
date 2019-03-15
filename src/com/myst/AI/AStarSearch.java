@@ -27,6 +27,7 @@ public class AStarSearch {
 	public ArrayList<Vector3f> getPath(){
 		ArrayList<Vector3f> routeAsCoords = new ArrayList<Vector3f>();
 		ArrayList<MapNode> route = search();
+		System.out.println(route.get(0).getPosition());
 		for(MapNode node : route) {
 			routeAsCoords.add(node.getPosition());
 			
@@ -61,13 +62,14 @@ public class AStarSearch {
 		ArrayList<MapNode> children = new ArrayList<MapNode>();
 		for(int x = -1; x <= 1; x++) {
 			for(int y = -1; y <= 1; y++) {
-				Vector3f childPosition = new Vector3f(parent.getPosition().x + x, parent.getPosition().y + y, 0);
+				Vector3f childPosition = new Vector3f(parent.getPosition().x + x, parent.getPosition().y + y, 1);
 				if(world.getTile(new TileCoords((int)childPosition.x,(int)-childPosition.y)) != null && world.getTile(new TileCoords((int)childPosition.x,(int)-childPosition.y)).isSolid() == false) {
 					children.add(new MapNode(childPosition, goal, parent, world));
-					System.out.println(childPosition.toString());
+					//System.out.println(childPosition.toString());
 				}
 			}
 		}
+		
 		return children;
 	}
 	

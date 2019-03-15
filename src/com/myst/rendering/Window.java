@@ -44,15 +44,7 @@ public class Window {
             glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
             glfwShowWindow(window);
         }
-<<<<<<< HEAD:src/com/myst/rendering/Window.java
-
-
         glfwMakeContextCurrent(window);
-
-
-=======
-        glfwMakeContextCurrent(window);
->>>>>>> networking:project/src/com/myst/rendering/Window.java
         input = new Input(window);
         glfwSetCursorPosCallback(window, input);
     }

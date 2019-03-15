@@ -27,5 +27,9 @@ public class AI {
 		return false;
 		
 	}
+	
+	public void updateTransform(Transform transform) {
+		this.transform = transform;
+	}
 
 }

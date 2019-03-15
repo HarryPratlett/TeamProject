@@ -10,6 +10,7 @@ import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
+import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
 
 public class Bot extends Entity {
@@ -17,10 +18,13 @@ public class Bot extends Entity {
 	private AI intelligence;
 	private final float MOVEMENT_SPEED = 1f;
 	private ArrayList<Vector3f> path;
+	private ArrayList<Line> bullets;
 	
-	public Bot(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords) {
+	public Bot(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords, ArrayList<Line> bullets) {
 		super(vertices, texture, indices, boundingBoxCoords);
 		type = EntityTypes.BOT;
+        this.visibleToEnemy = true;
+        this.bullets = bullets;
 	}
 
 	public void initialiseAI(World world) {
@@ -30,6 +34,7 @@ public class Bot extends Entity {
 	@Override
 	public void update(float deltaTime, Window window, Camera camera, World world) {
 		//add enemy detection method here, so constantly checks for enemies as well as randomly turning on flashlight.
+		intelligence.updateTransform(transform);
 		followPath(deltaTime);
 		this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
 			
@@ -94,6 +99,7 @@ public class Bot extends Entity {
 	}
 	
 	public void setPath(Vector3f goal) {
+		intelligence.updateTransform(transform);
 		path = intelligence.pathFind(goal);
 		System.out.print(path);
 	}
@@ -102,7 +108,6 @@ public class Bot extends Entity {
 		return path;
 	}
 	
-	@Override
 	public boolean attack(World world, int entityID) {
 		AABB[] line = new AABB[100];
 		for (int i = 0; i < line.length; i++) {

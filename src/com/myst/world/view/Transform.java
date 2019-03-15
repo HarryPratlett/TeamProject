@@ -13,6 +13,7 @@ public class Transform implements Serializable {
     public Transform(){
         pos = new Vector3f();
         scale = new Vector3f(1,1,1);
+        rotation = 0f;
     }
 
     public Matrix4f getProjection(Matrix4f target){

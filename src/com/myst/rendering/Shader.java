@@ -4,14 +4,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
-<<<<<<< HEAD:src/com/myst/rendering/Shader.java
 import org.joml.Vector4f;
 import org.joml.Vector2f;
-=======
-
-import org.joml.Vector2f;
-import org.joml.Vector4f;
->>>>>>> networking:project/src/com/myst/rendering/Shader.java
 import org.lwjgl.BufferUtils;
 import org.joml.Matrix4f;
 import static org.lwjgl.opengl.GL20.*;

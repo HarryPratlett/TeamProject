@@ -12,7 +12,7 @@ public class Camera {
     public Matrix4f projection;
     private int width;
     private int height;
-    private Player player;
+    private Bot player;
     public int scale = 20;
 
     public Camera(int width, int height){
@@ -26,7 +26,7 @@ public class Camera {
         this.position = position;
     }
 
-    public void bindPlayer(Player bot){
+    public void bindPlayer(Bot bot){
         this.player = bot;
     }
 
