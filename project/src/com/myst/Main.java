@@ -192,7 +192,7 @@ public class Main {
 
         player.update((float) timeSinceLastUpdate, window, camera, world);
         gui.update();
-//        calculateBullets(myEntities, playerBullets, map);
+        calculateBullets(myEntities, playerBullets, map);
         playerBullets.clear();
 
       }
