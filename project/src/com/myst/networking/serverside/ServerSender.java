@@ -12,54 +12,53 @@ import java.util.concurrent.BlockingQueue;
 // forwarding to the client.
 
 public class ServerSender extends Thread {
-  private BlockingQueue<Object> clientQueue;
-  private ObjectOutputStream client;
-  private String clientID;
-  private WorldModel world;
-  private boolean updateClient;
+    private BlockingQueue<Object> clientQueue;
+    private ObjectOutputStream client;
+    private String clientID;
+    private WorldModel world;
+    private boolean updateClient;
 
 
-  public ServerSender(BlockingQueue<Object> q, ObjectOutputStream c, String clientID, WorldModel world) {
-    clientQueue = q;
-    client = c;
-    this.clientID = clientID;
-    this.world = world;
-    this.updateClient = false;
-  }
-
-  @Override
-  public void run() {
-    try {
-      System.out.println("started");
-      while (true) {
-//        don't know why but it won't work without a thread.sleep()
-        Thread.sleep(1);
-        if (updateClient) {
-//          System.out.println("updating client");
-          this.updateClient = false;
-          while (!clientQueue.isEmpty()) {
-            Object msg = clientQueue.take();
-            client.writeObject(msg);
-          }
-        }
-
-      }
-
-    }catch(IOException | InterruptedException e){
-        System.out.println("server sender for " + clientID+ " ending");
-
+    public ServerSender(BlockingQueue<Object> q, ObjectOutputStream c, String clientID, WorldModel world) {
+        clientQueue = q;
+        client = c;
+        this.clientID = clientID;
+        this.world = world;
+        this.updateClient = false;
     }
-  }
 
-  public void updateClient(){
-    clientQueue.add(new Message(Codes.ENTITY_UPDATE,world.getWorldData()));
-    this.updateClient = true;
-  }
+    @Override
+    public void run() {
+        try {
+            System.out.println("started");
+            while (true) {
+//        don't know why but it won't work without a thread.sleep()
+                Thread.sleep(1);
+                if (updateClient) {
+//          System.out.println("updating client");
+                    this.updateClient = false;
+                    while (!clientQueue.isEmpty()) {
+                        Object msg = clientQueue.take();
+                        client.writeObject(msg);
+                    }
+                }
 
-  public void requestClientUpdate(){
-    clientQueue.add(new Message(Codes.UPDATE_SERVER, null));
-  }
+            }
 
+        } catch (IOException | InterruptedException e) {
+            System.out.println("server sender for " + clientID + " ending");
+
+        }
+    }
+
+    public void updateClient() {
+        clientQueue.add(new Message(Codes.ENTITY_UPDATE, world.getWorldData()));
+        this.updateClient = true;
+    }
+
+    public void requestClientUpdate() {
+        clientQueue.add(new Message(Codes.UPDATE_SERVER, null));
+    }
 
 
 }

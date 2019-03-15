@@ -6,24 +6,22 @@ import com.myst.world.World;
 import com.myst.world.view.Camera;
 import org.joml.Vector2f;
 
-import java.io.File;
+import java.util.concurrent.ConcurrentHashMap;
 
-import static com.myst.world.entities.EntityTypes.ITEM;
+import static com.myst.world.entities.EntityType.ITEM_APPLE;
+import static com.myst.world.entities.EntityType.ITEM_SPIKES_HIDDEN;
+import static com.myst.world.entities.EntityType.ITEM_SPIKES_REVEALED;
 
 public class Item extends Entity {
 
+    final public static String APPLE = "apple";
+    final public static String SPIKES_HIDDEN = "spikes_hidden";
+    final public static String SPIKES_REVEALED = "spikes_revealed";
 
-    final public String HEALTH_UP = "apple";
-    final public String HEALTH_DOWN = "healthDown";
+    final private String PATH = "assets/items/";
+    final private String PNG = ".png";
 
-    final private String PATH = ("assets/items/");
-    final private String PNG = (".png");
-
-
-    private File healthUp = new File(PATH + HEALTH_UP + PNG);
-    private File healthDown = new File(PATH + HEALTH_DOWN + PNG);
-
-    public Item() {
+    public Item(String t) {
         super(new float[]{
                         -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
                         -0.5f, -0.5f, 0f/*3*/
@@ -37,14 +35,23 @@ public class Item extends Entity {
                         2, 3, 0
                 },
                 new Vector2f(0.5f, 0.5f));
-        this.type = ITEM;
-        this.visibleToEnemy = true;
-        this.texture = new Texture(PATH + HEALTH_UP + PNG);
+
+            if (t.equals(APPLE))
+                this.type = ITEM_APPLE;
+            if (t.equals(SPIKES_HIDDEN))
+                this.type = ITEM_SPIKES_HIDDEN;
+            if (t.equals(SPIKES_REVEALED))
+                this.type = ITEM_SPIKES_REVEALED;
+
+            this.visibleToEnemy = true;
+            this.texture = new Texture(PATH + t + PNG);
         }
 
+
     @Override
-    public void update(float deltaTime, Window window, Camera camera, World world) {
+    public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer,Entity> items) {
 
     }
+
 
 }

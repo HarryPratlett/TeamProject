@@ -1,18 +1,16 @@
 package com.myst.world.collisions;
 
-import com.myst.rendering.Model;
 import com.myst.rendering.Shader;
 import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.entities.Entity;
 import com.myst.world.view.Camera;
-import com.myst.world.view.Transform;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import static com.myst.world.entities.EntityTypes.BULLET;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.myst.world.entities.EntityType.BULLET;
 
 public class Bullet extends Entity {
     private static final float MAX_LENGTH = 20;
@@ -41,7 +39,7 @@ public class Bullet extends Entity {
 
     }
 
-    public void update(float deltaTime, Window window, Camera camera, World world){
+    public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer,Entity> items){
 
     }
 }

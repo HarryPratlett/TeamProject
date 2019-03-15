@@ -11,16 +11,12 @@ import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.Bullet;
 import com.myst.world.collisions.Line;
-import com.myst.world.entities.Enemy;
-import com.myst.world.entities.Entity;
-import com.myst.world.entities.Item;
-import com.myst.world.entities.Player;
+import com.myst.world.entities.*;
 import com.myst.world.lighting.Darkness;
 import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
 import com.myst.world.view.Camera;
-import javafx.scene.effect.Lighting;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -29,8 +25,6 @@ import org.lwjgl.opengl.GL;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -40,7 +34,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Main {
 
     static int IDCounter = 0;
-    static String clientID = "Base2";
+    static String clientID = "Bas1";
 
     public static void setUp() {
         Window.setCallbacks();
@@ -190,15 +184,21 @@ public class Main {
 
                 Audio.getAudio().update();
 
-                ArrayList<Entity> entitiesForPlayer = new ArrayList<>();
 
-                entities.values().forEach(integerEntityConcurrentHashMap -> {
-                    for(Entity e : integerEntityConcurrentHashMap.values()) {
-                        entitiesForPlayer.add(e);
-                    }
-                });
 
-                player.update((float) timeSinceLastUpdate, window, camera, world, entitiesForPlayer);
+//                entities.values().forEach(integerEntityConcurrentHashMap -> {
+//                    ArrayList<Entity> ee = new ArrayList<>();
+//
+//                    for (Entity e : integerEntityConcurrentHashMap.values()) {
+//                        if (e.exists) entitiesForPlayer.add(e);
+//                        else ee.add(e);
+//                    }
+//
+//                    ee.forEach(x -> integerEntityConcurrentHashMap.remove(x));
+//                });
+
+
+                player.update((float) timeSinceLastUpdate, window, camera, world, entities.get("items"));
 
                 gui.update();
                 calculateBullets(myEntities, playerBullets, map);
@@ -206,7 +206,7 @@ public class Main {
             }
 
             if (frame_time >= 1) {
-                System.out.println(frames);
+//                System.out.println(frames);
                 frame_time = 0;
                 frames = 0;
             }
@@ -219,7 +219,8 @@ public class Main {
 
                 for (String owner : entities.keySet()) {
                     for (Integer entityID : entities.get(owner).keySet()) {
-                        entities.get(owner).get(entityID).render(camera, environmentShader);
+                        Entity e = entities.get(owner).get(entityID);
+                        if(!e.hidden) e.render(camera, environmentShader);
                     }
                 }
 
@@ -373,8 +374,25 @@ public class Main {
             for (Integer id : items.get(owner).keySet()) {
                 EntityData entitiesData = items.get(owner).get(id);
                 if (entitiesData != null) {
-
-                    Entity ent = new Item();
+                    System.out.println(entitiesData.type);
+                    Entity ent;
+//                    switch(entitiesData.type){
+//                        case ITEM_APPLE:
+//                            ent
+//                        case ITEM_SPIKES_HIDDEN:
+//
+//                        case ITEM_SPIKES_REVEALED:
+//
+//
+//                    }
+                    if (entitiesData.type == EntityType.ITEM_APPLE)
+                        ent = new Item(Item.APPLE);
+                    else if (entitiesData.type == EntityType.ITEM_SPIKES_HIDDEN)
+                        ent = new Item(Item.SPIKES_HIDDEN);
+                    else if (entitiesData.type == EntityType.ITEM_SPIKES_REVEALED)
+                        ent = new Item(Item.SPIKES_REVEALED);
+                    else
+                        ent = new Enemy();
                     ent.readInEntityData(entitiesData);
                     entities.get(owner).put(id, ent);
                     items.get(owner).remove(id);

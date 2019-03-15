@@ -4,11 +4,8 @@ import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 import javax.sound.sampled.*;
-import javax.xml.stream.Location;
 import java.io.File;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Audio {
 
@@ -19,6 +16,8 @@ public class Audio {
     public static final String GUN = "gun";
     public static final String HIT = "hit";
     public static final String FOOTSTEPS = "footsteps";
+    public static final String APPLE = "apple";
+    public static final String SPIKES = "spikes";
 
     private final String WAV = ".wav";
     private final String PATH = "assets/sounds/";
@@ -41,26 +40,36 @@ public class Audio {
     private File gun = new File(PATH + GUN + WAV);
     private File hit = new File(PATH + HIT + WAV);
     private File footsteps = new File(PATH + FOOTSTEPS + WAV);
+    private File apple = new File(PATH + APPLE + WAV);
+    private File spikes = new File(PATH + SPIKES + WAV);
 
     private AudioInputStream themeStream;
     private AudioInputStream gunStream;
     private AudioInputStream hitStream;
     private AudioInputStream footstepsStream;
+    private AudioInputStream appleStream;
+    private AudioInputStream spikesStream;
 
     private Clip themeClip;
     private Clip gunClip;
     private Clip hitClip;
     private Clip footstepsClip;
+    private Clip appleClip;
+    private Clip spikesClip;
 
     private FloatControl themeGainControl;
     private FloatControl gunGainControl;
     private FloatControl hitGainControl;
     private FloatControl footstepsGainControl;
+    private FloatControl appleGainControl;
+    private FloatControl spikesGainControl;
 
     private float themeRange;
     private float gunRange;
     private float hitRange;
     private float footstepsRange;
+    private float appleRange;
+    private float spikesRange;
 
     private float gain;
 
@@ -92,6 +101,14 @@ public class Audio {
             footstepsClip = AudioSystem.getClip();
             footstepsClip.open(footstepsStream);
 
+            appleStream = AudioSystem.getAudioInputStream(apple);
+            appleClip = AudioSystem.getClip();
+            appleClip.open(appleStream);
+
+            spikesStream = AudioSystem.getAudioInputStream(spikes);
+            spikesClip = AudioSystem.getClip();
+            spikesClip.open(spikesStream);
+
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -104,14 +121,18 @@ public class Audio {
         gunGainControl = (FloatControl) gunClip.getControl(FloatControl.Type.MASTER_GAIN);
         hitGainControl = (FloatControl) hitClip.getControl(FloatControl.Type.MASTER_GAIN);
         footstepsGainControl = (FloatControl) footstepsClip.getControl(FloatControl.Type.MASTER_GAIN);
+        appleGainControl = (FloatControl) appleClip.getControl(FloatControl.Type.MASTER_GAIN);
+        spikesGainControl = (FloatControl) spikesClip.getControl(FloatControl.Type.MASTER_GAIN);
 
         themeRange = themeGainControl.getMaximum() - themeGainControl.getMinimum();
         gunRange = gunGainControl.getMaximum() - gunGainControl.getMinimum();
         hitRange = hitGainControl.getMaximum() - hitGainControl.getMinimum();
         footstepsRange = footstepsGainControl.getMaximum() - footstepsGainControl.getMinimum();
+        appleRange = appleGainControl.getMaximum() - appleGainControl.getMinimum();
+        spikesRange = spikesGainControl.getMaximum() - spikesGainControl.getMinimum();
 
         volume(0);
-        theme();
+        //theme();
     }
 
     /**
@@ -145,6 +166,8 @@ public class Audio {
             gunClip.stop();
             hitClip.stop();
             footstepsClip.stop();
+            appleClip.stop();
+            spikesClip.stop();
         } else {
             themeClip.start();
         }
@@ -180,6 +203,12 @@ public class Audio {
 
         gain = (footstepsRange / MAX_VOLUME * volume) + footstepsGainControl.getMinimum();
         footstepsGainControl.setValue(gain);
+
+        gain = (appleRange / MAX_VOLUME * volume) + appleGainControl.getMinimum();
+        appleGainControl.setValue(gain);
+
+        gain = (spikesRange / MAX_VOLUME * volume) + spikesGainControl.getMinimum();
+        spikesGainControl.setValue(gain);
     }
 
     /**
@@ -204,13 +233,25 @@ public class Audio {
                     break;
                 case HIT:
                     //if (calculateDistance(playerLocation, soundLocation) < HIT_DIST) {}
+                    if (hitClip.getFramePosition() >= hitClip.getFrameLength())
+                        hitClip.setFramePosition(0);
                     hitClip.loop(0);
                     break;
                 case FOOTSTEPS:
-                    // TODO - check location, get volume
+                    //if (calculateDistance(playerLocation, soundLocation) < FOOTSTEPS_DIST) {}
                     if (footstepsClip.getFramePosition() >= footstepsClip.getFrameLength())
                         footstepsClip.setFramePosition(0);
                     footstepsClip.loop(0);
+                    break;
+                case APPLE:
+                    if (appleClip.getFramePosition() >= appleClip.getFrameLength())
+                        appleClip.setFramePosition(0);
+                    appleClip.loop(0);
+                    break;
+                case SPIKES:
+                    if (spikesClip.getFramePosition() >= spikesClip.getFrameLength())
+                        spikesClip.setFramePosition(0);
+                    spikesClip.loop(0);
                     break;
                 default:
                     //none
@@ -247,6 +288,12 @@ public class Audio {
                 break;
             case FOOTSTEPS:
                 footstepsClip.stop();
+                break;
+            case APPLE:
+                appleClip.stop();
+                break;
+            case SPIKES:
+                spikesClip.stop();
                 break;
             default:
                 //none

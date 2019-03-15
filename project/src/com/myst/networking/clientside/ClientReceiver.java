@@ -105,7 +105,6 @@ public class ClientReceiver extends Thread {
                 }
                 if(!entities.containsKey(entity.ownerID)){
                     entities.put(entity.ownerID, new ConcurrentHashMap<Integer,Entity>());
-
                 }
                 if(!entities.get(entity.ownerID).containsKey(entity.localID)){
                         toRender.get(entity.ownerID).put(entity.localID, entity);
@@ -115,9 +114,5 @@ public class ClientReceiver extends Thread {
                 }
             }
         }
-
-
     }
-
-
 }

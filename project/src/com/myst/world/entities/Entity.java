@@ -13,19 +13,22 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.io.Serializable;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Entity implements Serializable {
     protected Model model;
     public Transform transform;
     protected Texture texture;
     public AABB boundingBox;
-    protected EntityTypes type;
+    protected EntityType type;
     public String owner;
     public boolean lightSource;
     public float lightDistance;
     public Integer localID;
     public boolean visibleToEnemy;
 
+    public boolean exists = true;
+    public boolean hidden = false;
 
 
     public Entity(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords){
@@ -38,9 +41,11 @@ public abstract class Entity implements Serializable {
         this.lightDistance = 25f;
     }
 
-    public abstract void update(float deltaTime, Window window, Camera camera, World world);
+    public abstract void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer,Entity> items);
 
     public void render(Camera camera, Shader shader){
+        if(!exists || hidden) return;
+
         shader.bind();
         shader.setUniform("sampler", 0);
         shader.setUniform("projection", transform.getProjection(camera.getProjection()));
@@ -48,7 +53,11 @@ public abstract class Entity implements Serializable {
         model.render();
     }
 
-    public EntityTypes getType() {
+    public void setType(EntityType type) {
+        this.type = type;
+    }
+
+    public EntityType getType() {
         return type;
     }
 
@@ -57,10 +66,13 @@ public abstract class Entity implements Serializable {
         EntityData data = new EntityData();
         data.localID = this.localID;
         data.ownerID = this.owner;
+        data.type = this.type;
         data.boundingBox = this.boundingBox;
         data.transform = this.transform;
         data.lightSource = this.lightSource;
         data.lightDistance = this.lightDistance;
+        data.hidden = this.hidden;
+
         return data;
     }
 
@@ -71,6 +83,7 @@ public abstract class Entity implements Serializable {
         this.boundingBox = data.boundingBox;
         this.lightSource = data.lightSource;
         this.lightDistance = data.lightDistance;
+        this.hidden = data.hidden;
     }
 
 }
