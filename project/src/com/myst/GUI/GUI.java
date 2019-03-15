@@ -50,15 +50,14 @@ public class GUI {
     private GUIStates currentWindow;
     private Boolean controls_accessed;
     private Boolean settings_accessed;
-    private Shader shader;
     private Input input;
     private int volume;
     private int brightness;
 
     /** @param window The window which the GUI will be displayed in
      * @param input The input via which the mouse and keyboard inputs are taken
-     * @param audio The audio which is played and can be changed in settings**/
-    public GUI(Window window, Input input, Audio audio)    {
+     **/
+    public GUI(Window window, Input input)    {
         settings_accessed = false;
         volume = 3;
         brightness = 3;
@@ -71,7 +70,6 @@ public class GUI {
     /** This is the main method that will render each of the potential windows in the GUI. It is called in the Main
      * class of this project. The window that is rendered depends on currentWindow.
      */
-    public void render(){
         switch(currentWindow){
             case MAIN_MENU:
                 this.renderGUI(shader);
@@ -142,6 +140,7 @@ public class GUI {
     }
 
     public void renderGUI(Shader shader) {
+            renderBackground(shader);
 
             Texture[] menuTextures = new Texture[]{
                     new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
@@ -270,8 +269,7 @@ public class GUI {
      */
     public void renderSettings(Shader shader){
         glClear(GL_COLOR_BUFFER_BIT);
-        this.renderBackground();
-        Shader shader = new Shader("assets/shader");
+        this.renderBackground(shader);
         Texture[] settingsTextures = new Texture[]{new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
         Matrix4f scale = new Matrix4f();
         float y = 0;
@@ -349,7 +347,7 @@ public class GUI {
     /**
      * Renders the background in all parts except controls
      */
-    public void renderBackground()  {
+    public void renderBackground(Shader shader)  {
         Texture background = new Texture("assets/main_menu/NighBg.png");
         float [] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);

@@ -36,6 +36,7 @@ public class Menu {
     };
     private HashMap<Rectangle2D.Float, String> menuButtons = new HashMap<>();
     private HashMap<Rectangle2D.Float, String> multiplayerButtons = new HashMap<>();
+    private HashMap<Rectangle2D.Float, String> hostGameButtons = new HashMap<>();
     private HashMap<Rectangle2D.Float, String> joinGameButtons = new HashMap<>();
     private Window window;
     private Shader shader;
@@ -51,11 +52,12 @@ public class Menu {
 
     public Menu(Window window, Input input)   {
         this.window = window;
-        this.shader = new Shader ("assets/shader");
+        this.shader = new Shader ("assets/shader2");
         this.input = input;
         this.currentWindow = MenuStates.MAIN_MENU;
         this.multiplayerAccessed = false;
         this.joinGameAccessed = false;
+        this.hostGameAccessed = false;
         this.ipAddress = "";
         this.port = "";
     }
@@ -210,17 +212,20 @@ public class Menu {
     public void renderHostGame()    {
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground();
-        Texture[] hostGameTextures = new Texture[]{new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"), new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png")};
+        Texture[] hostGameTextures = new Texture[]{new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"), new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png"), new Texture("assets/main_menu/submit_button.png")};
         setupImages(Arrays.copyOfRange(hostGameTextures, 0, 2), -0.5f, 0.25f, false);
         setupImages(Arrays.copyOfRange(hostGameTextures, 2, 4), 0.5f, 0.25f, false);
+        setupImages(Arrays.copyOfRange(hostGameTextures, 4, 5 ), 0f, -0.5f, true);
     }
     public void renderJoinGame()    {
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground();
         Texture[] joinGameTextures = new Texture[]
-                {new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"), new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png")};
+                {new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"), new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png"), new Texture("assets/main_menu/submit_button.png")};
         setupImages(Arrays.copyOfRange(joinGameTextures, 0, 2), -0.5f, 0.25f, false);
         setupImages(Arrays.copyOfRange(joinGameTextures, 2, 4), 0.5f, 0.25f, true);
+        setupImages(Arrays.copyOfRange(joinGameTextures, 4, 5), 0f, -0.5f, true);
+
     }
 
     public void addButton(float x, float y, float width, float height, String filepath) {
@@ -230,6 +235,9 @@ public class Menu {
         }
         else if(joinGameAccessed)   {
             joinGameButtons.put(bounds, filepath);
+        }
+        else if(hostGameAccessed)   {
+            hostGameButtons.put(bounds, filepath);
         }
         else    {
             menuButtons.put(bounds, filepath);
@@ -294,6 +302,28 @@ public class Menu {
     }
 
     public void hostGameInput() {
+        for (Rectangle2D.Float b : hostGameButtons.keySet())   {
+
+            double mouseX = ((this.input.getMouseCoordinates()[0])/(window.getWidth()/2))-1;
+            double mouseY = -(((this.input.getMouseCoordinates()[1])/(window.getHeight()/2))-1);
+
+            if (mouseX >= b.getX() && mouseX <= (b.getX()+b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY()-b.getHeight()))  {
+                if (window.getInput().isMouseButtonDown(GLFW_MOUSE_BUTTON_1)){
+                    String buttonName = hostGameButtons.get(b);
+                    switch(buttonName) {
+                        case "submit_button.png":
+                            System.exit(1);
+                            break;
+                    }
+                }
+            }
+        }
+        if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
+            this.ipAddress = "";
+            this.port = "";
+            this.hostGameAccessed = false;
+            this.currentWindow = MenuStates.MULTIPLAYER;
+        }
     }
 
     public void joinGameInput()   {
@@ -313,6 +343,9 @@ public class Menu {
                         case "text_box_2.png":
                             this.currentWindow = MenuStates.ENTERING;
                             this.isIpAddress = false;
+                            break;
+                        case "submit_button.png":
+                            System.exit(1);
                             break;
                     }
                 }

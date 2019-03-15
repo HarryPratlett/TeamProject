@@ -86,7 +86,6 @@ public class Player extends Entity{
         if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)){
             Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) xMouse,(float) -yMouse));
             bullets.add(line);
-            System.out.println("mouse pressed");
         }
 
 

@@ -56,7 +56,7 @@ public class Main {
     Window window = new Window();
 
     ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
-//        only the main can render and create items so this array hands stuff to the main to render
+    //        only the main can render and create items so this array hands stuff to the main to render
     ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
 
     ArrayList<Line> playerBullets = new ArrayList<>();
@@ -71,8 +71,8 @@ public class Main {
     resHeight =window.getScreenHeight();
     resWidth  =window.getScreenWidth();
 
-    System.out.println(window.getHeight());
-    System.out.println(window.getWidth());
+    /*System.out.println(window.getHeight());
+    System.out.println(window.getWidth());*/
 
 
     GL.createCapabilities();
@@ -83,11 +83,11 @@ public class Main {
 
 
 
-//        glfwSetWindowPos(window,(videoMode.width() - 640) / 2, (videoMode.height() - 480) / 2);
+    //        glfwSetWindowPos(window,(videoMode.width() - 640) / 2, (videoMode.height() - 480) / 2);
 
-//        glfwShowWindow(window);
+    //        glfwShowWindow(window);
 
-        glClearColor(0f, 0f, 0f, 0f);
+    glClearColor(0f, 0f, 0f, 0f);
 
     Shader environmentShader = new Shader("assets/shader");
     Shader menuShader = new Shader("assets/shader2");
@@ -162,75 +162,75 @@ public class Main {
 
     while (!window.shouldClose()){
 
-      renderFrame = false;
+    renderFrame = false;
 
-      double time2 = Timer.getTime();
-      double deltaTime = time2 - time;
-      time = time2;
+    double time2 = Timer.getTime();
+    double deltaTime = time2 - time;
+    time = time2;
 
-      unprocessed += deltaTime;
-      frame_time += deltaTime;
-
-
-//            in the case you want to render a frame as you have gone over the frame_cap
-//            a while is used instead of an if incase the performance is less than 30 FPS
-      while (unprocessed >= frame_cap) {
-//                look into effects of containing a thread.sleep();
-//                take away the frame cap so that you account for the time you've taken of the next frame
-        unprocessed -= frame_cap;
-
-        renderFrame = true;
-
-        window.update();
+    unprocessed += deltaTime;
+    frame_time += deltaTime;
 
 
+    //            in the case you want to render a frame as you have gone over the frame_cap
+    //            a while is used instead of an if incase the performance is less than 30 FPS
+    while (unprocessed >= frame_cap) {
+    //                look into effects of containing a thread.sleep();
+    //                take away the frame cap so that you account for the time you've taken of the next frame
+    unprocessed -= frame_cap;
 
-        debugCurrentTime = Timer.getTime();
-        double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
-        debugLastTime = debugCurrentTime;
+    renderFrame = true;
 
-        player.update((float) timeSinceLastUpdate, window, camera, world);
-        gui.update();
-//        calculateBullets(myEntities, playerBullets, map);
-        playerBullets.clear();
+    window.update();
 
-      }
-      if (frame_time >= 1) {
-        System.out.println(frames);
-        frame_time = 0;
-        frames = 0;
-        System.gc();
-      }
 
-      camera.updatePosition();
-      if (renderFrame) {
-          glClear(GL_COLOR_BUFFER_BIT);
 
-          calculateLighting(entities,camera,environmentShader,window);
+    debugCurrentTime = Timer.getTime();
+    double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
+    debugLastTime = debugCurrentTime;
 
-          world.render(environmentShader,camera, window);
+    player.update((float) timeSinceLastUpdate, window, camera, world);
+    gui.update();
+    //        calculateBullets(myEntities, playerBullets, map);
+    playerBullets.clear();
 
-          for(String owner: entities.keySet()){
-              for(Integer entityID: entities.get(owner).keySet()){
-                  entities.get(owner).get(entityID).render(camera, environmentShader);
-              }
+    }
+    if (frame_time >= 1) {
+    //System.out.println(frames);
+    frame_time = 0;
+    frames = 0;
+    System.gc();
+    }
+
+    camera.updatePosition();
+    if (renderFrame) {
+      glClear(GL_COLOR_BUFFER_BIT);
+
+      calculateLighting(entities,camera,environmentShader,window);
+
+      world.render(environmentShader,camera, window);
+
+      for(String owner: entities.keySet()){
+          for(Integer entityID: entities.get(owner).keySet()){
+              entities.get(owner).get(entityID).render(camera, environmentShader);
           }
+      }
 
 
-          createAndRender(toRender, entities);
-          gui.render(menuShader);
-          window.swapBuffers();
+      createAndRender(toRender, entities);
+      gui.render(menuShader);
+      window.swapBuffers();
 
-          frames += 1;
-        }
+      frames += 1;
+    }
 
 
     }
 
-//        clears everything we have used from memory
+    //        clears everything we have used from memory
     glfwTerminate();
 
-//        sloppy and needs tidying
+    //        sloppy and needs tidying
     System.exit(1);
   }
 
