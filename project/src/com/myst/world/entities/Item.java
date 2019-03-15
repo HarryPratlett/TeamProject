@@ -47,11 +47,9 @@ public class Item extends Entity {
             this.texture = new Texture(PATH + t + PNG);
         }
 
-
     @Override
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer,Entity> items) {
 
     }
-
 
 }

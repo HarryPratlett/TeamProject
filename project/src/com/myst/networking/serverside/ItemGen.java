@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class ItemGen {
 
     static int IDCounter = 0;
-    static String clientID = "items";
+    static String clientID = "Item";
 
     public static void setUp() {
         Window.setCallbacks();
@@ -30,12 +30,6 @@ public class ItemGen {
     public static void main(String[] args) {
         setUp();
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-        System.out.println(width);
-        System.out.println(height);
-
         Window window = new Window();
 
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
@@ -45,7 +39,7 @@ public class ItemGen {
         connection.startConnection(clientID);
 
         window.setFullscreen(false);
-        window.createWindow("My game");
+        window.createWindow("ITEM GENERATION");
 
         GL.createCapabilities();
 

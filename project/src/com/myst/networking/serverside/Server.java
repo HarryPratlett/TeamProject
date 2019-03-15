@@ -23,7 +23,10 @@ public class Server {
      * Start the server listening for connections.
      */
     public static void main(String[] args) {
+        new Server().run();
+    }
 
+    public void run() {
         WorldModel world = new WorldModel();
 
         // This table will be shared by the server threads:
@@ -44,7 +47,7 @@ public class Server {
 
         ArrayList<String> usedIDs = new ArrayList<>();
 
-        TickManager ticker = new TickManager();
+        TickManager ticker = new TickManager(world);
         ticker.start();
 
         final ServerSocket s = serverSocket;
@@ -71,8 +74,6 @@ public class Server {
             }
         }.start();
 
-//        System.out.println("hello");
-
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -80,6 +81,7 @@ public class Server {
             }
         }, 5000);
 
-//        while(true){}
     }
+
+
 }

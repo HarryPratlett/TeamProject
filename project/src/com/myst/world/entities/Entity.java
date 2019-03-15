@@ -26,10 +26,8 @@ public abstract class Entity implements Serializable {
     public float lightDistance;
     public Integer localID;
     public boolean visibleToEnemy;
-
     public boolean exists = true;
     public boolean hidden = false;
-
 
     public Entity(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords){
         model = new Model(vertices, texture, indices);
@@ -72,6 +70,7 @@ public abstract class Entity implements Serializable {
         data.lightSource = this.lightSource;
         data.lightDistance = this.lightDistance;
         data.hidden = this.hidden;
+        data.exists = this.exists;
 
         return data;
     }
@@ -84,6 +83,6 @@ public abstract class Entity implements Serializable {
         this.lightSource = data.lightSource;
         this.lightDistance = data.lightDistance;
         this.hidden = data.hidden;
+        this.exists = data.exists;
     }
-
 }

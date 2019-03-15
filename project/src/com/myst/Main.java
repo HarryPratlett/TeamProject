@@ -34,7 +34,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Main {
 
     static int IDCounter = 0;
-    static String clientID = "Bas1";
+    static String clientID = "Base2";
 
     public static void setUp() {
         Window.setCallbacks();
@@ -47,11 +47,11 @@ public class Main {
     public static void main(String[] args) {
         setUp();
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-        System.out.println(width);
-        System.out.println(height);
+//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//        double width = screenSize.getWidth();
+//        double height = screenSize.getHeight();
+//        System.out.println(width);
+//        System.out.println(height);
 
         Window window = new Window();
 
@@ -376,21 +376,14 @@ public class Main {
                 if (entitiesData != null) {
                     System.out.println(entitiesData.type);
                     Entity ent;
-//                    switch(entitiesData.type){
-//                        case ITEM_APPLE:
-//                            ent
-//                        case ITEM_SPIKES_HIDDEN:
-//
-//                        case ITEM_SPIKES_REVEALED:
-//
-//
-//                    }
                     if (entitiesData.type == EntityType.ITEM_APPLE)
                         ent = new Item(Item.APPLE);
                     else if (entitiesData.type == EntityType.ITEM_SPIKES_HIDDEN)
                         ent = new Item(Item.SPIKES_HIDDEN);
                     else if (entitiesData.type == EntityType.ITEM_SPIKES_REVEALED)
                         ent = new Item(Item.SPIKES_REVEALED);
+                    else if (entitiesData.type == EntityType.BULLET)
+                        ent = new Bullet(new Line(new Vector2f(), new Vector2f()), 0, 0);
                     else
                         ent = new Enemy();
                     ent.readInEntityData(entitiesData);

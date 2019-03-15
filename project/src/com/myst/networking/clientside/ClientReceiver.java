@@ -51,6 +51,8 @@ public class ClientReceiver extends Thread {
                         System.out.println("no more spaces on the server");
                         System.exit(1);
                         break;
+                    case PLAY_AUDIO:
+
                     default:
                         break;
                 }
@@ -63,6 +65,10 @@ public class ClientReceiver extends Thread {
             }
         }
     }
+
+//    public void playAudio(PlayAudioData playAudioData) {
+//
+//    }
 
 //    sends the entities positions to the server
     private void sendEntities(){
