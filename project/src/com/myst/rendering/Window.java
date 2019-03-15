@@ -72,10 +72,21 @@ public class Window {
     }
 
     public int getWidth(){
-        return this.width;
+        int[] width = new int[1];
+        int[] height = new int[1];
+        glfwGetWindowSize(this.window,width,height);
+        this.width = width[0];
+
+        return width[0];
     }
+
     public int getHeight(){
-        return this.height;
+        int[] width = new int[1];
+        int[] height = new int[1];
+        glfwGetWindowSize(this.window,width,height);
+        this.height = height[0];
+
+        return height[0];
     }
 
     public long getWindow(){
