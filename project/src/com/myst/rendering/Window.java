@@ -14,6 +14,8 @@ public class Window {
 
     private boolean fullscreen;
 
+    GLFWVidMode vidMode;
+
 
     public static void setCallbacks(){
         glfwSetErrorCallback(new GLFWErrorCallback() {
@@ -32,6 +34,7 @@ public class Window {
     public void createWindow(String title){
 //        gets information about the monitor
         GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        this.vidMode = videoMode;
 
         window = glfwCreateWindow(width,height,title,fullscreen ? glfwGetPrimaryMonitor() : 0,0);
 
@@ -76,7 +79,6 @@ public class Window {
         int[] height = new int[1];
         glfwGetWindowSize(this.window,width,height);
         this.width = width[0];
-
         return width[0];
     }
 
@@ -87,6 +89,14 @@ public class Window {
         this.height = height[0];
 
         return height[0];
+    }
+
+    public int getScreenWidth(){
+        return vidMode.width();
+    }
+
+    public int getScreenHeight(){
+        return vidMode.height();
     }
 
     public long getWindow(){

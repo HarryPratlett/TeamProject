@@ -35,7 +35,7 @@ public class Enemy extends Entity{
                         0,1,2,
                         2,3,0
                 },
-                new Vector2f(0.5f,0.5f), new Shader("assets/Shader"));
+                new Vector2f(0.5f,0.5f));
         this.type = PLAYER;
 
     }

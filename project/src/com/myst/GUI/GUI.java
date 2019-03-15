@@ -15,7 +15,6 @@ import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
 import com.myst.rendering.Shader;
-import com.myst.audio.Audio;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import java.util.HashMap;
@@ -24,6 +23,7 @@ import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+
 
 
 public class GUI {
@@ -36,24 +36,24 @@ public class GUI {
             -1f, -0.5f, 0f/*3*/
     };
 
-    private final float[] textureDocks = new float[] {
+    private float[] textureDocks = new float[] {
             0f, 0f,   1, 0f,  1f, 1f,
             0f, 1f
     };
 
-    private final int[] indices = new int[] {
+    private int[] indices = new int[] {
             0,1,2,
             2,3,0
     };
 
     private Window window;
     private GUIStates currentWindow;
+    private Boolean controls_accessed;
     private Boolean settings_accessed;
     private Shader shader;
     private Input input;
     private int volume;
     private int brightness;
-    private Audio audio;
 
     /** @param window The window which the GUI will be displayed in
      * @param input The input via which the mouse and keyboard inputs are taken
@@ -63,27 +63,25 @@ public class GUI {
         volume = 3;
         brightness = 3;
         currentWindow = GUIStates.HIDDEN;
-        shader = new Shader("assets/shader");
         this.window = window;
         this.input = input;
-        this.audio = audio;
     }
 
+    public void render(Shader shader){
     /** This is the main method that will render each of the potential windows in the GUI. It is called in the Main
      * class of this project. The window that is rendered depends on currentWindow.
      */
     public void render(){
         switch(currentWindow){
             case MAIN_MENU:
-                this.renderGUI();
+                this.renderGUI(shader);
                 break;
             case CONTROLS:
-                this.renderControls();
+                this.renderControls(shader);
                 break;
             case SETTINGS:
-                this.renderSettings();
+                this.renderSettings(shader);
                 break;
-
         }
     }
 
@@ -143,8 +141,8 @@ public class GUI {
         model.render();
     }
 
-    public void renderGUI() {
-            this.renderBackground();
+    public void renderGUI(Shader shader) {
+
             Texture[] menuTextures = new Texture[]{
                     new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
                     new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
@@ -239,16 +237,10 @@ public class GUI {
                             if (brightness > 0) { brightness -= 1; }
                             break;
                         case "plus.png":
-                            if (volume < 5) {
-                                volume += 1;
-                                audio.volume(1);
-                            }
+                            if (volume < 5) { volume += 1;  }
                             break;
                         case "minus.png":
-                            if (volume > 0) {
-                                volume -= 1;
-                                audio.volume(-1);
-                            }
+                            if (volume > 0) { volume -= 1; }
                             break;
                     }
                 }
@@ -262,10 +254,9 @@ public class GUI {
     /**
      * Renders the controls image
      */
-    public void renderControls() {
+    public void renderControls(Shader shader) {
 
         glClear(GL_COLOR_BUFFER_BIT);
-        Shader shader = new Shader("assets/shader");
         Texture controlsTexture = new Texture("assets/Keyboard_asset.png");
         float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, controlsTexture.getHeight(), controlsTexture.getWidth(), 0.0007, 0.0025);
@@ -277,8 +268,7 @@ public class GUI {
     /**
      * Renders the settings menu
      */
-    public void renderSettings(){
-
+    public void renderSettings(Shader shader){
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground();
         Shader shader = new Shader("assets/shader");
