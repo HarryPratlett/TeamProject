@@ -159,7 +159,7 @@ public class Player extends Entity {
 //                                        if (canTakeSpikeDamage()) {
 //                                            damage(10);
 //                                            lastSpikeDamage = System.currentTimeMillis();
-//                                            Audio.getAudio().play(Audio.HIT);
+//                                            Audio.getAudio().play(Audio.HIT_BY_BULLET);
 //                                            System.out.println(health);
 //                                        }
 //                                    }

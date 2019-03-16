@@ -79,7 +79,7 @@ public class WorldModel {
                                     if (canTakeSpikeDamage(playerData)) {
                                         setHealthOfPlayerData(playerData, playerData.health - 10);
                                         playerData.lastSpikeDamage = System.currentTimeMillis();
-                                        playSound(Audio.HIT);
+                                        playSound(Audio.HIT_BY_SPIKES);
                                     }
                                 }
 

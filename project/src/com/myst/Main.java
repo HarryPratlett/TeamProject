@@ -34,7 +34,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Main {
 
     static int IDCounter = 0;
-    static String clientID = "Base1";
+    static String clientID = "Base2";
 
     public static void setUp() {
         Window.setCallbacks();

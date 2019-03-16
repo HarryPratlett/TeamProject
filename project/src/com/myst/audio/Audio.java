@@ -14,7 +14,8 @@ public class Audio {
 
     public static final String THEME = "theme";
     public static final String GUN = "gun";
-    public static final String HIT = "hit";
+    public static final String HIT_BY_BULLET = "hit_by_bullet";
+    public static final String HIT_BY_SPIKES = "hit_by_spikes";
     public static final String FOOTSTEPS = "footsteps";
     public static final String APPLE = "apple";
     public static final String SPIKES = "spikes";
@@ -38,35 +39,40 @@ public class Audio {
 
     private File theme = new File(PATH + THEME + WAV);
     private File gun = new File(PATH + GUN + WAV);
-    private File hit = new File(PATH + HIT + WAV);
+    private File hitByBullet = new File(PATH + HIT_BY_BULLET + WAV);
+    private File hitBySpikes = new File(PATH + HIT_BY_SPIKES + WAV);
     private File footsteps = new File(PATH + FOOTSTEPS + WAV);
     private File apple = new File(PATH + APPLE + WAV);
     private File spikes = new File(PATH + SPIKES + WAV);
 
     private AudioInputStream themeStream;
     private AudioInputStream gunStream;
-    private AudioInputStream hitStream;
+    private AudioInputStream hitByBulletStream;
+    private AudioInputStream hitBySpikesStream;
     private AudioInputStream footstepsStream;
     private AudioInputStream appleStream;
     private AudioInputStream spikesStream;
 
     private Clip themeClip;
     private Clip gunClip;
-    private Clip hitClip;
+    private Clip hitByBulletClip;
+    private Clip hitBySpikesClip;
     private Clip footstepsClip;
     private Clip appleClip;
     private Clip spikesClip;
 
     private FloatControl themeGainControl;
     private FloatControl gunGainControl;
-    private FloatControl hitGainControl;
+    private FloatControl hitByBulletGainControl;
+    private FloatControl hitBySpikesGainControl;
     private FloatControl footstepsGainControl;
     private FloatControl appleGainControl;
     private FloatControl spikesGainControl;
 
     private float themeRange;
     private float gunRange;
-    private float hitRange;
+    private float hitByBulletRange;
+    private float hitBySpikesRange;
     private float footstepsRange;
     private float appleRange;
     private float spikesRange;
@@ -93,9 +99,13 @@ public class Audio {
             gunClip = AudioSystem.getClip();
             gunClip.open(gunStream);
 
-            hitStream = AudioSystem.getAudioInputStream(hit);
-            hitClip = AudioSystem.getClip();
-            hitClip.open(hitStream);
+            hitByBulletStream = AudioSystem.getAudioInputStream(hitByBullet);
+            hitByBulletClip = AudioSystem.getClip();
+            hitByBulletClip.open(hitByBulletStream);
+
+            hitBySpikesStream = AudioSystem.getAudioInputStream(hitBySpikes);
+            hitBySpikesClip = AudioSystem.getClip();
+            hitBySpikesClip.open(hitBySpikesStream);
 
             footstepsStream = AudioSystem.getAudioInputStream(footsteps);
             footstepsClip = AudioSystem.getClip();
@@ -119,14 +129,16 @@ public class Audio {
 
         themeGainControl = (FloatControl) themeClip.getControl(FloatControl.Type.MASTER_GAIN);
         gunGainControl = (FloatControl) gunClip.getControl(FloatControl.Type.MASTER_GAIN);
-        hitGainControl = (FloatControl) hitClip.getControl(FloatControl.Type.MASTER_GAIN);
+        hitByBulletGainControl = (FloatControl) hitByBulletClip.getControl(FloatControl.Type.MASTER_GAIN);
+        hitBySpikesGainControl = (FloatControl) hitBySpikesClip.getControl(FloatControl.Type.MASTER_GAIN);
         footstepsGainControl = (FloatControl) footstepsClip.getControl(FloatControl.Type.MASTER_GAIN);
         appleGainControl = (FloatControl) appleClip.getControl(FloatControl.Type.MASTER_GAIN);
         spikesGainControl = (FloatControl) spikesClip.getControl(FloatControl.Type.MASTER_GAIN);
 
         themeRange = themeGainControl.getMaximum() - themeGainControl.getMinimum();
         gunRange = gunGainControl.getMaximum() - gunGainControl.getMinimum();
-        hitRange = hitGainControl.getMaximum() - hitGainControl.getMinimum();
+        hitByBulletRange = hitByBulletGainControl.getMaximum() - hitByBulletGainControl.getMinimum();
+        hitBySpikesRange = hitBySpikesGainControl.getMaximum() - hitBySpikesGainControl.getMinimum();
         footstepsRange = footstepsGainControl.getMaximum() - footstepsGainControl.getMinimum();
         appleRange = appleGainControl.getMaximum() - appleGainControl.getMinimum();
         spikesRange = spikesGainControl.getMaximum() - spikesGainControl.getMinimum();
@@ -164,7 +176,8 @@ public class Audio {
         if (muted) {
             themeClip.stop();
             gunClip.stop();
-            hitClip.stop();
+            hitByBulletClip.stop();
+            hitBySpikesClip.stop();
             footstepsClip.stop();
             appleClip.stop();
             spikesClip.stop();
@@ -198,8 +211,10 @@ public class Audio {
         gain = (gunRange / MAX_VOLUME * volume) + gunGainControl.getMinimum();
         gunGainControl.setValue(gain);
 
-        gain = (hitRange / MAX_VOLUME * volume) + hitGainControl.getMinimum();
-        hitGainControl.setValue(gain);
+        gain = (hitByBulletRange / MAX_VOLUME * volume) + hitByBulletGainControl.getMinimum();
+        hitByBulletGainControl.setValue(gain);
+
+        gain = (hitBySpikesRange / MAX_VOLUME * volume) + hitBySpikesGainControl.getMinimum();
 
         gain = (footstepsRange / MAX_VOLUME * volume) + footstepsGainControl.getMinimum();
         footstepsGainControl.setValue(gain);
@@ -231,11 +246,17 @@ public class Audio {
                         gunClip.setFramePosition(0);
                     gunClip.loop(0);
                     break;
-                case HIT:
+                case HIT_BY_BULLET:
                     //if (calculateDistance(playerLocation, soundLocation) < HIT_DIST) {}
-                    if (hitClip.getFramePosition() >= hitClip.getFrameLength())
-                        hitClip.setFramePosition(0);
-                    hitClip.loop(0);
+                    if (hitByBulletClip.getFramePosition() >= hitByBulletClip.getFrameLength())
+                        hitByBulletClip.setFramePosition(0);
+                    hitByBulletClip.loop(0);
+                    break;
+                case HIT_BY_SPIKES:
+                    //if (calculateDistance(playerLocation, soundLocation) < HIT_DIST) {}
+                    if (hitBySpikesClip.getFramePosition() >= hitBySpikesClip.getFrameLength())
+                        hitBySpikesClip.setFramePosition(0);
+                    hitBySpikesClip.loop(0);
                     break;
                 case FOOTSTEPS:
                     //if (calculateDistance(playerLocation, soundLocation) < FOOTSTEPS_DIST) {}
@@ -283,8 +304,11 @@ public class Audio {
             case GUN:
                 gunClip.stop();
                 break;
-            case HIT:
-                hitClip.stop();
+            case HIT_BY_BULLET:
+                hitByBulletClip.stop();
+                break;
+            case HIT_BY_SPIKES:
+                hitBySpikesClip.stop();
                 break;
             case FOOTSTEPS:
                 footstepsClip.stop();
