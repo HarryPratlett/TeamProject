@@ -33,7 +33,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Main {
 
     static int IDCounter = 0;
-    static String clientID = "Base1";
+    static String clientID = "Base2";
     static int resHeight;
     static int resWidth;
 
