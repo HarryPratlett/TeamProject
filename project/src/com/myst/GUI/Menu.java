@@ -48,6 +48,28 @@ public class Menu {
     private Boolean isIpAddress;
     private String ipAddress;
     private String port;
+    private Texture dot = new Texture("assets/main_menu/typing/dot.png");
+    private Texture background = new Texture("assets/main_menu/NighBg0.jpg");
+    private Texture[] menuTextures = new Texture[]{
+            new Texture("assets/main_menu/singleplayer_button.png"), new Texture("assets/main_menu/multiplayer_button.png"),
+            new Texture("assets/main_menu/quit_button.png")};
+    private Texture[] multiplayerTextures = new Texture[]{
+            new Texture("assets/main_menu/host_game_button.png"), new Texture("assets/main_menu/join_game_button.png")};
+    private Texture[] hostGameTextures = new Texture[]{
+            new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"),
+            new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png"),
+            new Texture("assets/main_menu/submit_button.png")};
+    private Texture[] joinGameTextures = new Texture[]{
+            new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"),
+            new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png"),
+            new Texture("assets/main_menu/submit_button.png")};
+    private Texture[] numberTextures = new Texture[]{
+            new Texture("assets/main_menu/typing/0.png"), new Texture("assets/main_menu/typing/1.png"),
+            new Texture("assets/main_menu/typing/2.png"), new Texture("assets/main_menu/typing/3.png"),
+            new Texture("assets/main_menu/typing/4.png"), new Texture("assets/main_menu/typing/5.png"),
+            new Texture("assets/main_menu/typing/6.png"), new Texture("assets/main_menu/typing/7.png"),
+            new Texture("assets/main_menu/typing/8.png"), new Texture("assets/main_menu/typing/9.png"),
+    };
 
 
     public Menu(Window window, Input input)   {
@@ -145,20 +167,25 @@ public class Menu {
     public void render(){
         switch(currentWindow){
             case MAIN_MENU:
+                System.gc();
                 this.renderMenu();
                 break;
             case MULTIPLAYER:
+                System.gc();
                 this.renderMultiplayer();
                 break;
             case HOST_GAME:
+                System.gc();
                 this.renderHostGame();
                 break;
             case HIDDEN:
                 break;
             case JOIN_GAME:
+                System.gc();
                 this.renderJoinGame();
                 break;
             case ENTERING:
+                System.gc();
                 this.renderJoinGame();
                 this.renderText(ipAddress, 0.17f, 0.25f);
                 this.renderText(port, 0.35f, -0.10f);
@@ -196,23 +223,18 @@ public class Menu {
     public void renderMenu()    {
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground();
-        Texture[] menuTextures = new Texture[]{new Texture("assets/main_menu/singleplayer_button.png"),
-                new Texture("assets/main_menu/multiplayer_button.png"), new Texture("assets/main_menu/quit_button.png")};
         setupImages(menuTextures, 0f, 0.35f, true);
     }
 
     public void renderMultiplayer() {
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground();
-        Texture[] multiplayerTextures = new Texture[]{new Texture("assets/main_menu/host_game_button.png"),
-        new Texture("assets/main_menu/join_game_button.png")};
         setupImages(multiplayerTextures, 0f, 0.33f, true);
     }
 
     public void renderHostGame()    {
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground();
-        Texture[] hostGameTextures = new Texture[]{new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"), new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png"), new Texture("assets/main_menu/submit_button.png")};
         setupImages(Arrays.copyOfRange(hostGameTextures, 0, 2), -0.5f, 0.25f, false);
         setupImages(Arrays.copyOfRange(hostGameTextures, 2, 4), 0.5f, 0.25f, false);
         setupImages(Arrays.copyOfRange(hostGameTextures, 4, 5 ), 0f, -0.5f, true);
@@ -220,8 +242,6 @@ public class Menu {
     public void renderJoinGame()    {
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground();
-        Texture[] joinGameTextures = new Texture[]
-                {new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"), new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png"), new Texture("assets/main_menu/submit_button.png")};
         setupImages(Arrays.copyOfRange(joinGameTextures, 0, 2), -0.5f, 0.25f, false);
         setupImages(Arrays.copyOfRange(joinGameTextures, 2, 4), 0.5f, 0.25f, true);
         setupImages(Arrays.copyOfRange(joinGameTextures, 4, 5), 0f, -0.5f, true);
@@ -457,27 +477,24 @@ public class Menu {
         char[] charInput = input.toCharArray();
 
         for(char c : charInput) {
-            Texture texture;
+
             if (Character.toString(c).equals("."))   {
-                texture = new Texture("assets/main_menu/typing/dot.png");
                 float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-                vertices = this.alterVertices(vertices, texture.getHeight(), texture.getWidth(), 0.005, 0.006);
+                vertices = this.alterVertices(vertices, dot.getHeight(), dot.getWidth(), 0.005, 0.006);
                 Model model = new Model(vertices, textureDocks, indices);
-                this.renderImage(shader, texture, x, y, new Matrix4f(), model);
+                this.renderImage(shader, dot, x, y, new Matrix4f(), model);
             }
             else {
-                texture = new Texture("assets/main_menu/typing/" + Character.toString(c) + ".png");
                 float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-                vertices = this.alterVertices(vertices, texture.getHeight(), texture.getWidth(), 0.002, 0.006);
+                vertices = this.alterVertices(vertices, numberTextures[Character.getNumericValue(c)].getHeight(), numberTextures[Character.getNumericValue(c)].getWidth(), 0.002, 0.006);
                 Model model = new Model(vertices, textureDocks, indices);
-                this.renderImage(shader, texture, x, y, new Matrix4f(), model);
+                this.renderImage(shader, numberTextures[Character.getNumericValue(c)], x, y, new Matrix4f(), model);
             }
             x = x + 0.065f;
         }
     }
 
     public void renderBackground()  {
-        Texture background = new Texture("assets/main_menu/NighBg0.jpg");
         float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);
         Model model = new Model(vertices, textureDocks, indices);

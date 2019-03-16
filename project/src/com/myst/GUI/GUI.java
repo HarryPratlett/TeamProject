@@ -48,11 +48,27 @@ public class GUI {
 
     private Window window;
     private GUIStates currentWindow;
-    private Boolean controls_accessed;
     private Boolean settings_accessed;
     private Input input;
     private int volume;
     private int brightness;
+    private Texture background = new Texture("assets/main_menu/NighBg.png");
+    private Texture controlsTexture = new Texture("assets/Keyboard_asset.png");
+    private Texture menuTexture = new Texture("assets/settings_button.png");
+    private Texture[] menuTextures = new Texture[]{
+            new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
+            new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
+    };
+    private Texture[] settingsTextures = new Texture[]{
+            new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
+    private Texture[] audioTextures = new Texture[]{
+            new Texture("assets/volume_assets/0.png"), new Texture("assets/volume_assets/1.png"),
+            new Texture("assets/volume_assets/2.png"), new Texture("assets/volume_assets/3.png"),
+            new Texture("assets/volume_assets/4.png"), new Texture("assets/volume_assets/5.png")};
+    private Texture[] alterTextures = new Texture[]{new Texture (
+            "assets/volume_assets/plus.png"), new Texture("assets/volume_assets/minus.png"),
+            new Texture("assets/volume_assets/plus1.png"), new Texture("assets/volume_assets/minus1.png")};
+
 
     /** @param window The window which the GUI will be displayed in
      * @param input The input via which the mouse and keyboard inputs are taken
@@ -141,11 +157,6 @@ public class GUI {
 
     public void renderGUI(Shader shader) {
             renderBackground(shader);
-
-            Texture[] menuTextures = new Texture[]{
-                    new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
-                    new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
-            };
 
             float y = 0.55f;
 
@@ -256,7 +267,6 @@ public class GUI {
     public void renderControls(Shader shader) {
 
         glClear(GL_COLOR_BUFFER_BIT);
-        Texture controlsTexture = new Texture("assets/Keyboard_asset.png");
         float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, controlsTexture.getHeight(), controlsTexture.getWidth(), 0.0007, 0.0025);
         Model model = new Model(vertices, textureDocks, indices);
@@ -270,10 +280,10 @@ public class GUI {
     public void renderSettings(Shader shader){
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground(shader);
-        Texture[] settingsTextures = new Texture[]{new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
+
         Matrix4f scale = new Matrix4f();
         float y = 0;
-        Texture menuTexture = new Texture("assets/settings_button.png");
+
         float[] titleVertices = Arrays.copyOf(baseVertices, baseVertices.length);
         titleVertices = this.alterVertices(titleVertices, menuTexture.getHeight(), menuTexture.getWidth(), 0.002, 0.005);
         Model titleModel = new Model(titleVertices, textureDocks, indices);
@@ -285,12 +295,6 @@ public class GUI {
             this.renderImage(shader, t, -0.5f, y, scale, model);
             y -= -0.35f;
         }
-
-        Texture[] audioTextures = new Texture[]{new Texture("assets/volume_assets/0.png"), new Texture("assets/volume_assets/1.png"),new Texture("assets/volume_assets/2.png"),
-                new Texture("assets/volume_assets/3.png"), new Texture("assets/volume_assets/4.png"), new Texture("assets/volume_assets/5.png")};
-
-        Texture[] alterTextures = new Texture[]{new Texture ("assets/volume_assets/plus.png"), new Texture("assets/volume_assets/minus.png"), new Texture("assets/volume_assets/plus1.png"), new Texture("assets/volume_assets/minus1.png")};
-
         float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, alterTextures[0].getWidth(), alterTextures[0].getHeight(), 0.002, 0.005);
 
@@ -348,7 +352,6 @@ public class GUI {
      * Renders the background in all parts except controls
      */
     public void renderBackground(Shader shader)  {
-        Texture background = new Texture("assets/main_menu/NighBg.png");
         float [] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);
         Model model = new Model(vertices, textureDocks, indices);
