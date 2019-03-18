@@ -69,7 +69,7 @@ public class ClientReceiver extends Thread {
     }
 
     public void playAudio(PlayAudioData playAudioData) {
-        Audio.getAudio().play(playAudioData.clipName);
+        Audio.getAudio().play(playAudioData.clipName, playAudioData.location);
     }
 
 //    sends the entities positions to the server

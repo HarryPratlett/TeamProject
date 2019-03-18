@@ -7,6 +7,8 @@ import com.myst.networking.Message;
 import com.myst.networking.serverside.PlayAudioData;
 import com.myst.networking.serverside.ServerSender;
 import com.myst.world.entities.EntityType;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,8 +36,8 @@ public class WorldModel {
         senders.add(sender);
     }
 
-    public void playSound(String clipName) {
-        Message soundMessage = new Message(Codes.PLAY_AUDIO, new PlayAudioData(clipName));
+    public void playSound(String clipName, Vector3f location) {
+        Message soundMessage = new Message(Codes.PLAY_AUDIO, new PlayAudioData(clipName, location));
 
         for(ServerSender sender : senders) {
             sender.addMessage(soundMessage);
@@ -62,13 +64,13 @@ public class WorldModel {
                             case ITEM_APPLE:
                                 itemData.exists = false;
                                 setHealthOfPlayerData(playerData, playerData.health + 10);
-                                playSound(Audio.APPLE);
+                                playSound(Audio.APPLE, playerData.transform.pos);
                                 break;
                             case ITEM_SPIKES_HIDDEN:
                                 if (!itemData.hidden) {
                                     itemData.spikeTimer = System.currentTimeMillis();
                                     itemData.hidden = true;
-                                    playSound(Audio.SPIKES);
+                                    playSound(Audio.SPIKES, playerData.transform.pos);
                                 }
                                 break;
                             case ITEM_SPIKES_REVEALED:
@@ -79,7 +81,7 @@ public class WorldModel {
                                     if (canTakeSpikeDamage(playerData)) {
                                         setHealthOfPlayerData(playerData, playerData.health - 10);
                                         playerData.lastSpikeDamage = System.currentTimeMillis();
-                                        playSound(Audio.HIT_BY_SPIKES);
+                                        playSound(Audio.HIT_BY_SPIKES, playerData.transform.pos);
                                     }
                                 }
 

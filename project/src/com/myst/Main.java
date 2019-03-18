@@ -148,6 +148,7 @@ public class Main {
         Darkness dark = new Darkness(window);
 
         Audio.getAudio().initInput(window.getInput());
+        Audio.getAudio().initAudioWithPlayer(player);
 
 //        Lighting lights = new Lighting(window.getInput(), window);
 

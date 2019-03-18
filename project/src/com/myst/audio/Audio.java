@@ -1,6 +1,8 @@
 package com.myst.audio;
 import com.myst.input.Input;
+import com.myst.world.entities.Player;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import javax.sound.sampled.*;
@@ -9,8 +11,7 @@ import java.io.IOException;
 
 public class Audio {
 
-    Vector2f playerLocation;
-    Vector2f soundLocation;
+    Vector3f playerLocation;
 
     public static final String THEME = "theme";
     public static final String GUN = "gun";
@@ -23,7 +24,7 @@ public class Audio {
     private final String WAV = ".wav";
     private final String PATH = "assets/sounds/";
 
-    public static final int MAP_LENGTH = 100;
+    public static final double MAP_LENGTH = 100;
     public static final double MAP_WIDTH = 100;
     private final double GUN_DIST = 70;
     private final double HIT_DIST = 35;
@@ -33,7 +34,7 @@ public class Audio {
     public static final int MIN_VOLUME = 0;
     public static final int MAX_VOLUME = 5;
     boolean muted = false;
-    int volume = 3;
+    float volume = 3;
 
     private Input input;
 
@@ -86,9 +87,10 @@ public class Audio {
     }
 
     /**
-     * creating streams, clips, gain, calculating volume range
+     * creating streams, clips, gain, calculating modVolume range
      */
     private Audio() {
+        playerLocation = new Vector3f();
 
         try {
             themeStream = AudioSystem.getAudioInputStream(theme);
@@ -143,7 +145,7 @@ public class Audio {
         appleRange = appleGainControl.getMaximum() - appleGainControl.getMinimum();
         spikesRange = spikesGainControl.getMaximum() - spikesGainControl.getMinimum();
 
-        volume(0);
+        modVolume(0);
         //theme();
     }
 
@@ -155,13 +157,16 @@ public class Audio {
         this.input = input;
     }
 
+    public void initAudioWithPlayer(Player player) {
+        this.playerLocation = player.transform.pos;
+    }
+
     /**
      * calculating the distance between the player and sound source
-     * @param playerLocation - location of the player
      * @param soundLocation - location of the sound source
      * @return
      */
-    public static double calculateDistance(Vector2f playerLocation, Vector2f soundLocation) {
+    public double calculateDistanceToPlayer(Vector3f soundLocation) {
         double x = playerLocation.x - soundLocation.x;
         double y = playerLocation.y - soundLocation.y;
         double res = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
@@ -187,10 +192,10 @@ public class Audio {
     }
 
     /**
-     * changing the volume
-     * @param change how much the volume is increased / decreased
+     * changing the modVolume
+     * @param change how much the modVolume is increased / decreased
      */
-    public void volume(int change) {
+    public void modVolume(int change) {
         if (change < MIN_VOLUME) {
             if ((volume + change) < MIN_VOLUME) {
                 volume = MIN_VOLUME;
@@ -226,6 +231,13 @@ public class Audio {
         spikesGainControl.setValue(gain);
     }
 
+    public void setControlVolume(FloatControl control, double volumeMod) {
+        System.out.println(volumeMod == 1);
+        float range = control.getMaximum() - control.getMinimum();
+        double gain = (range / MAX_VOLUME * (volume * volumeMod)) + control.getMinimum();
+        control.setValue((float) gain);
+    }
+
     /**
      * playing the theme song
      */
@@ -237,31 +249,40 @@ public class Audio {
      * playing a clip
      * @param clipName - name of the clip
      */
-    public void play(String clipName) { //, Vector2f playerLocation, Vector2f soundLocation) {
+    public void play(String clipName, Vector3f location) { //, Vector2f playerLocation, Vector2f soundLocation) {
+        double dist = calculateDistanceToPlayer(location);
+
         if (!muted) {
             switch (clipName) {
                 case GUN:
-                    //if (calculateDistance(playerLocation, soundLocation) < GUN_DIST) {}
+                    if (dist > GUN_DIST) return;
+                    setControlVolume(gunGainControl, 1 - dist / GUN_DIST);
+
                     if (gunClip.getFramePosition() >= gunClip.getFrameLength())
                         gunClip.setFramePosition(0);
                     gunClip.loop(0);
                     break;
                 case HIT_BY_BULLET:
-                    //if (calculateDistance(playerLocation, soundLocation) < HIT_DIST) {}
+                    //if (calculateDistanceToPlayer(playerLocation, soundLocation) < HIT_DIST) {}
                     if (hitByBulletClip.getFramePosition() >= hitByBulletClip.getFrameLength())
                         hitByBulletClip.setFramePosition(0);
                     hitByBulletClip.loop(0);
                     break;
                 case HIT_BY_SPIKES:
-                    //if (calculateDistance(playerLocation, soundLocation) < HIT_DIST) {}
+                    if(dist > HIT_DIST) return;
+                    setControlVolume(hitBySpikesGainControl, 1 - dist / HIT_DIST);
+
                     if (hitBySpikesClip.getFramePosition() >= hitBySpikesClip.getFrameLength())
                         hitBySpikesClip.setFramePosition(0);
                     hitBySpikesClip.loop(0);
                     break;
                 case FOOTSTEPS:
-                    //if (calculateDistance(playerLocation, soundLocation) < FOOTSTEPS_DIST) {}
-                    if (footstepsClip.getFramePosition() >= footstepsClip.getFrameLength())
+                    if(dist > FOOTSTEPS_DIST) return;
+                    setControlVolume(footstepsGainControl, 1 - dist / FOOTSTEPS_DIST);
+                    if (footstepsClip.getFramePosition() >= footstepsClip.getFrameLength()) {
+                        System.out.println("reset fooooootsteps");
                         footstepsClip.setFramePosition(0);
+                    }
                     footstepsClip.loop(0);
                     break;
                 case APPLE:
@@ -278,18 +299,6 @@ public class Audio {
                     //none
             }
         }
-    }
-
-    /**
-     * calculating the volume depending on sound source location
-     * @param clipName - the name of the clip
-     * @param soundLocation - the location of sound source
-     * @return
-     */
-    public int calculateVolume(String clipName, Vector2f soundLocation) {
-        int result = volume;
-        // TODO - calculate how far it is (0-1) * how high the volume is (0-5)
-        return result;
     }
 
     /**
