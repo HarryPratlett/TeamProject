@@ -90,64 +90,64 @@ public class Menu {
             throw new IllegalStateException("Failed to initialise GLFW");
         }
 
-            Window window = new Window();
-            window.setFullscreen(false);
-            window.createWindow("My game");
+        Window window = new Window();
+        window.setFullscreen(false);
+        window.createWindow("My game");
 
-            GL.createCapabilities();
-            glEnable(GL_TEXTURE_2D);
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glClearColor(0f, 0f, 0f, 0f);
-            Boolean renderFrame;
-            double frame_cap = 1.0 / 60.0;
+        GL.createCapabilities();
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glClearColor(0f, 0f, 0f, 0f);
+        Boolean renderFrame;
+        double frame_cap = 1.0 / 60.0;
 
-            double time = Timer.getTime();
-            double unprocessed = 0;
+        double time = Timer.getTime();
+        double unprocessed = 0;
 
-            double frame_time = 0;
-            int frames = 0;
+        double frame_time = 0;
+        int frames = 0;
 
-            double debugCurrentTime = Timer.getTime();
-            double debugLastTime = Timer.getTime();
-            Menu menu = new Menu(window, window.getInput());
-            while (!window.shouldClose()) {
+        double debugCurrentTime = Timer.getTime();
+        double debugLastTime = Timer.getTime();
+        Menu menu = new Menu(window, window.getInput());
+        while (!window.shouldClose()) {
 
-                renderFrame = false;
-                double time2 = Timer.getTime();
-                double deltaTime = time2 - time;
-                time = time2;
-                unprocessed += deltaTime;
-                frame_time += deltaTime;
+            renderFrame = false;
+            double time2 = Timer.getTime();
+            double deltaTime = time2 - time;
+            time = time2;
+            unprocessed += deltaTime;
+            frame_time += deltaTime;
 //            in the case you want to render a frame as you have gone over the frame_cap
 //            a while is used instead of an if incase the performance is less than 30 FPS
-                while (unprocessed >= frame_cap) {
+            while (unprocessed >= frame_cap) {
 //                look into effects of containing a thread.sleep();
 //                take away the frame cap so that you account for the time you've taken of the next frame
-                    unprocessed -= frame_cap;
-                    renderFrame = true;
-                    debugCurrentTime = Timer.getTime();
-                    double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
-                    debugLastTime = debugCurrentTime;
-                    window.update();
-                    menu.update();
+                unprocessed -= frame_cap;
+                renderFrame = true;
+                debugCurrentTime = Timer.getTime();
+                double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
+                debugLastTime = debugCurrentTime;
+                window.update();
+                menu.update();
 
-                }
-                if (frame_time >= 1) {
-                    System.out.println(frames);
-                    frame_time = 0;
-                    frames = 0;
-                }
-                if (renderFrame) {
-                    glClear(GL_COLOR_BUFFER_BIT);
-                    menu.render();
-                    window.swapBuffers();
-                    frames += 1;
-                }
             }
+            if (frame_time >= 1) {
+                System.out.println(frames);
+                frame_time = 0;
+                frames = 0;
+            }
+            if (renderFrame) {
+                glClear(GL_COLOR_BUFFER_BIT);
+                menu.render();
+                window.swapBuffers();
+                frames += 1;
+            }
+        }
 
-            glfwTerminate();
-            System.exit(1);
+        glfwTerminate();
+        System.exit(1);
         }
 
     public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){

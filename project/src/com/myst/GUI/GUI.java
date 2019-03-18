@@ -28,8 +28,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GUI {
 
-    private HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
-    private HashMap<Rectangle2D.Float, String> settings_buttons = new HashMap<>();
+    public HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
+    public HashMap<Rectangle2D.Float, String> settings_buttons = new HashMap<>();
 
     private final float[] baseVertices = new float[] {
             -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
@@ -82,10 +82,10 @@ public class GUI {
         this.input = input;
     }
 
-    public void render(Shader shader){
     /** This is the main method that will render each of the potential windows in the GUI. It is called in the Main
      * class of this project. The window that is rendered depends on currentWindow.
      */
+    public void render(Shader shader)   {
         switch(currentWindow){
             case MAIN_MENU:
                 this.renderGUI(shader);
@@ -156,18 +156,17 @@ public class GUI {
     }
 
     public void renderGUI(Shader shader) {
-            renderBackground(shader);
+        renderBackground(shader);
+        float y = 0.55f;
 
-            float y = 0.55f;
-
-            for (Texture t : menuTextures) {
-                float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-                vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
-                Model model = new Model(vertices, textureDocks, indices);
-                renderImage(shader, t, 0f, y, new Matrix4f(), model);
-                this.addButton(0 + vertices[0], y + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
-                y += (-0.35f);
-            }
+        for (Texture t : menuTextures) {
+            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+            vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
+            Model model = new Model(vertices, textureDocks, indices);
+            renderImage(shader, t, 0f, y, new Matrix4f(), model);
+            this.addButton(0 + vertices[0], y + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
+            y += (-0.35f);
+        }
 
     }
 

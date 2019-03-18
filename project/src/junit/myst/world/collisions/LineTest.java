@@ -1,4 +1,3 @@
-/*
 package junit.myst.world.collisions;
 
 import static org.junit.Assert.assertEquals;
@@ -42,4 +41,3 @@ public class LineTest {
         assertEquals(4, lambda,0.001);
     }
 }
-*/
