@@ -47,16 +47,10 @@ public class Main {
     public static void main(String[] args) {
         setUp();
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-        System.out.println(width);
-        System.out.println(height);
-
         Window window = new Window();
 
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
-//        only the main can render and create items so this array hands stuff to the main to render
+//        only the genItems can render and create items so this array hands stuff to the genItems to render
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
         ArrayList<Line> playerBullets = new ArrayList<>();
 
@@ -145,7 +139,6 @@ public class Main {
 
         GUI gui = new GUI(window, window.getInput());
 
-        Darkness dark = new Darkness(window);
 
         Audio.getAudio().initInput(window.getInput());
 
@@ -206,7 +199,7 @@ public class Main {
             }
 
             if (frame_time >= 1) {
-//                System.out.println(frames);
+                System.out.println(frames);
                 frame_time = 0;
                 frames = 0;
             }

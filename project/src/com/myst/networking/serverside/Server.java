@@ -12,8 +12,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 
 public class Server {
     private static final int PORT = 4444;
@@ -23,6 +24,20 @@ public class Server {
      * Start the server listening for connections.
      */
     public static void main(String[] args) {
+        long window = glfwCreateWindow(640,480,"news",0,0);
+        glfwMakeContextCurrent(window);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                ItemGen.genItems(new String[]{}, window);
+
+            }
+        }.start();
 
         WorldModel world = new WorldModel();
 
@@ -48,37 +63,25 @@ public class Server {
         ticker.start();
 
         final ServerSocket s = serverSocket;
+        try {
+            // We loop for ever, as servers usually do.
+            while (true) {
+                // Listen to the socket, accepting connections from new clients:
+                Socket socket = s.accept(); // Matches AAAAA in ClientConnection
+                // By creating another thread to deal with client connection it allows
+                // multiple users to connect at once
+                new ClientConnectionThread(socket, clientTable, usedIDs, IDKey, world, ticker).start();
 
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    // We loop for ever, as servers usually do.
-                    while (true) {
-                        // Listen to the socket, accepting connections from new clients:
-                        Socket socket = s.accept(); // Matches AAAAA in ClientConnection
-                        // By creating another thread to deal with client connection it allows
-                        // multiple users to connect at once
-                        new ClientConnectionThread(socket, clientTable, usedIDs, IDKey, world, ticker).start();
-
-                    }
-                } catch (IOException e) {
-                    // Lazy approach:
-                    Report.error("IO error " + e.getMessage());
-                    // A more sophisticated approach could try to establish a new
-                    // connection. But this is beyond the scope of this simple exercise.
-                }
             }
-        }.start();
+        } catch (IOException e) {
+            // Lazy approach:
+            Report.error("IO error " + e.getMessage());
+            // A more sophisticated approach could try to establish a new
+            // connection. But this is beyond the scope of this simple exercise.
+        }
 
 //        System.out.println("hello");
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                ItemGen.main(new String[]{});
-            }
-        }, 5000);
 
 //        while(true){}
     }

@@ -10,8 +10,7 @@ import org.lwjgl.opengl.GL;
 import java.awt.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class ItemGen {
@@ -27,16 +26,10 @@ public class ItemGen {
         }
     }
 
-    public static void main(String[] args) {
+    public static void genItems(String[] args, long window) {
         setUp();
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-        System.out.println(width);
-        System.out.println(height);
 
-        Window window = new Window();
 
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
@@ -44,14 +37,10 @@ public class ItemGen {
         ClientConnection connection = new ClientConnection(entities, toRender, "127.0.0.1");
         connection.startConnection(clientID);
 
-        window.setFullscreen(false);
-        window.createWindow("My game");
 
-        GL.createCapabilities();
 
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//        this is sloppy but our time frame is limited
+
 
         entities.put(clientID, new ConcurrentHashMap<Integer, Entity>());
 
@@ -76,7 +65,6 @@ public class ItemGen {
         myEntities.put(i6.localID, i6);
 
 //        clears everything we have used from memory
-        glfwTerminate();
     }
 
     public static Item genItem(EntityType type, String tex, float x, float y, boolean hidden) {
