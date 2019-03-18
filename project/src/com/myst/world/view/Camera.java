@@ -12,7 +12,7 @@ public class Camera {
     private int width;
     private int height;
     private Player player;
-    public int scale = 20;
+    public int scale = 40;
 
     public Camera(int width, int height){
         position = new Vector3f(0,0,1);

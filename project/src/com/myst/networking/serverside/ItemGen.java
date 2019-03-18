@@ -54,10 +54,10 @@ public class ItemGen {
         Item i = genItem(EntityType.ITEM_APPLE, Item.APPLE, 2,-2, false);
         myEntities.put(i.localID, i);
 
-        Item i2 = genItem(EntityType.ITEM_SPIKES_HIDDEN, Item.SPIKES_HIDDEN, 3,-4, false);
+        Item i2 = genItem(EntityType.ITEM_SPIKES_HIDDEN, Item.SPIKES_HIDDEN, 10,-4, false);
         myEntities.put(i2.localID, i2);
 
-        Item i3 = genItem(EntityType.ITEM_SPIKES_REVEALED, Item.SPIKES_REVEALED, 3,-4, true);
+        Item i3 = genItem(EntityType.ITEM_SPIKES_REVEALED, Item.SPIKES_REVEALED, 10,-4, true);
         myEntities.put(i3.localID, i3);
 
         Item i4 = genItem(EntityType.ITEM_APPLE, Item.APPLE, 1,-5, false);

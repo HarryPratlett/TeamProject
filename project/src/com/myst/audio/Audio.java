@@ -27,6 +27,7 @@ public class Audio {
     public static final double MAP_LENGTH = 100;
     public static final double MAP_WIDTH = 100;
     private final double GUN_DIST = 70;
+    private final double SPIKES_DIST = 30;
     private final double HIT_DIST = 35;
     private final double FOOTSTEPS_DIST = 10;
     private double distance;
@@ -34,7 +35,7 @@ public class Audio {
     public static final int MIN_VOLUME = 0;
     public static final int MAX_VOLUME = 5;
     boolean muted = false;
-    float volume = 3;
+    int volume = 3;
 
     private Input input;
 
@@ -232,7 +233,6 @@ public class Audio {
     }
 
     public void setControlVolume(FloatControl control, double volumeMod) {
-        System.out.println(volumeMod == 1);
         float range = control.getMaximum() - control.getMinimum();
         double gain = (range / MAX_VOLUME * (volume * volumeMod)) + control.getMinimum();
         control.setValue((float) gain);
@@ -257,13 +257,12 @@ public class Audio {
                 case GUN:
                     if (dist > GUN_DIST) return;
                     setControlVolume(gunGainControl, 1 - dist / GUN_DIST);
-
                     if (gunClip.getFramePosition() >= gunClip.getFrameLength())
                         gunClip.setFramePosition(0);
                     gunClip.loop(0);
                     break;
                 case HIT_BY_BULLET:
-                    //if (calculateDistanceToPlayer(playerLocation, soundLocation) < HIT_DIST) {}
+                    // setControlVolume
                     if (hitByBulletClip.getFramePosition() >= hitByBulletClip.getFrameLength())
                         hitByBulletClip.setFramePosition(0);
                     hitByBulletClip.loop(0);
@@ -271,7 +270,6 @@ public class Audio {
                 case HIT_BY_SPIKES:
                     if(dist > HIT_DIST) return;
                     setControlVolume(hitBySpikesGainControl, 1 - dist / HIT_DIST);
-
                     if (hitBySpikesClip.getFramePosition() >= hitBySpikesClip.getFrameLength())
                         hitBySpikesClip.setFramePosition(0);
                     hitBySpikesClip.loop(0);
@@ -280,7 +278,6 @@ public class Audio {
                     if(dist > FOOTSTEPS_DIST) return;
                     setControlVolume(footstepsGainControl, 1 - dist / FOOTSTEPS_DIST);
                     if (footstepsClip.getFramePosition() >= footstepsClip.getFrameLength()) {
-                        System.out.println("reset fooooootsteps");
                         footstepsClip.setFramePosition(0);
                     }
                     footstepsClip.loop(0);
@@ -291,6 +288,8 @@ public class Audio {
                     appleClip.loop(0);
                     break;
                 case SPIKES:
+                    if(dist > SPIKES_DIST) return;
+                    setControlVolume(spikesGainControl, 1 - dist / HIT_DIST);
                     if (spikesClip.getFramePosition() >= spikesClip.getFrameLength())
                         spikesClip.setFramePosition(0);
                     spikesClip.loop(0);

@@ -79,6 +79,8 @@ public class ClientConnectionThread extends Thread {
                 e.printStackTrace();
             }
 
+            toClient.writeObject(world.map);
+
             System.out.println(clientID);
 
             clientTable.addClient(clientID);
@@ -97,6 +99,7 @@ public class ClientConnectionThread extends Thread {
         } catch (IOException e) {
             // Lazy approach:
             Report.error("IO error " + e.getMessage());
+            e.printStackTrace();
             // A more sophisticated approach could try to establish a new
             // connection. But this is beyond the scope of this simple exercise.
         }

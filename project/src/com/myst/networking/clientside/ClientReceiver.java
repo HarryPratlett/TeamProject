@@ -37,11 +37,9 @@ public class ClientReceiver extends Thread {
 
     @Override
     public void run(){
-        System.out.println("client receiver ran");
         while(true){
             try {
                 Message msg = (Message) fromServer.readObject();
-//                System.out.println(msg.header);
                 switch(msg.header){
                     case ENTITY_UPDATE:
                         readInEntities(msg.data);
@@ -60,7 +58,6 @@ public class ClientReceiver extends Thread {
                 }
 
             } catch (IOException e) {
-                System.out.println("something happened");
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();

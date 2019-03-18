@@ -31,7 +31,6 @@ public class ServerSender extends Thread {
     @Override
     public void run() {
         try {
-            System.out.println("started");
             while (true) {
 //        don't know why but it won't work without a thread.sleep()
                 Thread.sleep(1);

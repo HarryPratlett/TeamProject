@@ -1,0 +1,6 @@
+Texture:
+
+Wall:  Black  :	000000
+Grass: Green  :	33FF00
+Maze:  RED    :	FF0000
+Water: Purple : 66FF00

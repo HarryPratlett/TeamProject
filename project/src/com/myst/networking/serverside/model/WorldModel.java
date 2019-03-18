@@ -7,6 +7,7 @@ import com.myst.networking.Message;
 import com.myst.networking.serverside.PlayAudioData;
 import com.myst.networking.serverside.ServerSender;
 import com.myst.world.entities.EntityType;
+import com.myst.world.map.rendering.Tile;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -22,6 +23,7 @@ public class WorldModel {
     private ArrayList<EntityData> playersData;
     private ArrayList<EntityData> itemsData;
     private int entityCount;
+    public Tile[][] map;
 
     private ArrayList<ServerSender> senders;
 

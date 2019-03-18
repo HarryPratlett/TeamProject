@@ -1,5 +1,6 @@
 package com.myst.networking.serverside;
 
+import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.Report;
@@ -42,6 +43,7 @@ public class ServerReceiver extends Thread {
                         case ERROR:
                             Report.error((String) userMessage.data);
                             break;
+
                     }
 
                 } catch (ClassNotFoundException e) {

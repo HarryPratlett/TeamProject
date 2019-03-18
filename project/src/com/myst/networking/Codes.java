@@ -10,5 +10,6 @@ public enum Codes implements Serializable {
     ERROR,
     SUCCESS,
     ID_UNAVAILABLE,
-    PLAY_AUDIO
+    PLAY_AUDIO,
+    GET_MAP
 }
