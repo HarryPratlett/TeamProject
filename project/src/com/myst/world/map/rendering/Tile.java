@@ -1,6 +1,8 @@
 package com.myst.world.map.rendering;
 
-public class Tile {
+import java.io.Serializable;
+
+public class Tile implements Serializable{
 //    tiles is the different tiles that exist
     public static int nOfTiles = 0;
     private boolean solid;

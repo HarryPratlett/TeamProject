@@ -82,18 +82,9 @@ public class Window {
         int[] height = new int[1];
         glfwGetWindowSize(this.window,width,height);
         this.height = height[0];
-
         return height[0];
     }
-
-    public int getScreenWidth(){
-        return vidMode.width();
-    }
-
-    public int getScreenHeight(){
-        return vidMode.height();
-    }
-
+    
     public long getWindow(){
         return window;
     }

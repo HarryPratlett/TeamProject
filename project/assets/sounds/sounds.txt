@@ -1,0 +1,34 @@
+0) Duplex Bassline - Astronaut (test theme option)
+    theme
+	https://www.youtube.com/watch?v=RkDTd0L9Ubw
+	Licence: ask Duplex
+1) gunshot
+    gun
+	https://www.youtube.com/watch?v=nS9VmrOzd7o
+	License: Public Domain
+2) footsteps
+    footsteps
+	https://www.premiumbeat.com/blog/40-free-footstep-foley-sound-effects/
+	License: Public Domain
+3) man getting hurt
+    hit
+	https://www.youtube.com/watch?v=89vJ8V4qQrs
+	Licence: Public Domain
+4) spike trap
+	https://freesound.org/people/Deathscyp/sounds/443806/
+	Licence: Public Domain
+5) apple crunch
+	https://freesound.org/people/Leafs67/sounds/379341/
+	Licence: Public Domain
+6) 
+	
+	Licence: Public Domain
+7) 
+	
+	Licence: Public Domain
+8) 
+	
+	Licence: Public Domain
+9) 
+	
+	Licence: Public Domain

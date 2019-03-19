@@ -1,24 +1,27 @@
 package com.myst.world.collisions;
 
-import com.myst.rendering.Model;
+import com.myst.networking.EntityData;
 import com.myst.rendering.Shader;
 import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
 import com.myst.world.World;
+import com.myst.world.entities.BulletData;
 import com.myst.world.entities.Entity;
+import com.myst.world.entities.PlayerData;
 import com.myst.world.view.Camera;
-import com.myst.world.view.Transform;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import static com.myst.world.entities.EntityTypes.BULLET;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.myst.world.entities.EntityType.BULLET;
 
 public class Bullet extends Entity {
     private static final float MAX_LENGTH = 20;
     private Texture texture;
     private Shader shader;
     private Line line;
+    private float length;
+    private float damage;
 
 
     public Bullet(Line line, float length, float damage){
@@ -34,6 +37,7 @@ public class Bullet extends Entity {
                 2,3,0
         },
         new Vector2f(0.5f,0.5f));
+        this.length = length;
         this.line = line;
         this.type = BULLET;
         this.lightDistance = 0f;
@@ -41,7 +45,24 @@ public class Bullet extends Entity {
 
     }
 
-    public void update(float deltaTime, Window window, Camera camera, World world){
+    public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer,Entity> items){
 
+    }
+
+    @Override
+    public void readInEntityData(EntityData data) {
+        super.readInEntityData(data);
+        BulletData bData = (BulletData) data.typeData;
+        this.damage = bData.damage;
+    }
+
+    @Override
+    public EntityData getData() {
+        EntityData data = super.getData();
+        BulletData bData = new BulletData();
+        bData.damage = this.damage;
+        bData.length = this.length;
+        data.typeData = bData;
+        return data;
     }
 }
