@@ -1,19 +1,17 @@
 package com.myst.world.entities;
 
 import com.myst.audio.Audio;
+import com.myst.networking.EntityData;
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
 import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
-import com.myst.world.view.Transform;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.myst.world.entities.EntityType.PLAYER;
@@ -27,7 +25,7 @@ public class Player extends Entity {
     private float health = 50;
 
     private long spikeDamageDelay = 1000;
-    private long lastSpikeHit = 0;
+    private long lastSpikeDamage = 0;
 
 //    private static final float[] vertices =
 //
@@ -79,7 +77,7 @@ public class Player extends Entity {
     }
 
     private boolean canTakeSpikeDamage() {
-        return System.currentTimeMillis() - lastSpikeHit > spikeDamageDelay;
+        return System.currentTimeMillis() - lastSpikeDamage > spikeDamageDelay;
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer, Entity> items) {
@@ -123,70 +121,16 @@ public class Player extends Entity {
             }
         }
 
-        if (items != null) {
-            for (Integer i : items.keySet()) {
-                Entity e = items.get(i);
-                if (e.getType() == EntityType.ITEM_APPLE || e.getType() == EntityType.ITEM_SPIKES_HIDDEN || e.getType() == EntityType.ITEM_SPIKES_REVEALED) {
-                    Transform itemPos = e.transform;
-                    if ((transform.pos.x() - itemPos.pos.x() < 0.5f) && (transform.pos.x() - itemPos.pos.x() > -0.5f)) {
-                        if ((transform.pos.y() - itemPos.pos.y() < 0.5f) && (transform.pos.y() - itemPos.pos.y() > -0.5f)) {
-                            switch (e.getType()) {
-                                case ITEM_APPLE:
-                                    e.exists = false;
-                                    heal(10);
-                                    Audio.getAudio().play(Audio.APPLE);
-                                    break;
-                                case ITEM_SPIKES_HIDDEN:
-                                    if (!e.hidden) {
-                                        Audio.getAudio().play(Audio.SPIKES);
-                                        new Timer().schedule(new TimerTask() {
-                                            @Override
-                                            public void run() {
-                                                e.hidden = false;
-                                                System.out.println("HEH");
-                                            }
-                                        }, 5000);
-                                        e.hidden = true;
-                                    }
-                                    break;
-                                case ITEM_SPIKES_REVEALED:
-                                    if (e.hidden) {
-                                        new Timer().schedule(new TimerTask() {
-                                            @Override
-                                            public void run() {
-                                                e.hidden = true;
-                                                System.out.println("WHY");
-                                            }
-                                        }, 5000);
-                                        System.out.println("nop");
-                                        e.hidden = false;
-                                    } else {
-                                        if (canTakeSpikeDamage()) {
-                                            damage(10);
-                                            lastSpikeHit = System.currentTimeMillis();
-                                            Audio.getAudio().play(Audio.HIT);
-                                            System.out.println(health);
-                                        }
-                                    }
-
-                                    break;
-                            }
-
-                        }
-                    }
-                }
-            }
-        }
 
         if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
             Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) xMouse, (float) -yMouse));
             bullets.add(line);
-            Audio.getAudio().play(Audio.GUN);
+            Audio.getAudio().play(Audio.GUN, transform.pos);
             System.out.println("mouse pressed");
         }
 
         if (moved)
-            Audio.getAudio().play(Audio.FOOTSTEPS);
+            Audio.getAudio().play(Audio.FOOTSTEPS, transform.pos);
         else
             Audio.getAudio().stop(Audio.FOOTSTEPS);
 
@@ -213,5 +157,24 @@ public class Player extends Entity {
                 }
             }
         }
+    }
+
+    @Override
+    public void readInEntityData(EntityData data) {
+        super.readInEntityData(data);
+        this.health = ((PlayerData) data.typeData).health;
+        this.maxHealth = ((PlayerData) data.typeData).maxHealth;
+        this.lastSpikeDamage = ((PlayerData) data.typeData).lastSpikeDamage;
+    }
+
+    @Override
+    public EntityData getData() {
+        EntityData data = super.getData();
+        PlayerData playerData = new PlayerData();
+        playerData.health = health;
+        playerData.maxHealth = maxHealth;
+        playerData.lastSpikeDamage = lastSpikeDamage;
+        data.typeData = playerData;
+        return data;
     }
 }

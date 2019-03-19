@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class ItemGen {
 
     static int IDCounter = 0;
-    static String clientID = "items";
+    static String clientID = "Item";
 
     public static void setUp() {
         Window.setCallbacks();
@@ -26,10 +26,10 @@ public class ItemGen {
         }
     }
 
-    public static void genItems(String[] args, long window) {
+    public static void genItems() {
         setUp();
 
-
+        Window window = new Window();
 
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
@@ -37,6 +37,8 @@ public class ItemGen {
         ClientConnection connection = new ClientConnection(entities, toRender, "127.0.0.1");
         connection.startConnection(clientID);
 
+        window.setFullscreen(false);
+        window.createWindow("ITEM GENERATION");
 
 
 //        this is sloppy but our time frame is limited
@@ -49,10 +51,10 @@ public class ItemGen {
         Item i = genItem(EntityType.ITEM_APPLE, Item.APPLE, 2,-2, false);
         myEntities.put(i.localID, i);
 
-        Item i2 = genItem(EntityType.ITEM_SPIKES_HIDDEN, Item.SPIKES_HIDDEN, 3,-4, false);
+        Item i2 = genItem(EntityType.ITEM_SPIKES_HIDDEN, Item.SPIKES_HIDDEN, 10,-4, false);
         myEntities.put(i2.localID, i2);
 
-        Item i3 = genItem(EntityType.ITEM_SPIKES_REVEALED, Item.SPIKES_REVEALED, 3,-4, true);
+        Item i3 = genItem(EntityType.ITEM_SPIKES_REVEALED, Item.SPIKES_REVEALED, 10,-4, true);
         myEntities.put(i3.localID, i3);
 
         Item i4 = genItem(EntityType.ITEM_APPLE, Item.APPLE, 1,-5, false);

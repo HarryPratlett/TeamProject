@@ -79,9 +79,9 @@ public class Window {
         int[] height = new int[1];
         glfwGetWindowSize(this.window,width,height);
         this.height = height[0];
-
         return height[0];
     }
+    
     public long getWindow(){
         return window;
     }

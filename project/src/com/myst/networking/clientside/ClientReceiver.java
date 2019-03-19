@@ -1,8 +1,10 @@
 package com.myst.networking.clientside;
 
+import com.myst.audio.Audio;
 import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
 import com.myst.networking.Message;
+import com.myst.networking.serverside.PlayAudioData;
 import com.myst.world.entities.Enemy;
 import com.myst.world.entities.Entity;
 import com.myst.world.entities.Player;
@@ -35,11 +37,9 @@ public class ClientReceiver extends Thread {
 
     @Override
     public void run(){
-        System.out.println("client receiver ran");
         while(true){
             try {
                 Message msg = (Message) fromServer.readObject();
-//                System.out.println(msg.header);
                 switch(msg.header){
                     case ENTITY_UPDATE:
                         readInEntities(msg.data);
@@ -51,17 +51,22 @@ public class ClientReceiver extends Thread {
                         System.out.println("no more spaces on the server");
                         System.exit(1);
                         break;
+                    case PLAY_AUDIO:
+                        playAudio((PlayAudioData) msg.data);
                     default:
                         break;
                 }
 
             } catch (IOException e) {
-                System.out.println("something happened");
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void playAudio(PlayAudioData playAudioData) {
+        Audio.getAudio().play(playAudioData.clipName, playAudioData.location);
     }
 
 //    sends the entities positions to the server

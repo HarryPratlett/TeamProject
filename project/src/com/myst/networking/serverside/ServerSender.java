@@ -18,19 +18,19 @@ public class ServerSender extends Thread {
     private WorldModel world;
     private boolean updateClient;
 
-
     public ServerSender(BlockingQueue<Object> q, ObjectOutputStream c, String clientID, WorldModel world) {
         clientQueue = q;
         client = c;
         this.clientID = clientID;
         this.world = world;
         this.updateClient = false;
+
+        world.addSender(this);
     }
 
     @Override
     public void run() {
         try {
-            System.out.println("started");
             while (true) {
 //        don't know why but it won't work without a thread.sleep()
                 Thread.sleep(1);
@@ -60,7 +60,10 @@ public class ServerSender extends Thread {
         clientQueue.add(new Message(Codes.UPDATE_SERVER, null));
     }
 
-
+    public void addMessage(Message message) {
+        clientQueue.add(message);
+        this.updateClient = true;
+    }
 }
 
 

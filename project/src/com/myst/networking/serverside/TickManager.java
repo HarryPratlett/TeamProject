@@ -1,18 +1,21 @@
 package com.myst.networking.serverside;
 
 import com.myst.networking.Report;
+import com.myst.networking.serverside.model.WorldModel;
 
 public class TickManager extends Thread{
     private final int TICKRATE = 60;
     private ServerSender[] senders = new ServerSender[8];
     private Object senderListKey = new Object();
-    TickManager(){
-
+    private WorldModel wm;
+    TickManager(WorldModel wm){
+        this.wm = wm;
     }
 
     @Override
     public void run(){
         while(true){
+
             for (int i=0; i< senders.length; i++){
                 if(senders[i] != null) {
 //                    System.out.println("tick");
@@ -21,6 +24,7 @@ public class TickManager extends Thread{
 
                 }
             }
+            wm.update();
             try {
                 Thread.sleep((long) 1000 / (long) TICKRATE);
             } catch (InterruptedException e){

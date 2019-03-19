@@ -34,7 +34,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Main {
 
     static int IDCounter = 0;
-    static String clientID = "Bas1";
+    static String clientID = String.valueOf(Math.random());
 
     public static void setUp() {
         Window.setCallbacks();
@@ -47,36 +47,9 @@ public class Main {
     public static void main(String[] args) {
         setUp();
 
-        Window window = new Window();
+        String[] textures = new String[20];
+        String path = ("assets/tileset/");
 
-        ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
-//        only the genItems can render and create items so this array hands stuff to the genItems to render
-        ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
-        ArrayList<Line> playerBullets = new ArrayList<>();
-
-        ClientConnection connection = new ClientConnection(entities, toRender, "127.0.0.1");
-        connection.startConnection(clientID);
-
-        window.setFullscreen(false);
-        window.createWindow("My game");
-
-        GL.createCapabilities();
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-//        glfwSetWindowPos(window,(videoMode.width() - 640) / 2, (videoMode.height() - 480) / 2);
-
-//        glfwShowWindow(window);
-
-        glClearColor(0f, 0f, 0f, 0f);
-
-        Shader environmentShader = new Shader("assets/shader");
-        Shader menuShader = new Shader("assets/shader2");
-
-        String[] textures = new String[21];
-        String path = ("assets/tile/");
         textures[0] = path + "tile_01";
         textures[1] = path + "tile_02";
         textures[2] = path + "tile_03";
@@ -97,9 +70,45 @@ public class Main {
         textures[17] = path + "tile_18";
         textures[18] = path + "tile_19";
         textures[19] = path + "tile_20";
-        textures[20] = path + "tile_479";
 
-        Tile[][] map = new MapGenerator(textures).generateMap(100, 100);
+
+//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//        double width = screenSize.getWidth();
+//        double height = screenSize.getHeight();
+//        System.out.println(width);
+//        System.out.println(height);
+
+        Window window = new Window();
+
+        ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
+//        only the genItems can render and create items so this array hands stuff to the genItems to render
+        ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
+        ArrayList<Line> playerBullets = new ArrayList<>();
+
+        ClientConnection connection = new ClientConnection(entities, toRender, "127.0.0.1");
+        connection.startConnection(clientID);
+        Tile[][] map = connection.map;
+
+        window.setFullscreen(false);
+        window.createWindow("My game");
+
+        GL.createCapabilities();
+
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+//        glfwSetWindowPos(window,(videoMode.width() - 640) / 2, (videoMode.height() - 480) / 2);
+
+//        glfwShowWindow(window);
+
+        glClearColor(0f, 0f, 0f, 0f);
+
+        Shader environmentShader = new Shader("assets/shader");
+        Shader menuShader = new Shader("assets/shader2");
+
+
+
 
         TileRenderer tiles = new TileRenderer(textures);
 
@@ -141,6 +150,7 @@ public class Main {
 
 
         Audio.getAudio().initInput(window.getInput());
+        Audio.getAudio().initAudioWithPlayer(player);
 
 //        Lighting lights = new Lighting(window.getInput(), window);
 
@@ -170,25 +180,12 @@ public class Main {
 
                 window.update();
 
-                camera.updatePosition();
+
                 debugCurrentTime = Timer.getTime();
                 double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
                 debugLastTime = debugCurrentTime;
 
                 Audio.getAudio().update();
-
-
-
-//                entities.values().forEach(integerEntityConcurrentHashMap -> {
-//                    ArrayList<Entity> ee = new ArrayList<>();
-//
-//                    for (Entity e : integerEntityConcurrentHashMap.values()) {
-//                        if (e.exists) entitiesForPlayer.add(e);
-//                        else ee.add(e);
-//                    }
-//
-//                    ee.forEach(x -> integerEntityConcurrentHashMap.remove(x));
-//                });
 
 
                 player.update((float) timeSinceLastUpdate, window, camera, world, entities.get("items"));
@@ -202,7 +199,9 @@ public class Main {
                 System.out.println(frames);
                 frame_time = 0;
                 frames = 0;
+                System.gc();
             }
+            camera.updatePosition();
 
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);
@@ -367,23 +366,15 @@ public class Main {
             for (Integer id : items.get(owner).keySet()) {
                 EntityData entitiesData = items.get(owner).get(id);
                 if (entitiesData != null) {
-                    System.out.println(entitiesData.type);
                     Entity ent;
-//                    switch(entitiesData.type){
-//                        case ITEM_APPLE:
-//                            ent
-//                        case ITEM_SPIKES_HIDDEN:
-//
-//                        case ITEM_SPIKES_REVEALED:
-//
-//
-//                    }
                     if (entitiesData.type == EntityType.ITEM_APPLE)
                         ent = new Item(Item.APPLE);
                     else if (entitiesData.type == EntityType.ITEM_SPIKES_HIDDEN)
                         ent = new Item(Item.SPIKES_HIDDEN);
                     else if (entitiesData.type == EntityType.ITEM_SPIKES_REVEALED)
                         ent = new Item(Item.SPIKES_REVEALED);
+                    else if (entitiesData.type == EntityType.BULLET)
+                        ent = new Bullet(new Line(new Vector2f(), new Vector2f()), 0, 0);
                     else
                         ent = new Enemy();
                     ent.readInEntityData(entitiesData);

@@ -19,6 +19,7 @@ import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.Report;
 import com.myst.world.entities.Entity;
+import com.myst.world.map.rendering.Tile;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -34,8 +35,10 @@ public class ClientConnection {
     private String hostname;
     private ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities;
     private ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender;
-
+    private ObjectOutputStream toServer;
+    private ObjectInputStream fromServer;
     private ClientReceiver receiver;
+    public Tile[][] map;
 
     public ClientConnection(ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities,
                             ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender,
@@ -55,6 +58,8 @@ public class ClientConnection {
             server = new Socket(hostname, PORT);
             toServer = new ObjectOutputStream(server.getOutputStream());
             fromServer = new ObjectInputStream(server.getInputStream());
+            this.toServer = toServer;
+            this.fromServer = fromServer;
             BlockingQueue<Object> clientqueue = new LinkedBlockingQueue<Object>();
 
             if (!checkClientID(toServer, fromServer, clientID)) {
@@ -64,6 +69,8 @@ public class ClientConnection {
                 return;
             }
 
+            map = (Tile[][]) fromServer.readObject();
+
             ClientSender sender = new ClientSender(toServer, clientqueue);
             receiver = new ClientReceiver(fromServer, sender, this.entities, toRender, clientID);
             sender.start();
@@ -72,6 +79,8 @@ public class ClientConnection {
             Report.errorAndGiveUp("Unknown host: " + hostname);
         } catch (IOException e) {
             Report.errorAndGiveUp("The server doesn't seem to be running " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

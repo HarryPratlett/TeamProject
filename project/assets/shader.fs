@@ -16,8 +16,9 @@ void main(){
 
     gl_FragColor = vec4(0,0,0,1);
 
-    float screenCoordX = (gl_FragCoord.x / winWidth -2.0 ) * 2.0;
-    float screenCoordY = (gl_FragCoord.y / winHeight -2.0 ) * 2.0;
+    float screenCoordX = ((2.0f*gl_FragCoord.x / (winWidth)) - 2.0f);
+    float screenCoordY = ((2.0f*gl_FragCoord.y / (winHeight)) - 2.0f);
+
     float smallestDistRatio = 1;
 
     bool inLight = false;
