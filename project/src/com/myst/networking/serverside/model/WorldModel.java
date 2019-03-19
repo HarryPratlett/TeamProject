@@ -6,6 +6,7 @@ import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.serverside.PlayAudioData;
 import com.myst.networking.serverside.ServerSender;
+import com.myst.world.entities.BulletData;
 import com.myst.world.entities.EntityType;
 import com.myst.world.entities.ItemData;
 import com.myst.world.entities.PlayerData;
@@ -24,6 +25,7 @@ public class WorldModel {
     private ConcurrentHashMap<String, ArrayList<EntityData>> entities;
     private ArrayList<EntityData> playersData;
     private ArrayList<EntityData> itemsData;
+    private ArrayList<EntityData> bulletsData;
     private int entityCount;
     public Tile[][] map;
 
@@ -51,6 +53,7 @@ public class WorldModel {
     public void update() {
         playersData = getPlayers();
         itemsData = getItems();
+        bulletsData = getBullets();
 
         for (EntityData playerData : playersData) {
             float playerX = playerData.transform.pos.x;
@@ -64,6 +67,7 @@ public class WorldModel {
                 float itemX = itemData.transform.pos.x;
                 float itemY = itemData.transform.pos.y;
 
+//              item update code
                 if ((playerX - itemX < 0.5f) && (playerX - itemX > -0.5f)) {
                     if ((playerY - itemY < 0.5f) && (playerY - itemY > -0.5f)) {
                         switch (itemData.type) {
@@ -93,6 +97,11 @@ public class WorldModel {
                         }
                     }
                 }
+//              bullet collision code
+
+            }
+            for(EntityData bulletData : bulletsData){
+
             }
         }
 
@@ -152,6 +161,21 @@ public class WorldModel {
         return itemsData;
     }
 
+    public ArrayList<EntityData> getBullets() {
+        ArrayList<EntityData> itemsData = new ArrayList<>();
+
+        entities.values().forEach(entityDataArrayList -> {
+            for (EntityData e : entityDataArrayList) {
+                if (e.exists && (e.type == BULLET)) {
+                    itemsData.add(e);
+
+                }
+            }
+        });
+
+        return itemsData;
+    }
+
 
     public void updateWorld(EntityData entity) {
         ArrayList<EntityData> clientEntities = entities.get(entity.ownerID);
@@ -185,6 +209,11 @@ public class WorldModel {
                     ((ItemData) entity.typeData).hidden = itemData.hidden;
                     ((ItemData) entity.typeData).lastSpikeDamage= itemData.lastSpikeDamage;
                     ((ItemData) entity.typeData).spikeTimer = itemData.spikeTimer;
+                    break;
+                case BULLET:
+                    BulletData bulletData = (BulletData) cEntityData.typeData;
+                    ((BulletData) entity.typeData).damage =  bulletData.damage;
+                    ((BulletData) entity.typeData).length =  bulletData.length;
                     break;
             }
             entity.exists = clientEntities.get(entity.localID).exists;
