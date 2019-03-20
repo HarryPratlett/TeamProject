@@ -22,7 +22,8 @@ public class Bullet extends Entity {
     private Line line;
     private float length;
     private float damage = 25;
-
+    private float life = 100000000;
+    private float timeOfCreation;
 
     public Bullet(Line line, float length, float damage){
         super( new float[]{
@@ -42,6 +43,7 @@ public class Bullet extends Entity {
         this.type = BULLET;
         this.lightDistance = 0f;
         this.lightSource = false;
+        this.timeOfCreation = System.nanoTime();
 
     }
 
@@ -54,6 +56,13 @@ public class Bullet extends Entity {
         super.readInEntityData(data);
         BulletData bData = (BulletData) data.typeData;
         this.damage = bData.damage;
+    }
+
+    @Override
+    public void render(Camera camera, Shader shader){
+        if((System.nanoTime() - timeOfCreation) < life){
+            super.render(camera,shader);
+        }
     }
 
     @Override

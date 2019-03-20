@@ -199,11 +199,8 @@ public class Main {
 
             if (frame_time >= 1) {
                 System.out.println(frames);
-                System.out.println(player.getHealth());
-                System.out.println(player.boundingBox.getCentre());
                 frame_time = 0;
                 frames = 0;
-                System.gc();
             }
             camera.updatePosition();
 
