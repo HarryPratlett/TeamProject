@@ -33,8 +33,6 @@ public class ClientConnectionThread extends Thread {
         // we have a maximum of 8 clients per server
 //      availableIDs is a list of booleans which if an element is true means it's index is available as an ID e.g.
 //      [T,F,F,F,T] ->  IDs 0,4 are available IDs 1,2,3 are not
-
-
     }
 
     @Override
@@ -104,6 +102,4 @@ public class ClientConnectionThread extends Thread {
             // connection. But this is beyond the scope of this simple exercise.
         }
     }
-
-
 }

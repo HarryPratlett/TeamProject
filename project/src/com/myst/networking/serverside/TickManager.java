@@ -8,8 +8,10 @@ public class TickManager extends Thread{
     private ServerSender[] senders = new ServerSender[8];
     private Object senderListKey = new Object();
     private WorldModel wm;
+    private ItemGenerator itemGenerator;
     TickManager(WorldModel wm){
         this.wm = wm;
+        itemGenerator = new ItemGenerator(wm);
     }
 
     @Override
@@ -25,6 +27,7 @@ public class TickManager extends Thread{
                 }
             }
             wm.update();
+            itemGenerator.update();
             try {
                 Thread.sleep((long) 1000 / (long) TICKRATE);
             } catch (InterruptedException e){

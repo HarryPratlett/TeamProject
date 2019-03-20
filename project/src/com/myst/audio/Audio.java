@@ -24,8 +24,6 @@ public class Audio {
     private final String WAV = ".wav";
     private final String PATH = "assets/sounds/";
 
-    public static final double MAP_LENGTH = 100;
-    public static final double MAP_WIDTH = 100;
     private final double GUN_DIST = 70;
     private final double SPIKES_DIST = 30;
     private final double HIT_DIST = 35;
@@ -147,7 +145,7 @@ public class Audio {
         spikesRange = spikesGainControl.getMaximum() - spikesGainControl.getMinimum();
 
         modVolume(0);
-        //theme();
+        theme();
     }
 
     /**
@@ -252,6 +250,7 @@ public class Audio {
     public void play(String clipName, Vector3f location) { //, Vector2f playerLocation, Vector2f soundLocation) {
         double dist = calculateDistanceToPlayer(location);
 
+        if(clipName == APPLE) System.out.println(muted);
         if (!muted) {
             switch (clipName) {
                 case GUN:
