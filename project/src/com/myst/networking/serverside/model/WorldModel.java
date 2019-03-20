@@ -101,8 +101,24 @@ public class WorldModel {
 
             }
             for(EntityData bulletData : bulletsData){
+                BulletData bulletSpecific = (BulletData) bulletData.typeData;
 
+//                if the bullet is colliding with the owner or we have already calculated whether it collides with
+//                something we ignore the bullet
+
+                if(bulletData.ownerID.equals(playerData.ownerID) || bulletSpecific.checked) continue;
+
+
+                bulletSpecific.line.vector.y *= -1;
+                if (playerData.boundingBox.isColliding(bulletSpecific.line,bulletSpecific.length)){
+                     playerSpecific.health -= bulletSpecific.damage;
+                }
+                bulletSpecific.line.vector.y *= -1;
             }
+        }
+
+        for(EntityData bulletData : bulletsData){
+            ((BulletData) bulletData.typeData).checked = true;
         }
 
         for (EntityData itemData : itemsData) {
@@ -214,6 +230,7 @@ public class WorldModel {
                     BulletData bulletData = (BulletData) cEntityData.typeData;
                     ((BulletData) entity.typeData).damage =  bulletData.damage;
                     ((BulletData) entity.typeData).length =  bulletData.length;
+                    ((BulletData) entity.typeData).checked = bulletData.checked;
                     break;
             }
             entity.exists = clientEntities.get(entity.localID).exists;

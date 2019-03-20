@@ -20,8 +20,8 @@ public class Player extends Entity {
     private ArrayList<Line> bullets;
     private final float MOVEMENT_SPEED = 10f;
 
-    private float maxHealth = 100;
-    private float health = 50;
+    public float maxHealth = 100;
+    public float health = 50;
 
     private long spikeDamageDelay = 1000;
     private long lastSpikeDamage = 0;
@@ -123,7 +123,7 @@ public class Player extends Entity {
 
 
         if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
-            Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) xMouse, (float) -yMouse));
+            Line line = new Line(new Vector2f(transform.pos.x, transform.pos.y), new Vector2f((float) xMouse, (float) -yMouse));
             bullets.add(line);
             Audio.getAudio().play(Audio.GUN, transform.pos);
             System.out.println("mouse pressed");

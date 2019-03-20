@@ -21,7 +21,7 @@ public class Bullet extends Entity {
     private Shader shader;
     private Line line;
     private float length;
-    private float damage;
+    private float damage = 25;
 
 
     public Bullet(Line line, float length, float damage){
@@ -62,6 +62,7 @@ public class Bullet extends Entity {
         BulletData bData = new BulletData();
         bData.damage = this.damage;
         bData.length = this.length;
+        bData.line = this.line;
         data.typeData = bData;
         return data;
     }

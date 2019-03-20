@@ -90,7 +90,7 @@ public class Main {
         Tile[][] map = connection.map;
 
         window.setFullscreen(false);
-        window.createWindow("My game");
+        window.createWindow(clientID);
 
         GL.createCapabilities();
 
@@ -199,6 +199,8 @@ public class Main {
 
             if (frame_time >= 1) {
                 System.out.println(frames);
+                System.out.println(player.getHealth());
+                System.out.println(player.boundingBox.getCentre());
                 frame_time = 0;
                 frames = 0;
                 System.gc();
@@ -276,10 +278,10 @@ public class Main {
                 yDist = (float) Math.floor((double) currentPos.y);
             }
 
-            yDist = (yDist - currentPos.y) * deltaY;
+            yDist = (yDist + currentPos.y) * deltaY;
 
             int mapX = (int) Math.floor((double) currentPos.x);
-            int mapY = (int) Math.floor((double) currentPos.y);
+            int mapY = (int) Math.floor((double) -currentPos.y);
 
             boolean hitWall = false;
             int total = 0;
@@ -307,7 +309,7 @@ public class Main {
             if (side == 0) {
                 wallDist = (mapX - currentPos.x + (1 - stepX) / 2) / bulletVec.x;
             } else {
-                wallDist = (mapY - currentPos.y + (1 - stepY) / 2) / bulletVec.y;
+                wallDist = (mapY + currentPos.y + (1 - stepY) / 2) / bulletVec.y;
             }
 
             Bullet newBullet = new Bullet(bullet, wallDist, 100f);
@@ -320,7 +322,7 @@ public class Main {
                 newBullet.transform.rotation += Math.PI;
             }
             newBullet.transform.pos.x = currentPos.x;
-            newBullet.transform.pos.y = -currentPos.y;
+            newBullet.transform.pos.y = currentPos.y;
 
             myEntities.put(newBullet.localID, newBullet);
         }

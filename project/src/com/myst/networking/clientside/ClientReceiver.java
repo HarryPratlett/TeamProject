@@ -8,6 +8,7 @@ import com.myst.networking.serverside.PlayAudioData;
 import com.myst.world.entities.Enemy;
 import com.myst.world.entities.Entity;
 import com.myst.world.entities.Player;
+import com.myst.world.entities.PlayerData;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -113,6 +114,14 @@ public class ClientReceiver extends Thread {
                 }
                 if(!entities.get(entity.ownerID).containsKey(entity.localID)){
                         toRender.get(entity.ownerID).put(entity.localID, entity);
+                }
+                else if(entity.ownerID.equals(clientID)){
+                    Entity clientEntity = entities.get(clientID).get(entity.localID);
+                    switch(clientEntity.getType()){
+                        case PLAYER:
+                            ((Player) clientEntity).health = ((PlayerData) entity.typeData).health;
+                            break;
+                    }
                 }
                 else if (!entity.ownerID.equals(clientID)) {
                     entities.get(entity.ownerID).get(entity.localID).readInEntityData(entityData.get(i));

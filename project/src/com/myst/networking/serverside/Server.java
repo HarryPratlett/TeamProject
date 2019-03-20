@@ -91,7 +91,6 @@ public class Server {
                 // By creating another thread to deal with client connection it allows
                 // multiple users to connect at once
                 new ClientConnectionThread(socket, clientTable, usedIDs, IDKey, world, ticker).start();
-
             }
         } catch (IOException e) {
             // Lazy approach:
