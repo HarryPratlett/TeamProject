@@ -1,12 +1,19 @@
 
 package com.myst.networking.serverside;
 
+import com.myst.networking.EntityData;
 import com.myst.networking.serverside.model.WorldModel;
+import com.myst.world.collisions.AABB;
+import com.myst.world.entities.EntityType;
+import com.myst.world.entities.ItemData;
 import com.myst.world.map.rendering.Tile;
+import com.myst.world.view.Transform;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.util.Random;
 
-public class ItemGenerator {
+public class ItemGen {
 
     static int IDCounter = 0;
     static String clientID = "Item";
@@ -19,7 +26,7 @@ public class ItemGenerator {
 
     Tile[][] freeTiles;
 
-    public ItemGenerator(WorldModel wm) {
+    public ItemGen(WorldModel wm) {
         this.wm = wm;
         r = new Random();
     }
@@ -32,6 +39,7 @@ public class ItemGenerator {
     }
 
     public void genItems() {
+        System.out.println("MAKING APPLES GO APPLES");
         for (int i = 0; i < wm.map.length; i++) {
             for (int j = 0; j < wm.map[0].length; j++) {
                 if (wm.map[i][j].getId() == 0) {
@@ -43,7 +51,32 @@ public class ItemGenerator {
     }
 
     public void genItem(int x, int y) {
+        EntityData item = new EntityData();
+        item.ownerID = "items";
+        item.localID = IDCounter++;
 
+        item.transform = new Transform();
+        item.transform.pos.add(x, -y, 0);
+        item.transform.scale = new Vector3f(1,1,1);
+        item.boundingBox = new AABB(new Vector2f(item.transform.pos.x, item.transform.pos.y), new Vector2f(0.5f, 0.5f));
+        item.type = getItemType();
+
+        item.lightSource = false;
+        item.lightDistance = 25f;
+
+        ItemData itemData = new ItemData();
+        itemData.hidden = false;
+        itemData.isChanged = true;
+        itemData.spikeTimer = 2;
+
+        item.typeData = itemData;
+        item.exists = true;
+
+        wm.updateWorld(item);
+    }
+
+    public EntityType getItemType() {
+        return EntityType.ITEM_APPLE;
     }
 
 //    public Tile[][] addItemsToWorldMap(Tile[][] map) {

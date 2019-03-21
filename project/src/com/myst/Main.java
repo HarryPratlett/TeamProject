@@ -34,7 +34,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Main {
 
     static int IDCounter = 0;
-    static String clientID = "Base1";
+    static String clientID = String.valueOf(Math.random());
 
     public static void setUp() {
         Window.setCallbacks();
@@ -81,7 +81,7 @@ public class Main {
         Window window = new Window();
 
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
-//        only the main can render and create items so this array hands stuff to the main to render
+//        only the genItems can render and create items so this array hands stuff to the genItems to render
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
         ArrayList<Line> playerBullets = new ArrayList<>();
 
@@ -148,7 +148,6 @@ public class Main {
 
         GUI gui = new GUI(window, window.getInput());
 
-        Darkness dark = new Darkness(window);
 
         Audio.getAudio().initInput(window.getInput());
         Audio.getAudio().initAudioWithPlayer(player);
@@ -181,25 +180,12 @@ public class Main {
 
                 window.update();
 
-                camera.updatePosition();
+
                 debugCurrentTime = Timer.getTime();
                 double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
                 debugLastTime = debugCurrentTime;
 
                 Audio.getAudio().update();
-
-
-
-//                entities.values().forEach(integerEntityConcurrentHashMap -> {
-//                    ArrayList<Entity> ee = new ArrayList<>();
-//
-//                    for (Entity e : integerEntityConcurrentHashMap.values()) {
-//                        if (e.exists) entitiesForPlayer.add(e);
-//                        else ee.add(e);
-//                    }
-//
-//                    ee.forEach(x -> integerEntityConcurrentHashMap.remove(x));
-//                });
 
 
                 player.update((float) timeSinceLastUpdate, window, camera, world, entities.get("items"));
@@ -210,10 +196,12 @@ public class Main {
             }
 
             if (frame_time >= 1) {
-//                System.out.println(frames);
+                System.out.println(frames);
                 frame_time = 0;
                 frames = 0;
+                System.gc();
             }
+            camera.updatePosition();
 
             if (renderFrame) {
                 glClear(GL_COLOR_BUFFER_BIT);

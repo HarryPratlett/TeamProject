@@ -69,7 +69,6 @@ public abstract class Entity implements Serializable {
         data.transform = this.transform;
         data.lightSource = this.lightSource;
         data.lightDistance = this.lightDistance;
-        data.hidden = this.hidden;
         data.exists = this.exists;
 
         return data;
@@ -82,7 +81,6 @@ public abstract class Entity implements Serializable {
         this.boundingBox = data.boundingBox;
         this.lightSource = data.lightSource;
         this.lightDistance = data.lightDistance;
-        this.hidden = data.hidden;
         this.exists = data.exists;
     }
 }

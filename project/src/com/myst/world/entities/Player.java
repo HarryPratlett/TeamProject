@@ -121,56 +121,6 @@ public class Player extends Entity {
             }
         }
 
-//        if (items != null) {
-//            for (Integer i : items.keySet()) {
-//                Entity e = items.get(i);
-//                if (e.getType() == EntityType.ITEM_APPLE || e.getType() == EntityType.ITEM_SPIKES_HIDDEN || e.getType() == EntityType.ITEM_SPIKES_REVEALED) {
-//                    Transform itemPos = e.transform;
-//                    if ((transform.pos.x() - itemPos.pos.x() < 0.5f) && (transform.pos.x() - itemPos.pos.x() > -0.5f)) {
-//                        if ((transform.pos.y() - itemPos.pos.y() < 0.5f) && (transform.pos.y() - itemPos.pos.y() > -0.5f)) {
-//                            switch (e.getType()) {
-//                                case ITEM_APPLE:
-//                                    e.exists = false;
-//                                    heal(10);
-//                                    Audio.getAudio().play(Audio.APPLE);
-//                                    break;
-//                                case ITEM_SPIKES_HIDDEN:
-//                                    if (!e.hidden) {
-//                                        Audio.getAudio().play(Audio.SPIKES);
-//                                        new Timer().schedule(new TimerTask() {
-//                                            @Override
-//                                            public void run() {
-//                                                e.hidden = false;
-//                                            }
-//                                        }, 5000);
-//                                        e.hidden = true;
-//                                    }
-//                                    break;
-//                                case ITEM_SPIKES_REVEALED:
-//                                    if (e.hidden) {
-//                                        new Timer().schedule(new TimerTask() {
-//                                            @Override
-//                                            public void run() {
-//                                                e.hidden = true;
-//                                            }
-//                                        }, 5000);
-//                                        e.hidden = false;
-//                                    } else {
-//                                        if (canTakeSpikeDamage()) {
-//                                            damage(10);
-//                                            lastSpikeDamage = System.currentTimeMillis();
-//                                            Audio.getAudio().play(Audio.HIT_BY_BULLET);
-//                                            System.out.println(health);
-//                                        }
-//                                    }
-//                                    break;
-//                            }
-//
-//                        }
-//                    }
-//                }
-//            }
-//        }
 
         if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
             Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) xMouse, (float) -yMouse));
@@ -212,17 +162,19 @@ public class Player extends Entity {
     @Override
     public void readInEntityData(EntityData data) {
         super.readInEntityData(data);
-        this.health = data.health;
-        this.maxHealth = data.maxHealth;
-        this.lastSpikeDamage = data.lastSpikeDamage;
+        this.health = ((PlayerData) data.typeData).health;
+        this.maxHealth = ((PlayerData) data.typeData).maxHealth;
+        this.lastSpikeDamage = ((PlayerData) data.typeData).lastSpikeDamage;
     }
 
     @Override
     public EntityData getData() {
         EntityData data = super.getData();
-        data.health = health;
-        data.maxHealth = maxHealth;
-        data.lastSpikeDamage = lastSpikeDamage;
+        PlayerData playerData = new PlayerData();
+        playerData.health = health;
+        playerData.maxHealth = maxHealth;
+        playerData.lastSpikeDamage = lastSpikeDamage;
+        data.typeData = playerData;
         return data;
     }
 }

@@ -6,7 +6,10 @@ import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.serverside.PlayAudioData;
 import com.myst.networking.serverside.ServerSender;
+import com.myst.world.entities.BulletData;
 import com.myst.world.entities.EntityType;
+import com.myst.world.entities.ItemData;
+import com.myst.world.entities.PlayerData;
 import com.myst.world.map.rendering.Tile;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -22,6 +25,7 @@ public class WorldModel {
     private ConcurrentHashMap<String, ArrayList<EntityData>> entities;
     private ArrayList<EntityData> playersData;
     private ArrayList<EntityData> itemsData;
+    private ArrayList<EntityData> bulletsData;
     private int entityCount;
     public Tile[][] map;
 
@@ -49,67 +53,76 @@ public class WorldModel {
     public void update() {
         playersData = getPlayers();
         itemsData = getItems();
+        bulletsData = getBullets();
 
         for (EntityData playerData : playersData) {
             float playerX = playerData.transform.pos.x;
             float playerY = playerData.transform.pos.y;
+            PlayerData playerSpecific = (PlayerData) playerData.typeData;
 
             for (EntityData itemData : itemsData) {
+                ItemData itemSpecific = (ItemData) itemData.typeData;
                 if(!itemData.exists) continue;
 
                 float itemX = itemData.transform.pos.x;
                 float itemY = itemData.transform.pos.y;
 
+//              item update code
                 if ((playerX - itemX < 0.5f) && (playerX - itemX > -0.5f)) {
                     if ((playerY - itemY < 0.5f) && (playerY - itemY > -0.5f)) {
                         switch (itemData.type) {
                             case ITEM_APPLE:
                                 itemData.exists = false;
-                                setHealthOfPlayerData(playerData, playerData.health + 10);
+                                setHealthOfPlayerData(playerSpecific, playerSpecific.health + 10);
                                 playSound(Audio.APPLE, playerData.transform.pos);
                                 break;
                             case ITEM_SPIKES_HIDDEN:
-                                if (!itemData.hidden) {
-                                    itemData.spikeTimer = System.currentTimeMillis();
-                                    itemData.hidden = true;
+                                if (!itemSpecific.hidden) {
+                                    itemSpecific.spikeTimer = System.currentTimeMillis();
+                                    itemSpecific.hidden = true;
                                     playSound(Audio.SPIKES, playerData.transform.pos);
                                 }
                                 break;
                             case ITEM_SPIKES_REVEALED:
-                                if (itemData.hidden) {
-                                    itemData.spikeTimer = System.currentTimeMillis();
-                                    itemData.hidden = false;
+                                if (itemSpecific.hidden) {
+                                    itemSpecific.spikeTimer = System.currentTimeMillis();
+                                    itemSpecific.hidden = false;
                                 } else {
-                                    if (canTakeSpikeDamage(playerData)) {
-                                        setHealthOfPlayerData(playerData, playerData.health - 10);
-                                        playerData.lastSpikeDamage = System.currentTimeMillis();
+                                    if (canTakeSpikeDamage(playerSpecific)) {
+                                        setHealthOfPlayerData(playerSpecific, playerSpecific.health - 10);
+                                        playerSpecific.lastSpikeDamage = System.currentTimeMillis();
                                         playSound(Audio.HIT_BY_SPIKES, playerData.transform.pos);
                                     }
                                 }
-
                         }
                     }
                 }
+//              bullet collision code
+
+            }
+            for(EntityData bulletData : bulletsData){
+
             }
         }
 
         for (EntityData itemData : itemsData) {
             if (itemData.type == ITEM_SPIKES_REVEALED || itemData.type == ITEM_SPIKES_HIDDEN) {
-                if (System.currentTimeMillis() - itemData.spikeTimer > 5000) {
-                    if (itemData.type == ITEM_SPIKES_HIDDEN) itemData.hidden = false;
-                    else itemData.hidden = true;
+                ItemData itemSpecific = (ItemData) itemData.typeData;
+                if (System.currentTimeMillis() - itemSpecific.spikeTimer > 5000) {
+                    if (itemData.type == ITEM_SPIKES_HIDDEN) itemSpecific.hidden = false;
+                    else itemSpecific.hidden = true;
 
-                    itemData.spikeTimer = Long.MAX_VALUE;
+                    itemSpecific.spikeTimer = Long.MAX_VALUE;
                 }
             }
         }
     }
 
-    public boolean canTakeSpikeDamage(EntityData player) {
+    public boolean canTakeSpikeDamage(PlayerData player) {
         return System.currentTimeMillis() - player.lastSpikeDamage > 1000;
     }
 
-    public void setHealthOfPlayerData(EntityData player, float health) {
+    public void setHealthOfPlayerData(PlayerData player, float health) {
         if (health < 0) health = 0;
         if (health > player.maxHealth) health = player.maxHealth;
 
@@ -121,8 +134,10 @@ public class WorldModel {
 
         entities.values().forEach(entityDataArrayList -> {
             for (EntityData e : entityDataArrayList) {
-                if (e.exists && (e.type == EntityType.PLAYER))
+                if (e.exists && (e.type == EntityType.PLAYER)){
                     playersData.add(e);
+                }
+
             }
         });
 
@@ -136,8 +151,25 @@ public class WorldModel {
             for (EntityData e : entityDataArrayList) {
                 if (e.exists && (e.type == ITEM_APPLE ||
                         e.type == EntityType.ITEM_SPIKES_HIDDEN ||
-                        e.type == EntityType.ITEM_SPIKES_REVEALED))
+                        e.type == EntityType.ITEM_SPIKES_REVEALED)) {
+                        itemsData.add(e);
+
+                }
+            }
+        });
+
+        return itemsData;
+    }
+
+    public ArrayList<EntityData> getBullets() {
+        ArrayList<EntityData> itemsData = new ArrayList<>();
+
+        entities.values().forEach(entityDataArrayList -> {
+            for (EntityData e : entityDataArrayList) {
+                if (e.exists && (e.type == BULLET)) {
                     itemsData.add(e);
+
+                }
             }
         });
 
@@ -159,19 +191,34 @@ public class WorldModel {
 
 //        try and catch need to catch when you try and access an element which doesn't exist
 //        try {
+
+
         if (clientEntities.get(entity.localID) != null) {
-            entity.health = clientEntities.get(entity.localID).health;
-            entity.maxHealth = clientEntities.get(entity.localID).maxHealth;
+            EntityData cEntityData = clientEntities.get(entity.localID);
+            switch(cEntityData.type){
+                case PLAYER:
+                    PlayerData playerData = (PlayerData) cEntityData.typeData;
+                    ((PlayerData) entity.typeData).health = playerData.health;
+                    ((PlayerData) entity.typeData).maxHealth = playerData.maxHealth;
+                    ((PlayerData) entity.typeData).lastSpikeDamage = playerData.lastSpikeDamage;
+                    break;
+                case ITEM_SPIKES_HIDDEN:
+                case ITEM_SPIKES_REVEALED:
+                case ITEM_APPLE:
+                    ItemData itemData = (ItemData) cEntityData.typeData;
+                    ((ItemData) entity.typeData).hidden = itemData.hidden;
+                    ((ItemData) entity.typeData).lastSpikeDamage= itemData.lastSpikeDamage;
+                    ((ItemData) entity.typeData).spikeTimer = itemData.spikeTimer;
+                    break;
+                case BULLET:
+                    BulletData bulletData = (BulletData) cEntityData.typeData;
+                    ((BulletData) entity.typeData).damage =  bulletData.damage;
+                    ((BulletData) entity.typeData).length =  bulletData.length;
+                    break;
+            }
             entity.exists = clientEntities.get(entity.localID).exists;
-            entity.hidden = clientEntities.get(entity.localID).hidden;
-            entity.lastSpikeDamage = clientEntities.get(entity.localID).lastSpikeDamage;
-            entity.spikeTimer = clientEntities.get(entity.localID).spikeTimer;
         }
-
         clientEntities.set(entity.localID, entity);
-//        } catch() {
-
-//        }
     }
 
     public void addClient(String clientID) {

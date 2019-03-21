@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+
 public class Server {
     private static final int PORT = 4444;
     private static final int MAX_CLIENTS = 8;
@@ -80,33 +83,27 @@ public class Server {
         ticker.start();
 
         final ServerSocket s = serverSocket;
+        try {
+            // We loop for ever, as servers usually do.
+            while (true) {
+                // Listen to the socket, accepting connections from new clients:
+                Socket socket = s.accept(); // Matches AAAAA in ClientConnection
+                // By creating another thread to deal with client connection it allows
+                // multiple users to connect at once
+                new ClientConnectionThread(socket, clientTable, usedIDs, IDKey, world, ticker).start();
 
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    // We loop for ever, as servers usually do.
-                    while (true) {
-                        // Listen to the socket, accepting connections from new clients:
-                        Socket socket = s.accept(); // Matches AAAAA in ClientConnection
-                        // By creating another thread to deal with client connection it allows
-                        // multiple users to connect at once
-                        new ClientConnectionThread(socket, clientTable, usedIDs, IDKey, world, ticker).start();
-
-                    }
-                } catch (IOException e) {
-                    // Lazy approach:
-                    Report.error("IO error " + e.getMessage());
-                    // A more sophisticated approach could try to establish a new
-                    // connection. But this is beyond the scope of this simple exercise.
-                }
             }
-        }.start();
+        } catch (IOException e) {
+            // Lazy approach:
+            Report.error("IO error " + e.getMessage());
+            // A more sophisticated approach could try to establish a new
+            // connection. But this is beyond the scope of this simple exercise.
+        }
 
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                ItemGen.main(new String[]{});
+                ItemGen.genItems();
             }
         }, 5000);
 

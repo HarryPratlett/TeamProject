@@ -18,15 +18,7 @@ public class EntityData implements Serializable {
     public boolean lightSource;
     public float lightDistance;
 
-    public float health;
-    public float maxHealth;
-
-    public boolean hidden;
     public boolean exists;
-    public long lastSpikeDamage;
-    public long spikeTimer;
 
-    public EntityData() {
-
-    }
+    public Object typeData;
 }
