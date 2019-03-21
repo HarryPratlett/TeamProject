@@ -5,9 +5,7 @@ import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.serverside.PlayAudioData;
-import com.myst.world.entities.Enemy;
-import com.myst.world.entities.Entity;
-import com.myst.world.entities.Player;
+import com.myst.world.entities.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,6 +19,8 @@ public class ClientReceiver extends Thread {
     private ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities;
     private ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender;
     private String clientID;
+
+    boolean b = true;
 
 //    convert entity[] into hash map potentially currently the arrays indexes corresponds to the entity's ID
     public ClientReceiver(ObjectInputStream fromServer,
@@ -40,6 +40,7 @@ public class ClientReceiver extends Thread {
         while(true){
             try {
                 Message msg = (Message) fromServer.readObject();
+//                System.out.println(msg.header.toString());
                 switch(msg.header){
                     case ENTITY_UPDATE:
                         readInEntities(msg.data);
@@ -66,6 +67,7 @@ public class ClientReceiver extends Thread {
     }
 
     public void playAudio(PlayAudioData playAudioData) {
+        System.out.println("gonna play some lit shit yo");
         Audio.getAudio().play(playAudioData.clipName, playAudioData.location);
     }
 
@@ -102,7 +104,16 @@ public class ClientReceiver extends Thread {
 //        System.out.println("Entity data length " + entityData.size());
         for (int i = 0; i < entityData.size(); i++) {
             if (entityData.get(i) != null) {
-//                System.out.println(entityData.get(i).ownerID + " => " + entityData.get(i).localID);
+                if(entityData.get(i).type == EntityType.ITEM_APPLE && !b) {
+                    System.out.println("APPLE");
+                    System.out.println(entityData.get(i).toString());
+                    System.out.println(entityData.get(i).transform.pos.x + " " + entityData.get(i).transform.pos.y);
+                    System.out.println(((ItemData) entityData.get(i).typeData).hidden);
+                    System.out.println(entityData.get(i).hidden);
+                    System.out.println(entityData.get(i).exists);
+                    System.out.println(((ItemData) entityData.get(i).typeData).spikeTimer);
+
+                }
                 EntityData entity = entityData.get(i);
 //                System.out.println(entityData.get(i).transform.pos);
                 if(!toRender.containsKey(entity.ownerID)){
@@ -119,5 +130,7 @@ public class ClientReceiver extends Thread {
                 }
             }
         }
+
+        b = false;
     }
 }

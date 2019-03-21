@@ -1,11 +1,15 @@
 package com.myst.networking.serverside;
 
 import com.myst.networking.Codes;
+import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.serverside.model.WorldModel;
+import com.myst.world.entities.EntityType;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
 // Continuously reads from message queue for a particular client,
@@ -16,14 +20,12 @@ public class ServerSender extends Thread {
     private ObjectOutputStream client;
     private String clientID;
     private WorldModel world;
-    private boolean updateClient;
 
     public ServerSender(BlockingQueue<Object> q, ObjectOutputStream c, String clientID, WorldModel world) {
         clientQueue = q;
         client = c;
         this.clientID = clientID;
         this.world = world;
-        this.updateClient = false;
 
         world.addSender(this);
     }
@@ -34,15 +36,24 @@ public class ServerSender extends Thread {
             while (true) {
 //        don't know why but it won't work without a thread.sleep()
                 Thread.sleep(1);
-                if (updateClient) {
-//          System.out.println("updating client");
-                    this.updateClient = false;
                     while (!clientQueue.isEmpty()) {
+//                        System.out.println("size: " + clientQueue.size());
                         Object msg = clientQueue.take();
+
+                        try {
+                            Message m = (Message) msg;
+                            if(m.header == Codes.ENTITY_UPDATE) {
+                                ArrayList<EntityData> dataArrayList = (ArrayList<EntityData>) m.data;
+
+                                for(EntityData ed : dataArrayList)
+                                    if(ed.type == EntityType.ITEM_APPLE) {
+                                        int x = 1 + 1;
+                                    }
+                            }
+                        } catch(Exception e){}
+
                         client.writeObject(msg);
                     }
-                }
-
             }
 
         } catch (IOException | InterruptedException e) {
@@ -51,18 +62,13 @@ public class ServerSender extends Thread {
         }
     }
 
-    public void updateClient() {
-        clientQueue.add(new Message(Codes.ENTITY_UPDATE, world.getWorldData()));
-        this.updateClient = true;
-    }
-
     public void requestClientUpdate() {
         clientQueue.add(new Message(Codes.UPDATE_SERVER, null));
     }
 
     public void addMessage(Message message) {
         clientQueue.add(message);
-        this.updateClient = true;
+//        if(message.header == Codes.PLAY_AUDIO) System.out.println(clientQueue.size());
     }
 }
 

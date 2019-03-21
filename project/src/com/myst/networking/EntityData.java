@@ -21,4 +21,10 @@ public class EntityData implements Serializable {
     public boolean exists;
 
     public Object typeData;
+
+    public boolean hidden;
+
+    public EntityData() {
+
+    }
 }

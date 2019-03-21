@@ -13,7 +13,7 @@ import org.joml.Vector3f;
 
 import java.util.Random;
 
-public class ItemGen {
+public class ItemGenerator {
 
     static int IDCounter = 0;
     static String clientID = "Item";
@@ -26,7 +26,7 @@ public class ItemGen {
 
     Tile[][] freeTiles;
 
-    public ItemGen(WorldModel wm) {
+    public ItemGenerator(WorldModel wm) {
         this.wm = wm;
         r = new Random();
     }

@@ -79,10 +79,12 @@ public class ClientConnectionThread extends Thread {
 
             toClient.writeObject(world.map);
 
+
             System.out.println(clientID);
 
             clientTable.addClient(clientID);
             BlockingQueue<Object> clientQueue = clientTable.getQueue(clientID);
+            clientQueue.add(new Message(Codes.ENTITY_UPDATE, world.getWorldData(true)));
             world.addClient(clientID);
 
             ServerSender serverSender = new ServerSender(clientQueue, toClient, clientID, world);

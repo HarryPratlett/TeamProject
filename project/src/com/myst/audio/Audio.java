@@ -145,7 +145,7 @@ public class Audio {
         spikesRange = spikesGainControl.getMaximum() - spikesGainControl.getMinimum();
 
         modVolume(0);
-        theme();
+//        theme();
     }
 
     /**

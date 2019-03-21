@@ -6,4 +6,5 @@ public class ItemData implements Serializable {
     public boolean hidden;
     public long lastSpikeDamage;
     public long spikeTimer;
+    public boolean isChanged;
 }

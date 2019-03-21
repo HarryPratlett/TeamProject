@@ -1,7 +1,14 @@
 package com.myst.networking.serverside;
 
+import com.myst.networking.Codes;
+import com.myst.networking.EntityData;
+import com.myst.networking.Message;
 import com.myst.networking.Report;
 import com.myst.networking.serverside.model.WorldModel;
+import com.myst.world.entities.EntityType;
+import com.myst.world.entities.ItemData;
+
+import java.util.ArrayList;
 
 public class TickManager extends Thread{
     private final int TICKRATE = 60;
@@ -17,17 +24,26 @@ public class TickManager extends Thread{
     @Override
     public void run(){
         while(true){
+            wm.update();
+            itemGenerator.update();
 
             for (int i=0; i< senders.length; i++){
                 if(senders[i] != null) {
-//                    System.out.println("tick");
+                    ArrayList<EntityData> worldData = wm.getWorldData(false);
+
+                    for(EntityData ed : worldData) {
+                        if(ed.type == EntityType.ITEM_APPLE) {
+                            ItemData id = (ItemData) ed.typeData;
+                            System.out.println(id.hidden);
+                        }
+                    }
+
                     senders[i].requestClientUpdate();
-                    senders[i].updateClient();
+                    senders[i].addMessage(new Message(Codes.ENTITY_UPDATE, worldData));
 
                 }
             }
-            wm.update();
-            itemGenerator.update();
+
             try {
                 Thread.sleep((long) 1000 / (long) TICKRATE);
             } catch (InterruptedException e){

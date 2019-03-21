@@ -33,6 +33,7 @@ public class WorldModel {
 
     public WorldModel() {
         this.entities = new ConcurrentHashMap<>();
+        entities.put("items", new ArrayList<>());
         this.entityCount = 0;
 
         senders = new ArrayList<>();
@@ -63,16 +64,24 @@ public class WorldModel {
             for (EntityData itemData : itemsData) {
                 ItemData itemSpecific = (ItemData) itemData.typeData;
                 if(!itemData.exists) continue;
+//                if(itemData.localID != 1) continue;
 
                 float itemX = itemData.transform.pos.x;
                 float itemY = itemData.transform.pos.y;
 
+//                System.out.println((playerX - itemX) + " " + (playerY - itemY));
+
 //              item update code
                 if ((playerX - itemX < 0.5f) && (playerX - itemX > -0.5f)) {
                     if ((playerY - itemY < 0.5f) && (playerY - itemY > -0.5f)) {
+                        System.out.println("MEEEE ON APPPLE BOIII");
                         switch (itemData.type) {
                             case ITEM_APPLE:
                                 itemData.exists = false;
+                                ((ItemData) itemData.typeData).hidden = true;
+                                itemData.hidden = true;
+                                ((ItemData) itemData.typeData).isChanged = true;
+                                ((ItemData) itemData.typeData).spikeTimer = 44;
                                 setHealthOfPlayerData(playerSpecific, playerSpecific.health + 10);
                                 playSound(Audio.APPLE, playerData.transform.pos);
                                 break;
@@ -226,11 +235,20 @@ public class WorldModel {
     }
 
     //    simply returns all the data stored by the world model in a form for networking to send
-    public ArrayList<EntityData> getWorldData() {
+    public ArrayList<EntityData> getWorldData(boolean forceUpdate) {
         ArrayList<EntityData> out = new ArrayList<>();
-        int j = 0;
         for (String key : entities.keySet()) {
-            out.addAll(this.entities.get(key));
+            if(!key.equals("items") || forceUpdate) {
+                out.addAll(this.entities.get(key));
+            } else {
+                for(EntityData entityData : entities.get(key)) {
+                    ItemData data = (ItemData) entityData.typeData;
+                    if(data.isChanged) {
+                        out.add(entityData);
+                        data.isChanged = false;
+                    }
+                }
+            }
         }
         return out;
     }

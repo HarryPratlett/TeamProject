@@ -100,12 +100,12 @@ public class Server {
             // connection. But this is beyond the scope of this simple exercise.
         }
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                ItemGen.genItems();
-            }
-        }, 5000);
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                ItemGenerator.genItems();
+//            }
+//        }, 5000);
 
     }
 

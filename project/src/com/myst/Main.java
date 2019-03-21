@@ -187,7 +187,6 @@ public class Main {
 
                 Audio.getAudio().update();
 
-
                 player.update((float) timeSinceLastUpdate, window, camera, world, entities.get("items"));
 
                 gui.update();
@@ -196,7 +195,7 @@ public class Main {
             }
 
             if (frame_time >= 1) {
-                System.out.println(frames);
+//                System.out.println(frames);
                 frame_time = 0;
                 frames = 0;
                 System.gc();
@@ -367,8 +366,10 @@ public class Main {
                 EntityData entitiesData = items.get(owner).get(id);
                 if (entitiesData != null) {
                     Entity ent;
-                    if (entitiesData.type == EntityType.ITEM_APPLE)
+                    if (entitiesData.type == EntityType.ITEM_APPLE) {
+                        if(!entitiesData.exists) System.out.println("NO EXIST");
                         ent = new Item(Item.APPLE);
+                    }
                     else if (entitiesData.type == EntityType.ITEM_SPIKES_HIDDEN)
                         ent = new Item(Item.SPIKES_HIDDEN);
                     else if (entitiesData.type == EntityType.ITEM_SPIKES_REVEALED)
