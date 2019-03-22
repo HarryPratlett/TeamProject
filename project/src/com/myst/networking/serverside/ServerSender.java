@@ -53,6 +53,7 @@ public class ServerSender extends Thread {
                         } catch(Exception e){}
 
                         client.writeObject(msg);
+                        client.reset();
                     }
             }
 
