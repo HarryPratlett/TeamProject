@@ -134,24 +134,4 @@ public class Player extends Entity{
             }
         }
     }
-
-	public boolean attack(World world, int entityID) {
-		//need to add orientation changes i.e. if player is facing towards negative, make line along negative axis.
-		AABB[] line = new AABB[100];
-		for (int i = 0; i < line.length; i++) {
-			int x = (int) transform.pos.x + i;
-			int y = (int) -transform.pos.y + i;
-			line[i] = new AABB(new Vector2f(x,-y),new Vector2f(0f,0f));
-		}
-		
-		for(int i = 0; i< line.length; i++) {
-			if(line[i] != null) {
-				Collision collision = entities.get(entityID).boundingBox.getCollision(line[i]);
-				if(collision.isIntersecting) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 }
