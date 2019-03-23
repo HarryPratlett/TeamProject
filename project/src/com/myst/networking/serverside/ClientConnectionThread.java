@@ -14,6 +14,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
+
+// This is the thread which is run whilst a clients is connecting
+// it verifies all their details and makes sure there are enough players to run the game
 public class ClientConnectionThread extends Thread {
     private Socket socket;
     private ClientTable clientTable;

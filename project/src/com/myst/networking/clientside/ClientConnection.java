@@ -30,7 +30,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ClientConnection {
+public class ClientConnection extends Thread{
     private static final int PORT = 4444;
     private String hostname;
     private ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities;
@@ -38,17 +38,20 @@ public class ClientConnection {
     private ObjectOutputStream toServer;
     private ObjectInputStream fromServer;
     private ClientReceiver receiver;
+    private String clientID;
     public Tile[][] map;
 
     public ClientConnection(ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities,
                             ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender,
-                            String host) {
+                            String host,
+                            String clientID) {
         this.hostname = host;
         this.entities = entities;
         this.toRender = toRender;
+        this.clientID = clientID;
     }
 
-    public void startConnection(String clientID) {
+    public void run() {
         // Open sockets:
         ObjectOutputStream toServer = null;
         ObjectInputStream fromServer = null;

@@ -34,8 +34,8 @@ public class ItemGen {
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
 
-        ClientConnection connection = new ClientConnection(entities, toRender, "127.0.0.1");
-        connection.startConnection(clientID);
+        ClientConnection connection = new ClientConnection(entities, toRender, "127.0.0.1", clientID);
+        connection.run();
 
         window.setFullscreen(false);
         window.createWindow("ITEM GENERATION");

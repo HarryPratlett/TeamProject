@@ -1,6 +1,7 @@
 package com.myst.GUI;
 
 
+import com.myst.ProgramState;
 import com.myst.helper.Timer;
 import com.myst.input.Input;
 import com.myst.rendering.Model;
@@ -46,8 +47,8 @@ public class Menu {
     private Boolean joinGameAccessed;
     private Boolean hostGameAccessed;
     private Boolean isIpAddress;
-    private String ipAddress;
-    private String port;
+    public  String ipAddress;
+    public  String port;
     private Texture dot = new Texture("assets/main_menu/typing/dot.png");
     private Texture background = new Texture("assets/main_menu/NighBg0.jpg");
     private Texture[] menuTextures = new Texture[]{
@@ -193,7 +194,8 @@ public class Menu {
         }
     }
 
-    public void update(){
+    public ProgramState update(){
+        ProgramState state = ProgramState.MAIN_MENUS;
         switch(currentWindow){
             case MAIN_MENU:
                 this.mainMenuInput();
@@ -205,18 +207,20 @@ public class Menu {
             case HOST_GAME:
                 //todo add the render text of the ip and port passed by the main and then add ok button at bottom
                 hostGameAccessed = true;
-                this.hostGameInput();
+                state = this.hostGameInput();
+                break;
             case JOIN_GAME:
                 //todo add the submit button and checks when integrating
                 joinGameAccessed = true;
-                this.joinGameInput();
+                state = this.joinGameInput();
                 break;
             case ENTERING:
-                this.joinGameInput();
+                state = this.joinGameInput();
                 this.takeInput();
             case HIDDEN:
                 break;
         }
+        return state;
     }
 
 
@@ -321,7 +325,8 @@ public class Menu {
         }
     }
 
-    public void hostGameInput() {
+    public ProgramState hostGameInput() {
+        ProgramState state = ProgramState.MAIN_MENUS;
         for (Rectangle2D.Float b : hostGameButtons.keySet())   {
 
             double mouseX = ((this.input.getMouseCoordinates()[0])/(window.getWidth()/2))-1;
@@ -332,8 +337,7 @@ public class Menu {
                     String buttonName = hostGameButtons.get(b);
                     switch(buttonName) {
                         case "submit_button.png":
-                            System.exit(1);
-                            break;
+                            state = ProgramState.SWITCH_TO_GAME_FROM_MENU;
                     }
                 }
             }
@@ -344,9 +348,11 @@ public class Menu {
             this.hostGameAccessed = false;
             this.currentWindow = MenuStates.MULTIPLAYER;
         }
+        return state;
     }
 
-    public void joinGameInput()   {
+    public ProgramState joinGameInput()   {
+        ProgramState state = ProgramState.MAIN_MENUS;
         for (Rectangle2D.Float b : joinGameButtons.keySet())   {
 
             double mouseX = ((this.input.getMouseCoordinates()[0])/(window.getWidth()/2))-1;
@@ -365,7 +371,7 @@ public class Menu {
                             this.isIpAddress = false;
                             break;
                         case "submit_button.png":
-                            System.exit(1);
+                            state =  ProgramState.SWITCH_TO_GAME_FROM_MENU;
                             break;
                     }
                 }
@@ -377,6 +383,7 @@ public class Menu {
             this.joinGameAccessed = false;
             this.currentWindow = MenuStates.MULTIPLAYER;
         }
+        return state;
     }
 
     public float[] alterVertices(float[] vertices, int height, int width, double widthScale, double heightScale) {

@@ -34,18 +34,13 @@ import static org.lwjgl.opengl.GL11.*;
 public class GameMain {
 
     static int IDCounter = 0;
-    static String clientID = String.valueOf(Math.random());
+    static String clientID;
 
-    public static void setUp() {
-        Window.setCallbacks();
+    public static void main(Window window, Tile[][] map,
+                            ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities,
+                            ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender, String clientID1) {
 
-        if (!glfwInit()) {
-            throw new IllegalStateException("Failed to initialise GLFW");
-        }
-    }
-
-    public static void main(String[] args) {
-        setUp();
+        clientID = clientID1;
 
         String[] textures = new String[20];
         String path = ("assets/tileset/");
@@ -72,22 +67,9 @@ public class GameMain {
         textures[19] = path + "tile_20";
 
 
-//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//        double width = screenSize.getWidth();
-//        double height = screenSize.getHeight();
-//        System.out.println(width);
-//        System.out.println(height);
 
-        Window window = new Window();
-
-        ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
-//        only the genItems can render and create items so this array hands stuff to the genItems to render
-        ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
         ArrayList<Line> playerBullets = new ArrayList<>();
 
-        ClientConnection connection = new ClientConnection(entities, toRender, "127.0.0.1");
-        connection.startConnection(clientID);
-        Tile[][] map = connection.map;
 
         window.setFullscreen(false);
         window.createWindow(clientID);
@@ -98,9 +80,6 @@ public class GameMain {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-//        glfwSetWindowPos(window,(videoMode.width() - 640) / 2, (videoMode.height() - 480) / 2);
-
-//        glfwShowWindow(window);
 
         glClearColor(0f, 0f, 0f, 0f);
 
