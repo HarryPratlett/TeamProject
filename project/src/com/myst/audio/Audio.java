@@ -198,6 +198,7 @@ public class Audio {
      */
     public void modVolume(int change) {
         if (change < MIN_VOLUME) {
+
             if ((volume + change) < MIN_VOLUME) {
                 volume = MIN_VOLUME;
             } else {

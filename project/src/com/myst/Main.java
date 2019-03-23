@@ -1,4 +1,3 @@
-
 package com.myst;
 
 import com.myst.GUI.GUI;
