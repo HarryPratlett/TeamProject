@@ -382,9 +382,14 @@ public class Menu {
                             this.isIpAddress = false;
                             break;
                         case "submit_button.png":
-                            state =  ProgramState.SWITCH_TO_GAME_FROM_MENU;
-                            break;
+                            if (ipAddress == "" || port == "")  {
+                                break;
+                            } else {
+                                state = ProgramState.SWITCH_TO_GAME_FROM_MENU;
+                                break;
+                            }
                     }
+
                 }
             }
         }
