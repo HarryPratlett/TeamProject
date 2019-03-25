@@ -46,6 +46,8 @@ public class GUI {
             2,3,0
     };
 
+    private float[] vertices;
+
     private Window window;
     private GUIStates currentWindow;
     private Boolean settings_accessed;
@@ -156,11 +158,11 @@ public class GUI {
     }
 
     public void renderGUI(Shader shader) {
-        renderBackground(shader);
+        renderBackground(shader);     
         float y = 0.55f;
 
         for (Texture t : menuTextures) {
-            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+            vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
             Model model = new Model(vertices, textureDocks, indices);
             renderImage(shader, t, 0f, y, new Matrix4f(), model);
@@ -266,7 +268,7 @@ public class GUI {
     public void renderControls(Shader shader) {
 
         glClear(GL_COLOR_BUFFER_BIT);
-        float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+        vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, controlsTexture.getHeight(), controlsTexture.getWidth(), 0.0007, 0.0025);
         Model model = new Model(vertices, textureDocks, indices);
         Matrix4f scale = new Matrix4f();
@@ -288,13 +290,13 @@ public class GUI {
         Model titleModel = new Model(titleVertices, textureDocks, indices);
         this.renderImage(shader, menuTexture, 0, 0.75f, scale, titleModel);
         for (Texture t : settingsTextures)   {
-            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+            vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
             Model model = new Model(vertices, textureDocks, indices);
             this.renderImage(shader, t, -0.5f, y, scale, model);
             y -= -0.35f;
         }
-        float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+        vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, alterTextures[0].getWidth(), alterTextures[0].getHeight(), 0.002, 0.005);
 
         Model model = new Model(vertices, textureDocks, indices);
@@ -351,7 +353,7 @@ public class GUI {
      * Renders the background in all parts except controls
      */
     public void renderBackground(Shader shader)  {
-        float [] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+        vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);
         Model model = new Model(vertices, textureDocks, indices);
         this.renderImage(shader, background, 0, 0, new Matrix4f(), model);
