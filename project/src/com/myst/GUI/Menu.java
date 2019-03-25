@@ -49,6 +49,7 @@ public class Menu {
     private Boolean isIpAddress;
     public  String ipAddress;
     public  String port;
+    private Texture[] logo = {new Texture("assets/myst_logo.png")};
     private Texture dot = new Texture("assets/main_menu/typing/dot.png");
     private Texture background = new Texture("assets/main_menu/NighBg0.jpg");
     private Texture[] menuTextures = new Texture[]{
@@ -227,6 +228,7 @@ public class Menu {
     public void renderMenu()    {
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground();
+        setupImages(logo, 0f, 0.65f, false);
         setupImages(menuTextures, 0f, 0.35f, true);
     }
 

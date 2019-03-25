@@ -2,6 +2,7 @@
 package com.myst;
 
 import com.myst.GUI.GUI;
+import com.myst.GUI.Overlay;
 import com.myst.audio.Audio;
 import com.myst.helper.Timer;
 import com.myst.networking.EntityData;
@@ -96,6 +97,7 @@ public class GameMain {
         Player player = new Player(playerBullets);
         player.lightSource = true;
 
+
         player.transform.pos.add(new Vector3f(1, -1, 0));
 
         player.localID = IDCounter;
@@ -126,6 +128,7 @@ public class GameMain {
         camera.bindPlayer(player);
 
         GUI gui = new GUI(window, window.getInput());
+        Overlay overlay = new Overlay(window, window.getInput(), (int) player.health, 0);
 
 
         Audio.getAudio().initInput(window.getInput());
@@ -170,7 +173,7 @@ public class GameMain {
 
 
                 player.update((float) timeSinceLastUpdate, window, camera, world, entities.get("items"));
-
+                overlay.update((int)player.health);
                 gui.update();
                 calculateBullets(myEntities, playerBullets, map);
                 playerBullets.clear();
@@ -189,6 +192,7 @@ public class GameMain {
                 calculateLighting(entities, camera, environmentShader, window);
                 world.render(environmentShader, camera, window);
 
+
                 for (String owner : entities.keySet()) {
                     for (Integer entityID : entities.get(owner).keySet()) {
                         Entity e = entities.get(owner).get(entityID);
@@ -199,6 +203,8 @@ public class GameMain {
                 createAndRender(toRender, entities);
 
                 gui.render(menuShader);
+                overlay.render(menuShader);
+
 
                 window.swapBuffers();
 
