@@ -37,14 +37,18 @@ public class Window {
         this.vidMode = videoMode;
 
         window = glfwCreateWindow(width,height,title,fullscreen ? glfwGetPrimaryMonitor() : 0,0);
+
         if (window == 0){
             throw new IllegalStateException("Failed to create window");
         }
         if (!fullscreen) {
             glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
+
             glfwShowWindow(window);
         }
+
         glfwMakeContextCurrent(window);
+
         input = new Input(window);
         glfwSetCursorPosCallback(window, input);
     }
@@ -74,25 +78,18 @@ public class Window {
         int[] width = new int[1];
         int[] height = new int[1];
         glfwGetWindowSize(this.window,width,height);
-
+        this.width = width[0];
         return width[0];
     }
+
     public int getHeight(){
         int[] width = new int[1];
         int[] height = new int[1];
         glfwGetWindowSize(this.window,width,height);
-
+        this.height = height[0];
         return height[0];
     }
-
-    public int getScreenWidth(){
-        return vidMode.width();
-    }
-
-    public int getScreenHeight(){
-        return vidMode.height();
-    }
-
+    
     public long getWindow(){
         return window;
     }

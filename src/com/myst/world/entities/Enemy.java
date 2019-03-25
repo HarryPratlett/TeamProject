@@ -1,15 +1,13 @@
 package com.myst.world.entities;
 
-import com.myst.rendering.Shader;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
-import com.myst.world.collisions.AABB;
-import com.myst.world.collisions.Collision;
 import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
 
-import static com.myst.world.entities.EntityTypes.PLAYER;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.myst.world.entities.EntityType.PLAYER;
 
 public class Enemy extends Entity{
 
@@ -40,7 +38,7 @@ public class Enemy extends Entity{
 
     }
 
-    public void update(float deltaTime, Window window, Camera camera, World world) {
+    public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer,Entity> items) {
 //        these needs fixing and entering into an entities class
 //        the entities will then
 //

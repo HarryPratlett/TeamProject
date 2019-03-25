@@ -1,5 +1,6 @@
 package com.myst.networking.serverside;
 
+import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.Report;
@@ -13,58 +14,59 @@ import java.util.ArrayList;
 // thread to forward to the appropriate client.
 
 public class ServerReceiver extends Thread {
-  private String clientID;
-  private ObjectInputStream myClient;
-  private ClientTable clientTable;
-  private ServerSender companion;
-  private WorldModel world;
+    private String clientID;
+    private ObjectInputStream myClient;
+    private ClientTable clientTable;
+    private ServerSender companion;
+    private WorldModel world;
 
 
-  public ServerReceiver(String ID, ObjectInputStream c, ClientTable t, ServerSender s, WorldModel world) {
-    System.out.println("server receiver for " + ID+ " created");
-    clientID = ID;
-    myClient = c;
-    clientTable = t;
-    companion = s;
-    this.world = world;
-  }
-
-  @Override
-  public void run() {
-    try {
-      while (true) {
-        try {
-          Message userMessage = (Message) myClient.readObject();
-          switch(userMessage.header){
-            case UPDATE_SERVER:
-              updateWorld(userMessage.data);
-              break;
-            case ERROR:
-              Report.error((String) userMessage.data);
-              break;
-          }
-
-        } catch(ClassNotFoundException e){
-          Report.error("corrupted / incorrect information received from the client");
-        }
-      }
-    } catch (IOException e) {
-      Report.error("Something went wrong with the client " + clientID + " " + e.getMessage());
-      e.printStackTrace();
-      // No point in trying to close sockets. Just give up.
-      // We end this thread (we don't do System.exit(1)).
+    public ServerReceiver(String ID, ObjectInputStream c, ClientTable t, ServerSender s, WorldModel world) {
+        System.out.println("server receiver for " + ID + " created");
+        clientID = ID;
+        myClient = c;
+        clientTable = t;
+        companion = s;
+        this.world = world;
     }
 
-    Report.behaviour("Server receiver ending for " + clientID);
-    companion.interrupt();
-  }
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                try {
+                    Message userMessage = (Message) myClient.readObject();
+                    switch (userMessage.header) {
+                        case UPDATE_SERVER:
+                            updateWorld(userMessage.data);
+                            break;
+                        case ERROR:
+                            Report.error((String) userMessage.data);
+                            break;
 
-  public void updateWorld(Object data){
-    ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
-    for(int i=0; i < entityData.size(); i++){
+                    }
+
+                } catch (ClassNotFoundException e) {
+                    Report.error("corrupted / incorrect information received from the client");
+                }
+            }
+        } catch (IOException e) {
+            Report.error("Something went wrong with the client " + clientID + " " + e.getMessage());
+            e.printStackTrace();
+            // No point in trying to close sockets. Just give up.
+            // We end this thread (we don't do System.exit(1)).
+        }
+
+        Report.behaviour("Server receiver ending for " + clientID);
+        companion.interrupt();
+    }
+
+    public void updateWorld(Object data) {
+        ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
+        for (int i = 0; i < entityData.size(); i++) {
 //      System.out.println("receiving entity with transform : ");
 //      System.out.println(entityData.get(i).transform.pos);
-      world.updateWorld(entityData.get(i));
+            world.updateWorld(entityData.get(i));
+        }
     }
-  }
 }

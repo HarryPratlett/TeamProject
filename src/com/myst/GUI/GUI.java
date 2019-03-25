@@ -1,4 +1,14 @@
+/**
+ * This program generates the GUI that appears when the users presses the escape key during the game.
+ * The user can access the controls, settings and exit the game from this menu. They can also resume the game if they
+ * wish. The volume and brightness can be altered within the settings.
+ *
+ * @author Harry Pratlett
+ * @version 1.0
+ * @since 2019-03-12
+ */
 package com.myst.GUI;
+
 
 import com.myst.input.Input;
 import com.myst.rendering.Model;
@@ -18,8 +28,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GUI {
 
-    private HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
-    private HashMap<Rectangle2D.Float, String> settings_buttons = new HashMap<>();
+    public HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
+    public HashMap<Rectangle2D.Float, String> settings_buttons = new HashMap<>();
 
     private final float[] baseVertices = new float[] {
             -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
@@ -38,17 +48,33 @@ public class GUI {
 
     private Window window;
     private GUIStates currentWindow;
-    private Boolean controls_accessed;
     private Boolean settings_accessed;
-    private Boolean close_window;
     private Input input;
     private int volume;
     private int brightness;
+    private Texture background = new Texture("assets/main_menu/NighBg.png");
+    private Texture controlsTexture = new Texture("assets/Keyboard_asset.png");
+    private Texture menuTexture = new Texture("assets/settings_button.png");
+    private Texture[] menuTextures = new Texture[]{
+            new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
+            new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
+    };
+    private Texture[] settingsTextures = new Texture[]{
+            new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
+    private Texture[] audioTextures = new Texture[]{
+            new Texture("assets/volume_assets/0.png"), new Texture("assets/volume_assets/1.png"),
+            new Texture("assets/volume_assets/2.png"), new Texture("assets/volume_assets/3.png"),
+            new Texture("assets/volume_assets/4.png"), new Texture("assets/volume_assets/5.png")};
+    private Texture[] alterTextures = new Texture[]{new Texture (
+            "assets/volume_assets/plus.png"), new Texture("assets/volume_assets/minus.png"),
+            new Texture("assets/volume_assets/plus1.png"), new Texture("assets/volume_assets/minus1.png")};
 
+
+    /** @param window The window which the GUI will be displayed in
+     * @param input The input via which the mouse and keyboard inputs are taken
+     **/
     public GUI(Window window, Input input)    {
-        controls_accessed = false;
         settings_accessed = false;
-        close_window = false;
         volume = 3;
         brightness = 3;
         currentWindow = GUIStates.HIDDEN;
@@ -56,7 +82,10 @@ public class GUI {
         this.input = input;
     }
 
-    public void render(Shader shader){
+    /** This is the main method that will render each of the potential windows in the GUI. It is called in the Main
+     * class of this project. The window that is rendered depends on currentWindow.
+     */
+    public void render(Shader shader)   {
         switch(currentWindow){
             case MAIN_MENU:
                 this.renderGUI(shader);
@@ -70,6 +99,10 @@ public class GUI {
         }
     }
 
+    /** This is other main method of the class which will update what needs to be rendered on screen. This is done by
+     * calling other methods which will detect input on screen that will cause certain actions like changing the window
+     * to be done in these methods
+     */
     public void update(){
         switch(currentWindow){
             case MAIN_MENU:
@@ -89,7 +122,6 @@ public class GUI {
 
     public void hiddenInput(){
         if (this.input.isKeyPressed(GLFW_KEY_ESCAPE)) {
-            System.out.println("trying to go to menu");
             currentWindow = GUIStates.MAIN_MENU;
         }
     }
@@ -100,6 +132,15 @@ public class GUI {
         }
     }
 
+    /**
+     * This is the main method for rendering images onto the canvas
+     * @param shader
+     * @param texture The image which will be rendered onto the screen
+     * @param x The x co-ordinate of where the image will be rendered
+     * @param y The y co-ordinate of where the image will be rendered
+     * @param scale The scale of the image with regards to sizing
+     * @param model
+     */
     public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
@@ -112,30 +153,31 @@ public class GUI {
         shader.setUniform("sampler",0);
         shader.setUniform("projection", target);
         model.render();
-
-
     }
 
     public void renderGUI(Shader shader) {
+        renderBackground(shader);
+        float y = 0.55f;
 
-            Texture[] menuTextures = new Texture[]{
-                    new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
-                    new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
-            };
-
-            float y = 0.55f;
-
-            for (Texture t : menuTextures) {
-                float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-                vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
-                Model model = new Model(vertices, textureDocks, indices);
-                renderImage(shader, t, 0f, y, new Matrix4f(), model);
-                this.addButton(0 + vertices[0], y + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
-                y += (-0.35f);
-            }
+        for (Texture t : menuTextures) {
+            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+            vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
+            Model model = new Model(vertices, textureDocks, indices);
+            renderImage(shader, t, 0f, y, new Matrix4f(), model);
+            this.addButton(0 + vertices[0], y + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
+            y += (-0.35f);
+        }
 
     }
 
+    /**
+     * This method adds a button when buttons have been rendered and we want input
+     * @param x X co-ordinate of the button
+     * @param y Y co-ordinae of the button
+     * @param width Width of the buttons clickable area
+     * @param height Height of the buttons clickable area
+     * @param filepath The filepath of the button so it can be added to a hashmap which can be searched later
+     */
     public void addButton(float x, float y, float width, float height, String filepath) {
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
         if(settings_accessed)  {
@@ -146,7 +188,9 @@ public class GUI {
         }
     }
 
-
+    /**
+     * Handles the input in the main menu of the gui
+     */
     public void mainMenuInput()   {
         for (Rectangle2D.Float b : buttons.keySet())   {
 
@@ -160,7 +204,6 @@ public class GUI {
                         case "resume_button.png": this.currentWindow = GUIStates.HIDDEN;
                             break;
                         case "controls_button.png": this.currentWindow = GUIStates.CONTROLS;
-                            controls_accessed = true;
                             break;
                         case "settings_button.png": this.currentWindow = GUIStates.SETTINGS;
                             settings_accessed = true;
@@ -177,6 +220,9 @@ public class GUI {
 
     }
 
+    /**
+     * Handles the input in the settings menu of the GUI
+     */
     public void settingsMenuInput() {
         for (Rectangle2D.Float b : settings_buttons.keySet()) {
 
@@ -186,7 +232,7 @@ public class GUI {
             if (mouseX >= b.getX() && mouseX <= (b.getX() + b.getWidth()) && mouseY <= b.getY() && mouseY >= (b.getY() - b.getHeight())) {
                 if (window.getInput().isMousePressed(GLFW_MOUSE_BUTTON_1)) {
                     try {
-                        Thread.sleep(50);
+                        Thread.sleep(70);
                     }
                     catch(Exception e)  {
                         e.printStackTrace();
@@ -214,26 +260,29 @@ public class GUI {
         }
     }
 
-
+    /**
+     * Renders the controls image
+     */
     public void renderControls(Shader shader) {
 
         glClear(GL_COLOR_BUFFER_BIT);
-        Texture controlsTexture = new Texture("assets/Keyboard_asset.png");
         float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, controlsTexture.getHeight(), controlsTexture.getWidth(), 0.0007, 0.0025);
         Model model = new Model(vertices, textureDocks, indices);
         Matrix4f scale = new Matrix4f();
         this.renderImage(shader, controlsTexture, 0, 0, scale, model);
-
-
     }
-    public void renderSettings(Shader shader){
 
+    /**
+     * Renders the settings menu
+     */
+    public void renderSettings(Shader shader){
         glClear(GL_COLOR_BUFFER_BIT);
-        Texture[] settingsTextures = new Texture[]{new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
+        this.renderBackground(shader);
+
         Matrix4f scale = new Matrix4f();
         float y = 0;
-        Texture menuTexture = new Texture("assets/settings_button.png");
+
         float[] titleVertices = Arrays.copyOf(baseVertices, baseVertices.length);
         titleVertices = this.alterVertices(titleVertices, menuTexture.getHeight(), menuTexture.getWidth(), 0.002, 0.005);
         Model titleModel = new Model(titleVertices, textureDocks, indices);
@@ -245,12 +294,6 @@ public class GUI {
             this.renderImage(shader, t, -0.5f, y, scale, model);
             y -= -0.35f;
         }
-
-        Texture[] audioTextures = new Texture[]{new Texture("assets/volume_assets/0.png"), new Texture("assets/volume_assets/1.png"),new Texture("assets/volume_assets/2.png"),
-                new Texture("assets/volume_assets/3.png"), new Texture("assets/volume_assets/4.png"), new Texture("assets/volume_assets/5.png")};
-
-        Texture[] alterTextures = new Texture[]{new Texture ("assets/volume_assets/plus.png"), new Texture("assets/volume_assets/minus.png"), new Texture("assets/volume_assets/plus1.png"), new Texture("assets/volume_assets/minus1.png")};
-
         float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, alterTextures[0].getWidth(), alterTextures[0].getHeight(), 0.002, 0.005);
 
@@ -272,18 +315,25 @@ public class GUI {
                 this.renderImage(shader, t, 0.25f, 0f, scale, model);
             }
         }
-
-
-
-
     }
 
-
+    /**
+     * Neater method to exit the game
+     */
     public void exitGame()  {
         System.exit(1);
     }
 
 
+    /**
+     * Alters a given float arrays variables
+     * @param vertices The float array that will be altered
+     * @param height The height of the image we want these vertices to be scaled to
+     * @param width The width of the image we want the vertices to be scaled to
+     * @param widthScale The scale of the width
+     * @param heightScale The scale of the height
+     * @return Returns an altered float array of the vertices given
+     */
     public float[] alterVertices(float[] vertices, int height, int width, double widthScale, double heightScale) {
         vertices[0] *= width * widthScale;
         vertices[3] *= width * widthScale;
@@ -297,5 +347,13 @@ public class GUI {
         return vertices;
     }
 
-
+    /**
+     * Renders the background in all parts except controls
+     */
+    public void renderBackground(Shader shader)  {
+        float [] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+        vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);
+        Model model = new Model(vertices, textureDocks, indices);
+        this.renderImage(shader, background, 0, 0, new Matrix4f(), model);
+    }
 }

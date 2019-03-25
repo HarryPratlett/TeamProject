@@ -1,31 +1,35 @@
 package com.myst.audio;
 import com.myst.input.Input;
+import com.myst.world.entities.Player;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import javax.sound.sampled.*;
-import javax.xml.stream.Location;
 import java.io.File;
 import java.io.IOException;
 
 public class Audio {
 
-    Vector2f playerLocation;
-    Vector2f soundLocation;
+    Vector3f playerLocation;
 
     public static final String THEME = "theme";
     public static final String GUN = "gun";
-    public static final String HIT = "hit";
+    public static final String HIT_BY_BULLET = "hit_by_bullet";
+    public static final String HIT_BY_SPIKES = "hit_by_spikes";
     public static final String FOOTSTEPS = "footsteps";
+    public static final String APPLE = "apple";
+    public static final String SPIKES = "spikes";
 
     private final String WAV = ".wav";
     private final String PATH = "assets/sounds/";
 
-    public static final int MAP_LENGTH = 100;
+    public static final double MAP_LENGTH = 100;
     public static final double MAP_WIDTH = 100;
-    private final double GUN_DIST = 100;
-    private final double HIT_DIST = 50;
-    private final double FOOTSTEPS_DIST = 20;
+    private final double GUN_DIST = 70;
+    private final double SPIKES_DIST = 30;
+    private final double HIT_DIST = 35;
+    private final double FOOTSTEPS_DIST = 10;
     private double distance;
 
     public static final int MIN_VOLUME = 0;
@@ -35,32 +39,47 @@ public class Audio {
 
     private Input input;
 
-    File theme = new File(PATH + THEME + WAV);
-    File gun = new File(PATH + GUN + WAV);
-    File hit = new File(PATH + HIT + WAV);
-    File footsteps = new File(PATH + FOOTSTEPS + WAV);
+    private File theme = new File(PATH + THEME + WAV);
+    private File gun = new File(PATH + GUN + WAV);
+    private File hitByBullet = new File(PATH + HIT_BY_BULLET + WAV);
+    private File hitBySpikes = new File(PATH + HIT_BY_SPIKES + WAV);
+    private File footsteps = new File(PATH + FOOTSTEPS + WAV);
+    private File apple = new File(PATH + APPLE + WAV);
+    private File spikes = new File(PATH + SPIKES + WAV);
 
-    AudioInputStream themeStream;
-    AudioInputStream gunStream;
-    AudioInputStream hitStream;
-    AudioInputStream footstepsStream;
+    private AudioInputStream themeStream;
+    private AudioInputStream gunStream;
+    private AudioInputStream hitByBulletStream;
+    private AudioInputStream hitBySpikesStream;
+    private AudioInputStream footstepsStream;
+    private AudioInputStream appleStream;
+    private AudioInputStream spikesStream;
 
-    Clip themeClip;
-    Clip gunClip;
-    Clip hitClip;
-    Clip footstepsClip;
+    private Clip themeClip;
+    private Clip gunClip;
+    private Clip hitByBulletClip;
+    private Clip hitBySpikesClip;
+    private Clip footstepsClip;
+    private Clip appleClip;
+    private Clip spikesClip;
 
-    FloatControl themeGainControl;
-    FloatControl gunGainControl;
-    FloatControl hitGainControl;
-    FloatControl footstepsGainControl;
+    private FloatControl themeGainControl;
+    private FloatControl gunGainControl;
+    private FloatControl hitByBulletGainControl;
+    private FloatControl hitBySpikesGainControl;
+    private FloatControl footstepsGainControl;
+    private FloatControl appleGainControl;
+    private FloatControl spikesGainControl;
 
-    float themeRange;
-    float gunRange;
-    float hitRange;
-    float footstepsRange;
+    private float themeRange;
+    private float gunRange;
+    private float hitByBulletRange;
+    private float hitBySpikesRange;
+    private float footstepsRange;
+    private float appleRange;
+    private float spikesRange;
 
-    float gain;
+    private float gain;
 
     private static Audio audio = new Audio();
 
@@ -68,7 +87,11 @@ public class Audio {
         return audio;
     }
 
+    /**
+     * creating streams, clips, gain, calculating modVolume range
+     */
     private Audio() {
+        playerLocation = new Vector3f();
 
         try {
             themeStream = AudioSystem.getAudioInputStream(theme);
@@ -79,13 +102,25 @@ public class Audio {
             gunClip = AudioSystem.getClip();
             gunClip.open(gunStream);
 
-            hitStream = AudioSystem.getAudioInputStream(hit);
-            hitClip = AudioSystem.getClip();
-            hitClip.open(hitStream);
+            hitByBulletStream = AudioSystem.getAudioInputStream(hitByBullet);
+            hitByBulletClip = AudioSystem.getClip();
+            hitByBulletClip.open(hitByBulletStream);
+
+            hitBySpikesStream = AudioSystem.getAudioInputStream(hitBySpikes);
+            hitBySpikesClip = AudioSystem.getClip();
+            hitBySpikesClip.open(hitBySpikesStream);
 
             footstepsStream = AudioSystem.getAudioInputStream(footsteps);
             footstepsClip = AudioSystem.getClip();
             footstepsClip.open(footstepsStream);
+
+            appleStream = AudioSystem.getAudioInputStream(apple);
+            appleClip = AudioSystem.getClip();
+            appleClip.open(appleStream);
+
+            spikesStream = AudioSystem.getAudioInputStream(spikes);
+            spikesClip = AudioSystem.getClip();
+            spikesClip.open(spikesStream);
 
         } catch (LineUnavailableException e) {
             e.printStackTrace();
@@ -96,53 +131,74 @@ public class Audio {
         }
 
         themeGainControl = (FloatControl) themeClip.getControl(FloatControl.Type.MASTER_GAIN);
-        gunGainControl = (FloatControl) themeClip.getControl(FloatControl.Type.MASTER_GAIN);
-        hitGainControl = (FloatControl) themeClip.getControl(FloatControl.Type.MASTER_GAIN);
-        footstepsGainControl = (FloatControl) themeClip.getControl(FloatControl.Type.MASTER_GAIN);
+        gunGainControl = (FloatControl) gunClip.getControl(FloatControl.Type.MASTER_GAIN);
+        hitByBulletGainControl = (FloatControl) hitByBulletClip.getControl(FloatControl.Type.MASTER_GAIN);
+        hitBySpikesGainControl = (FloatControl) hitBySpikesClip.getControl(FloatControl.Type.MASTER_GAIN);
+        footstepsGainControl = (FloatControl) footstepsClip.getControl(FloatControl.Type.MASTER_GAIN);
+        appleGainControl = (FloatControl) appleClip.getControl(FloatControl.Type.MASTER_GAIN);
+        spikesGainControl = (FloatControl) spikesClip.getControl(FloatControl.Type.MASTER_GAIN);
 
         themeRange = themeGainControl.getMaximum() - themeGainControl.getMinimum();
         gunRange = gunGainControl.getMaximum() - gunGainControl.getMinimum();
-        hitRange = hitGainControl.getMaximum() - hitGainControl.getMinimum();
+        hitByBulletRange = hitByBulletGainControl.getMaximum() - hitByBulletGainControl.getMinimum();
+        hitBySpikesRange = hitBySpikesGainControl.getMaximum() - hitBySpikesGainControl.getMinimum();
         footstepsRange = footstepsGainControl.getMaximum() - footstepsGainControl.getMinimum();
+        appleRange = appleGainControl.getMaximum() - appleGainControl.getMinimum();
+        spikesRange = spikesGainControl.getMaximum() - spikesGainControl.getMinimum();
 
-        volume(0);
-        theme();
+        modVolume(0);
+        //theme();
     }
 
+    /**
+     * initialising input
+     * @param input - input
+     */
     public void initInput(Input input) {
         this.input = input;
     }
 
-    public static double getPythagoras(int x, int y) {
-        double res = Math.sqrt(x ^ 2 + y ^ 2);
-        return res;
+    public void initAudioWithPlayer(Player player) {
+        this.playerLocation = player.transform.pos;
     }
 
-    public static double calculateDistance(Vector2f playerLocation, Vector2f soundLocation) {
+    /**
+     * calculating the distance between the player and sound source
+     * @param soundLocation - location of the sound source
+     * @return
+     */
+    public double calculateDistanceToPlayer(Vector3f soundLocation) {
         double x = playerLocation.x - soundLocation.x;
         double y = playerLocation.y - soundLocation.y;
         double res = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
         return res;
     }
 
-    // Object Sender
+    /**
+     * muting the client
+     */
     public void mute() {
         muted = !muted;
         if (muted) {
             themeClip.stop();
             gunClip.stop();
-            hitClip.stop();
+            hitByBulletClip.stop();
+            hitBySpikesClip.stop();
             footstepsClip.stop();
+            appleClip.stop();
+            spikesClip.stop();
         } else {
             themeClip.start();
         }
     }
 
-    // Object Sender
-    public void volume(int change) {
-        // TODO - something has to continuously check the volume
-        // TODO - OR change it straight away
+    /**
+     * changing the modVolume
+     * @param change how much the modVolume is increased / decreased
+     */
+    public void modVolume(int change) {
         if (change < MIN_VOLUME) {
+
             if ((volume + change) < MIN_VOLUME) {
                 volume = MIN_VOLUME;
             } else {
@@ -156,60 +212,99 @@ public class Audio {
             }
         }
 
-        //System.out.println(themeRange);
         gain = (themeRange / MAX_VOLUME * volume) + themeGainControl.getMinimum();
         themeGainControl.setValue(gain);
 
-        //System.out.println(gunRange);
         gain = (gunRange / MAX_VOLUME * volume) + gunGainControl.getMinimum();
         gunGainControl.setValue(gain);
 
-        //System.out.println(hitRange);
-        gain = (hitRange / MAX_VOLUME * volume) + hitGainControl.getMinimum();
-        hitGainControl.setValue(gain);
+        gain = (hitByBulletRange / MAX_VOLUME * volume) + hitByBulletGainControl.getMinimum();
+        hitByBulletGainControl.setValue(gain);
 
-        //System.out.println(footstepsRange);
+        gain = (hitBySpikesRange / MAX_VOLUME * volume) + hitBySpikesGainControl.getMinimum();
+
         gain = (footstepsRange / MAX_VOLUME * volume) + footstepsGainControl.getMinimum();
         footstepsGainControl.setValue(gain);
+
+        gain = (appleRange / MAX_VOLUME * volume) + appleGainControl.getMinimum();
+        appleGainControl.setValue(gain);
+
+        gain = (spikesRange / MAX_VOLUME * volume) + spikesGainControl.getMinimum();
+        spikesGainControl.setValue(gain);
     }
 
+    public void setControlVolume(FloatControl control, double volumeMod) {
+        float range = control.getMaximum() - control.getMinimum();
+        double gain = (range / MAX_VOLUME * (volume * volumeMod)) + control.getMinimum();
+        control.setValue((float) gain);
+    }
+
+    /**
+     * playing the theme song
+     */
     public void theme() {
         themeClip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
-    public void play(String clipName) { //, Vector2f playerLocation, Vector2f soundLocation) {
+    /**
+     * playing a clip
+     * @param clipName - name of the clip
+     */
+    public void play(String clipName, Vector3f location) { //, Vector2f playerLocation, Vector2f soundLocation) {
+        double dist = calculateDistanceToPlayer(location);
+
         if (!muted) {
             switch (clipName) {
                 case GUN:
-                    if (calculateDistance(playerLocation, soundLocation) < GUN_DIST) {
-                        gunClip.loop(0);
-                    }
+                    if (dist > GUN_DIST) return;
+                    setControlVolume(gunGainControl, 1 - dist / GUN_DIST);
+                    if (gunClip.getFramePosition() >= gunClip.getFrameLength())
+                        gunClip.setFramePosition(0);
+                    gunClip.loop(0);
                     break;
-                case HIT:
-                    if (calculateDistance(playerLocation, soundLocation) < HIT_DIST) {
-                        hitClip.loop(0);
-                    }
+                case HIT_BY_BULLET:
+                    // setControlVolume
+                    if (hitByBulletClip.getFramePosition() >= hitByBulletClip.getFrameLength())
+                        hitByBulletClip.setFramePosition(0);
+                    hitByBulletClip.loop(0);
+                    break;
+                case HIT_BY_SPIKES:
+                    if(dist > HIT_DIST) return;
+                    setControlVolume(hitBySpikesGainControl, 1 - dist / HIT_DIST);
+                    if (hitBySpikesClip.getFramePosition() >= hitBySpikesClip.getFrameLength())
+                        hitBySpikesClip.setFramePosition(0);
+                    hitBySpikesClip.loop(0);
                     break;
                 case FOOTSTEPS:
-                    // TODO - check location, get volume
-                    if (footstepsClip.getFramePosition() >= footstepsClip.getFrameLength())
+                    if(dist > FOOTSTEPS_DIST) return;
+                    setControlVolume(footstepsGainControl, 1 - dist / FOOTSTEPS_DIST);
+                    if (footstepsClip.getFramePosition() >= footstepsClip.getFrameLength()) {
                         footstepsClip.setFramePosition(0);
+                    }
                     footstepsClip.loop(0);
+                    break;
+                case APPLE:
+                    if (appleClip.getFramePosition() >= appleClip.getFrameLength())
+                        appleClip.setFramePosition(0);
+                    appleClip.loop(0);
+                    break;
+                case SPIKES:
+                    if(dist > SPIKES_DIST) return;
+                    setControlVolume(spikesGainControl, 1 - dist / HIT_DIST);
+                    if (spikesClip.getFramePosition() >= spikesClip.getFrameLength())
+                        spikesClip.setFramePosition(0);
+                    spikesClip.loop(0);
                     break;
                 default:
                     //none
             }
-        } else {
-            // muted, do nothing
         }
     }
 
-    public int getVolume(String clipName, Vector2f soundLocation) {
-        int result = volume;
-        // TODO - calculate how far it is (0-1) * how high the volume is (0-5)
-        return result;
-    }
-
+    /**
+     * stopping a track
+     * @param clipName - the name of the clip
+     */
     public void stop(String clipName) {
         switch (clipName) {
             case THEME:
@@ -218,17 +313,30 @@ public class Audio {
             case GUN:
                 gunClip.stop();
                 break;
-            case HIT:
-                hitClip.stop();
+            case HIT_BY_BULLET:
+                hitByBulletClip.stop();
+                break;
+            case HIT_BY_SPIKES:
+                hitBySpikesClip.stop();
                 break;
             case FOOTSTEPS:
                 footstepsClip.stop();
+                break;
+            case APPLE:
+                appleClip.stop();
+                break;
+            case SPIKES:
+                spikesClip.stop();
                 break;
             default:
                 //none
         }
     }
 
+    /**
+     * checking if the key M is pressed
+     * if true, calls mute
+     */
     public void update() {
         if(input.isKeyPressed(GLFW.GLFW_KEY_M)){
             mute();
