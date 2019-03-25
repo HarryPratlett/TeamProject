@@ -178,6 +178,8 @@ public class Menu {
             case HOST_GAME:
                 System.gc();
                 this.renderHostGame();
+                this.renderText(ipAddress, 0.17f, 0.25f);
+                this.renderText(port, 0.35f, -0.10f);
                 break;
             case HIDDEN:
                 break;
@@ -202,7 +204,7 @@ public class Menu {
                 break;
             case MULTIPLAYER:
                 multiplayerAccessed = true;
-                this.multiplayerInput();
+                state = this.multiplayerInput();
                 break;
             case HOST_GAME:
                 //todo add the render text of the ip and port passed by the main and then add ok button at bottom
@@ -297,7 +299,8 @@ public class Menu {
         }
     }
 
-    public void multiplayerInput()   {
+    public ProgramState multiplayerInput()   {
+        ProgramState state = ProgramState.MAIN_MENUS;
         for (Rectangle2D.Float b : multiplayerButtons.keySet())   {
 
             double mouseX = ((this.input.getMouseCoordinates()[0])/(window.getWidth()/2))-1;
@@ -310,6 +313,7 @@ public class Menu {
                         case "host_game_button.png":
                             multiplayerAccessed = false;
                             this.currentWindow = MenuStates.HOST_GAME;
+                            state = ProgramState.START_SERVER;
                             break;
                         case "join_game_button.png":
                             multiplayerAccessed = false;
@@ -323,6 +327,7 @@ public class Menu {
             multiplayerAccessed = false;
             currentWindow = MenuStates.MAIN_MENU;
         }
+        return state;
     }
 
     public ProgramState hostGameInput() {

@@ -11,8 +11,7 @@ import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,9 +19,12 @@ import java.util.TimerTask;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 
-public class Server {
-    private static final int PORT = 4444;
+public class Server extends Thread{
+    private static final int PORT = 0;
     private static final int MAX_CLIENTS = 8;
+    public static Integer port = null;
+    public static String IP;
+    public static boolean foundIPAndPort = false;
 
     /**
      * Start the server listening for connections.
@@ -31,7 +33,9 @@ public class Server {
         new Server().run();
     }
 
+
     public void run() {
+        System.out.println("starting server");
         WorldModel world = new WorldModel();
 
         // This table will be shared by the server threads:
@@ -64,16 +68,27 @@ public class Server {
         textures[18] = path + "tile_19";
         textures[19] = path + "tile_20";
 
+
+        System.out.println("i can't generate the map");
         Tile[][] map = new MapGenerator(textures).generateMap(100, 100);
 
+//        Tile [][] map = null;
         world.map = map;
+        System.out.println("i generate the map");
 
         try {
             serverSocket = new ServerSocket(PORT);
         } catch (IOException e) {
             Report.errorAndGiveUp("Couldn't listen on port " + PORT);
         }
+        System.out.println("i create the socket");
 
+        port = serverSocket.getLocalPort();
+        IP = "1000";
+
+        foundIPAndPort = true;
+
+        System.out.println("found IP and port");
 
         Object IDKey = new Object();
 
