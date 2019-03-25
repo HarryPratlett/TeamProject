@@ -21,11 +21,15 @@ public class Player extends Entity {
 
     private final float MOVEMENT_SPEED = 10f;
 
+    private float health = 100;
     private float maxHealth = 100;
-    private float health = 50;
+    private int bulletCount = 50;
+    private int maxBulletCount = 200;
 
     private long spikeDamageDelay = 1000;
     private long lastSpikeDamage = 0;
+    private long healDelay = 1000;
+    private long lastHealOnPlatform = 0;
 
 //    private static final float[] vertices =
 //
@@ -62,6 +66,17 @@ public class Player extends Entity {
         if (health > maxHealth) health = maxHealth;
 
         this.health = health;
+    }
+
+    public int getBulletCount() {
+        return bulletCount;
+    }
+
+    public void getBulletcount(int bulletCount) {
+        if (bulletCount < 0) bulletCount = 0;
+        if (bulletCount > maxBulletCount) bulletCount = bulletCount;
+
+        this.bulletCount = bulletCount;
     }
 
     public void setMaxHealth(int maxHealth) {
@@ -165,6 +180,7 @@ public class Player extends Entity {
         this.health = ((PlayerData) data.typeData).health;
         this.maxHealth = ((PlayerData) data.typeData).maxHealth;
         this.lastSpikeDamage = ((PlayerData) data.typeData).lastSpikeDamage;
+        this.lastHealOnPlatform = ((PlayerData) data.typeData).lastHealOnPlatform;
     }
 
     @Override
@@ -173,7 +189,10 @@ public class Player extends Entity {
         PlayerData playerData = new PlayerData();
         playerData.health = health;
         playerData.maxHealth = maxHealth;
+        playerData.bulletCount = bulletCount;
+        playerData.maxBulletCount = maxBulletCount;
         playerData.lastSpikeDamage = lastSpikeDamage;
+        playerData.lastHealOnPlatform = lastHealOnPlatform;
         data.typeData = playerData;
         return data;
     }

@@ -13,18 +13,10 @@ public class EntityData implements Serializable {
     public Transform transform;
     public AABB boundingBox;
     public EntityType type;
-    public long time;
 
     public boolean lightSource;
     public float lightDistance;
 
     public boolean exists;
-
     public Object typeData;
-
-    public boolean hidden;
-
-    public EntityData() {
-
-    }
 }

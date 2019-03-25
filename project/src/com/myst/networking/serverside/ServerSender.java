@@ -44,11 +44,6 @@ public class ServerSender extends Thread {
                             Message m = (Message) msg;
                             if(m.header == Codes.ENTITY_UPDATE) {
                                 ArrayList<EntityData> dataArrayList = (ArrayList<EntityData>) m.data;
-
-                                for(EntityData ed : dataArrayList)
-                                    if(ed.type == EntityType.ITEM_APPLE) {
-                                        int x = 1 + 1;
-                                    }
                             }
                         } catch(Exception e){}
 
@@ -59,7 +54,6 @@ public class ServerSender extends Thread {
 
         } catch (IOException | InterruptedException e) {
             System.out.println("server sender for " + clientID + " ending");
-
         }
     }
 
@@ -69,7 +63,6 @@ public class ServerSender extends Thread {
 
     public void addMessage(Message message) {
         clientQueue.add(message);
-//        if(message.header == Codes.PLAY_AUDIO) System.out.println(clientQueue.size());
     }
 }
 

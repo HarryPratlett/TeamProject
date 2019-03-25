@@ -366,14 +366,22 @@ public class Main {
                 EntityData entitiesData = items.get(owner).get(id);
                 if (entitiesData != null) {
                     Entity ent;
-                    if (entitiesData.type == EntityType.ITEM_APPLE) {
-                        if(!entitiesData.exists) System.out.println("NO EXIST");
+                    if (entitiesData.type == EntityType.ITEM_APPLE)
                         ent = new Item(Item.APPLE);
-                    }
+                    else if (entitiesData.type == EntityType.ITEM_MED_KIT)
+                        ent = new Item(Item.MED_KIT);
                     else if (entitiesData.type == EntityType.ITEM_SPIKES_HIDDEN)
                         ent = new Item(Item.SPIKES_HIDDEN);
                     else if (entitiesData.type == EntityType.ITEM_SPIKES_REVEALED)
                         ent = new Item(Item.SPIKES_REVEALED);
+                    else if (entitiesData.type == EntityType.ITEM_BULLETS_SMALL)
+                        ent = new Item(Item.BULLETS_SMALL);
+                    else if (entitiesData.type == EntityType.ITEM_BULLETS_BIG)
+                        ent = new Item(Item.BULLETS_BIG);
+                    else if (entitiesData.type == EntityType.ITEM_INVINCIBILITY_POTION)
+                        ent = new Item(Item.INVINCIBILITY_POTION);
+                    else if (entitiesData.type == EntityType.ITEM_HEALING_PLATFORM)
+                        ent = new Item(Item.HEALING_PLATFORM);
                     else if (entitiesData.type == EntityType.BULLET)
                         ent = new Bullet(new Line(new Vector2f(), new Vector2f()), 0, 0);
                     else

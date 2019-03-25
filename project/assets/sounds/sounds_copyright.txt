@@ -1,0 +1,72 @@
+0) Duplex Bassline - Astronaut (test theme option)
+   	Used in: 
+		theme
+	Link to sound:
+		https://www.youtube.com/watch?v=RkDTd0L9Ubw
+	Licence: Public Domain
+1) gunshot
+   	Used in:
+		gun
+	Link to file: 
+		https://www.youtube.com/watch?v=nS9VmrOzd7o
+	License: Public Domain
+2) footsteps
+   	Used in:
+		footsteps
+	Link to sound: 
+		https://www.premiumbeat.com/blog/40-free-footstep-foley-sound-effects/
+	License: Public Domain
+3) man getting hurt
+   	Used in:
+		hit_by_bullet
+		hit_by_spikes
+		monster_hit
+	Link to sound:
+		https://www.youtube.com/watch?v=89vJ8V4qQrs
+	Licence: Public Domain
+4) spike trap
+	Used in:
+		spikes
+		hit_by_spikes
+	Link to sound:
+		https://freesound.org/people/Deathscyp/sounds/443806/
+	Licence: Public Domain
+5) apple crunch
+	Used in: 
+		apple
+	Link to sound: 
+		https://freesound.org/people/Leafs67/sounds/379341/
+	Licence: Public Domain
+6) bullets
+	Used in:
+		bullets_small
+		bullets_big
+	Link to sound:
+		https://freesound.org/people/swidmark/sounds/171322/
+	Licence: Public Domain
+7) metal box open
+	Used in:
+		bullets_big
+		med_kit
+	Link to sound:
+		https://freesound.org/people/deleted_user_7146007/sounds/383833/
+	Licence: Public Domain
+8) potion drinking
+	Used in: 
+		potion
+	Link to sound:
+		https://freesound.org/people/Breviceps/sounds/445970/
+	Licence: Public Domain
+9) monster growl
+	Used in:
+		monster
+		monster_hit
+	Link to sound:
+		https://freesound.org/people/StephenSaldanha/sounds/123090/
+	Licence: Public Domain
+10) monster growl 2
+	Used in:
+		monster
+		monster_hit
+	Link to sound:
+		https://freesound.org/people/VisualPony/sounds/269114/

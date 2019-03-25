@@ -6,25 +6,19 @@ import com.myst.networking.serverside.model.WorldModel;
 import com.myst.world.collisions.AABB;
 import com.myst.world.entities.EntityType;
 import com.myst.world.entities.ItemData;
-import com.myst.world.map.rendering.Tile;
 import com.myst.world.view.Transform;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-
 import java.util.Random;
 
 public class ItemGenerator {
 
     static int IDCounter = 0;
-    static String clientID = "Item";
-    private int appleCount = 16;
-    private int healthPotion = 9;
+    private boolean hasSpawnedItems= false;
 
     private WorldModel wm;
     private long lastItemGen;
     private Random r;
-
-    Tile[][] freeTiles;
 
     public ItemGenerator(WorldModel wm) {
         this.wm = wm;
@@ -32,25 +26,110 @@ public class ItemGenerator {
     }
 
     public void update() {
-        if (System.currentTimeMillis() - lastItemGen > 5 * 60 * 1000) {
+        if (System.currentTimeMillis() - lastItemGen > 3 * 60 * 1000) {
             genItems();
             lastItemGen = System.currentTimeMillis();
         }
     }
 
     public void genItems() {
-        System.out.println("MAKING APPLES GO APPLES");
         for (int i = 0; i < wm.map.length; i++) {
             for (int j = 0; j < wm.map[0].length; j++) {
                 if (wm.map[i][j].getId() == 0) {
-                    if(r.nextInt(50) == 0)
-                        genItem(i, j);
+                    genItem(i, j);
                 }
+            }
+        }
+        hasSpawnedItems = true;
+    }
+
+    public void genItem(int x, int y) {
+        int a = r.nextInt(100);
+
+        if(a == 0) {
+            int b = r.nextInt(10);
+
+            switch(b) {
+                case 0:
+                    addMedKit(x, y);
+                    break;
+                case 1:
+                case 2:
+                    addApple(x, y);
+                    break;
+                case 3:
+                case 4:
+                    if (hasSpawnedItems) addApple(x, y);
+                    else addSpikes(x, y);
+                    break;
+                case 5:
+                case 6:
+                    if (hasSpawnedItems) addBulletsSmall(x, y);
+                    else addSpikes(x, y);
+                    break;
+                case 7:
+                    addBulletsSmall(x, y);
+                    break;
+                case 8:
+                    addBulletsBig(x, y);
+                    break;
+                case 9:
+                    addInvincibilityPotion(x, y);
+                    break;
             }
         }
     }
 
-    public void genItem(int x, int y) {
+    public void addApple(int x, int y) {
+        EntityData apple = createBaseItem(x, y, false);
+        apple.type = EntityType.ITEM_APPLE;
+        wm.updateWorld(apple);
+    }
+
+    public void addMedKit(int x, int y) {
+        EntityData medKit = createBaseItem(x, y, false);
+        medKit.type = EntityType.ITEM_MED_KIT;
+        wm.updateWorld(medKit);
+    }
+
+    public void addSpikes(int x, int y) {
+        EntityData spikesHidden = createBaseItem(x, y, false);
+        spikesHidden.type = EntityType.ITEM_SPIKES_HIDDEN;
+
+        EntityData spikesRevealed = createBaseItem(x, y, true);
+        spikesRevealed.type = EntityType.ITEM_SPIKES_REVEALED;
+
+        wm.updateWorld(spikesHidden);
+        wm.updateWorld(spikesRevealed);
+    }
+
+    public void addBulletsSmall(int x, int y) {
+        EntityData bulletsSmall = createBaseItem(x, y, false);
+        bulletsSmall.type = EntityType.ITEM_BULLETS_SMALL;
+        wm.updateWorld(bulletsSmall);
+    }
+
+    public void addBulletsBig(int x, int y) {
+        EntityData bulletsBig = createBaseItem(x, y, false);
+        bulletsBig.type = EntityType.ITEM_BULLETS_BIG;
+        wm.updateWorld(bulletsBig);
+    }
+
+    public void addInvincibilityPotion(int x, int y) {
+        EntityData invincibilityPotion = createBaseItem(x, y, false);
+        invincibilityPotion.type = EntityType.ITEM_INVINCIBILITY_POTION;
+        wm.updateWorld(invincibilityPotion);
+    }
+
+    public void addHealingPlatform(int x, int y) {
+        EntityData healingPlatform = createBaseItem(x, y, false);
+        healingPlatform.type = EntityType.ITEM_HEALING_PLATFORM;
+        healingPlatform.lightSource = true;
+        healingPlatform.lightDistance = 2.5f;
+        wm.updateWorld(healingPlatform);
+    }
+
+    public EntityData createBaseItem(int x, int y, boolean hidden) {
         EntityData item = new EntityData();
         item.ownerID = "items";
         item.localID = IDCounter++;
@@ -59,112 +138,14 @@ public class ItemGenerator {
         item.transform.pos.add(x, -y, 0);
         item.transform.scale = new Vector3f(1,1,1);
         item.boundingBox = new AABB(new Vector2f(item.transform.pos.x, item.transform.pos.y), new Vector2f(0.5f, 0.5f));
-        item.type = getItemType();
-
-        item.lightSource = false;
-        item.lightDistance = 25f;
 
         ItemData itemData = new ItemData();
-        itemData.hidden = false;
+        itemData.hidden = hidden;
         itemData.isChanged = true;
-        itemData.spikeTimer = 2;
 
         item.typeData = itemData;
         item.exists = true;
 
-        wm.updateWorld(item);
+        return item;
     }
-
-    public EntityType getItemType() {
-        return EntityType.ITEM_APPLE;
-    }
-
-//    public Tile[][] addItemsToWorldMap(Tile[][] map) {
-//
-//        freeTiles = map;
-//
-//        for (int i=0; i<freeTiles.length; i++){
-//            for (int j=0; j<freeTiles[i].length) {
-//                if (i>5 && i<25 && i>40 && i<60 && i>75 && i<95 &&
-//                        j>5 && j<25 && j>40 && j<60 && j>75 && j<95) {
-//                    if (map[i][j].getId() == 0) {
-//                        freeTiles[i][j] = map[i][i];
-//                    }
-//                }
-//            }
-//        }
-//
-//        Tile[][] map = new Tile[width][height];
-//        for (int x = 0; x < width; x++) {
-//            for (int y = 0; y < height; y++) {
-//                map[x][y] = new Tile(0, textures[0]);
-//            }
-//        }
-//
-//        return map;
-//    }
-//
-//    public static void setUp() {
-//        Window.setCallbacks();
-//        if (!glfwInit()) {
-//            throw new IllegalStateException("Failed to initialise GLFW");
-//        }
-//    }
-//
-//    public static void main(String[] args) {
-//        setUp();
-//
-//        Window window = new Window();
-//
-//        ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities = new ConcurrentHashMap<>();
-//        ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
-//
-//        ClientConnection connection = new ClientConnection(entities, toRender, "127.0.0.1");
-//        connection.startConnection(clientID);
-//
-//        window.setFullscreen(false);
-//        window.createWindow("ITEM GENERATION");
-//
-//        GL.createCapabilities();
-//
-//        glEnable(GL_TEXTURE_2D);
-//        glEnable(GL_BLEND);
-//        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//
-//        entities.put(clientID, new ConcurrentHashMap<Integer, Entity>());
-//
-//        ConcurrentHashMap<Integer, Entity> myEntities = entities.get(clientID);
-//
-//
-//
-//        Item i = genItem(EntityType.ITEM_APPLE, Item.APPLE, 2,-2, false);
-//        myEntities.put(i.localID, i);
-//
-//        Item i2 = genItem(EntityType.ITEM_SPIKES_HIDDEN, Item.SPIKES_HIDDEN, 10,-4, false);
-//        myEntities.put(i2.localID, i2);
-//
-//        Item i3 = genItem(EntityType.ITEM_SPIKES_REVEALED, Item.SPIKES_REVEALED, 10,-4, true);
-//        myEntities.put(i3.localID, i3);
-//
-//        Item i4 = genItem(EntityType.ITEM_APPLE, Item.APPLE, 1,-5, false);
-//        myEntities.put(i4.localID, i4);
-//
-//        Item i5 = genItem(EntityType.ITEM_SPIKES_HIDDEN, Item.SPIKES_HIDDEN, 4,-3, false);
-//        myEntities.put(i5.localID, i5);
-//
-//        Item i6 = genItem(EntityType.ITEM_SPIKES_REVEALED, Item.SPIKES_REVEALED, 4,-3, true);
-//        myEntities.put(i6.localID, i6);
-//
-////        clears everything we have used from memory
-//        glfwTerminate();
-//    }
-//
-//    public static Item genItem(EntityType type, String tex, float x, float y, boolean hidden) {
-//        Item i = new Item(tex);
-//        i.owner = clientID;
-//        i.localID = IDCounter++;
-//        i.transform.pos.add(x, y, 0);
-//        i.hidden = hidden;
-//        return i;
-//    }
 }

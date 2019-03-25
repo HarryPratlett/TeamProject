@@ -20,8 +20,6 @@ public class ClientReceiver extends Thread {
     private ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender;
     private String clientID;
 
-    boolean b = true;
-
 //    convert entity[] into hash map potentially currently the arrays indexes corresponds to the entity's ID
     public ClientReceiver(ObjectInputStream fromServer,
                           ClientSender toServer,
@@ -67,7 +65,6 @@ public class ClientReceiver extends Thread {
     }
 
     public void playAudio(PlayAudioData playAudioData) {
-        System.out.println("gonna play some lit shit yo");
         Audio.getAudio().play(playAudioData.clipName, playAudioData.location);
     }
 
@@ -100,22 +97,9 @@ public class ClientReceiver extends Thread {
 //    this can be modified
     private void readInEntities(Object data) {
         ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
-
-//        System.out.println("Entity data length " + entityData.size());
         for (int i = 0; i < entityData.size(); i++) {
             if (entityData.get(i) != null) {
-                if(entityData.get(i).type == EntityType.ITEM_APPLE && !b) {
-                    System.out.println("APPLE");
-                    System.out.println(entityData.get(i).toString());
-                    System.out.println(entityData.get(i).transform.pos.x + " " + entityData.get(i).transform.pos.y);
-                    System.out.println(((ItemData) entityData.get(i).typeData).hidden);
-                    System.out.println(entityData.get(i).hidden);
-                    System.out.println(entityData.get(i).exists);
-                    System.out.println(((ItemData) entityData.get(i).typeData).spikeTimer);
-
-                }
                 EntityData entity = entityData.get(i);
-//                System.out.println(entityData.get(i).transform.pos);
                 if(!toRender.containsKey(entity.ownerID)){
                     toRender.put(entity.ownerID, new ConcurrentHashMap<Integer,EntityData>());
                 }
@@ -130,7 +114,5 @@ public class ClientReceiver extends Thread {
                 }
             }
         }
-
-        b = false;
     }
 }

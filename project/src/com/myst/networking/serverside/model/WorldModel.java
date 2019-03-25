@@ -11,7 +11,6 @@ import com.myst.world.entities.EntityType;
 import com.myst.world.entities.ItemData;
 import com.myst.world.entities.PlayerData;
 import com.myst.world.map.rendering.Tile;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class WorldModel {
     public void playSound(String clipName, Vector3f location) {
         Message soundMessage = new Message(Codes.PLAY_AUDIO, new PlayAudioData(clipName, location));
 
-        for(ServerSender sender : senders) {
+        for (ServerSender sender : senders) {
             sender.addMessage(soundMessage);
         }
     }
@@ -63,27 +62,35 @@ public class WorldModel {
 
             for (EntityData itemData : itemsData) {
                 ItemData itemSpecific = (ItemData) itemData.typeData;
-                if(!itemData.exists) continue;
-//                if(itemData.localID != 1) continue;
+                if (!itemData.exists) continue;
 
                 float itemX = itemData.transform.pos.x;
                 float itemY = itemData.transform.pos.y;
 
-//                System.out.println((playerX - itemX) + " " + (playerY - itemY));
-
 //              item update code
                 if ((playerX - itemX < 0.5f) && (playerX - itemX > -0.5f)) {
                     if ((playerY - itemY < 0.5f) && (playerY - itemY > -0.5f)) {
-                        System.out.println("MEEEE ON APPPLE BOIII");
                         switch (itemData.type) {
                             case ITEM_APPLE:
                                 itemData.exists = false;
-                                ((ItemData) itemData.typeData).hidden = true;
-                                itemData.hidden = true;
-                                ((ItemData) itemData.typeData).isChanged = true;
-                                ((ItemData) itemData.typeData).spikeTimer = 44;
+                                itemSpecific.hidden = true;
+                                itemSpecific.isChanged = true;
                                 setHealthOfPlayerData(playerSpecific, playerSpecific.health + 10);
                                 playSound(Audio.APPLE, playerData.transform.pos);
+                                break;
+                            case ITEM_MED_KIT:
+                                itemData.exists = false;
+                                itemSpecific.hidden = true;
+                                itemSpecific.isChanged = true;
+                                setHealthOfPlayerData(playerSpecific, playerSpecific.health + 30);
+//                                playSound(Audio.MED_KIT, playerData.transform.pos);
+                                break;
+                            case ITEM_INVINCIBILITY_POTION:
+                                itemData.exists = false;
+                                itemSpecific.hidden = true;
+                                itemSpecific.isChanged = true;
+                                // TODO - make invincibility a thing
+                                playSound(Audio.POTION, playerData.transform.pos);
                                 break;
                             case ITEM_SPIKES_HIDDEN:
                                 if (!itemSpecific.hidden) {
@@ -103,14 +110,34 @@ public class WorldModel {
                                         playSound(Audio.HIT_BY_SPIKES, playerData.transform.pos);
                                     }
                                 }
+                            case ITEM_BULLETS_SMALL:
+                                itemData.exists = false;
+                                itemSpecific.hidden = true;
+                                itemSpecific.isChanged = true;
+                                setBulletsOfPlayerData(playerSpecific, playerSpecific.bulletCount + 10);
+                                playSound(Audio.BULLETS_SMALL, playerData.transform.pos);
+                                break;
+                            case ITEM_BULLETS_BIG:
+                                itemData.exists = false;
+                                itemSpecific.hidden = true;
+                                itemSpecific.isChanged = true;
+                                setBulletsOfPlayerData(playerSpecific, playerSpecific.bulletCount + 30);
+                                playSound(Audio.BULLETS_BIG, playerData.transform.pos);
+                                break;
+                            case ITEM_HEALING_PLATFORM:
+                                if (canHealOnPlatform(playerSpecific)) {
+                                    setHealthOfPlayerData(playerSpecific, playerSpecific.health + 1);
+                                    playerSpecific.lastHealOnPlatform = System.currentTimeMillis();
+//                                    playSound(Audio.HIT_BY_SPIKES, playerData.transform.pos);
+                                }
                         }
+                        break;
                     }
                 }
+
 //              bullet collision code
-
             }
-            for(EntityData bulletData : bulletsData){
-
+            for (EntityData bulletData : bulletsData) {
             }
         }
 
@@ -120,7 +147,6 @@ public class WorldModel {
                 if (System.currentTimeMillis() - itemSpecific.spikeTimer > 5000) {
                     if (itemData.type == ITEM_SPIKES_HIDDEN) itemSpecific.hidden = false;
                     else itemSpecific.hidden = true;
-
                     itemSpecific.spikeTimer = Long.MAX_VALUE;
                 }
             }
@@ -131,6 +157,10 @@ public class WorldModel {
         return System.currentTimeMillis() - player.lastSpikeDamage > 1000;
     }
 
+    public boolean canHealOnPlatform(PlayerData player) {
+        return System.currentTimeMillis() - player.lastHealOnPlatform > 1000;
+    }
+
     public void setHealthOfPlayerData(PlayerData player, float health) {
         if (health < 0) health = 0;
         if (health > player.maxHealth) health = player.maxHealth;
@@ -138,15 +168,21 @@ public class WorldModel {
         player.health = health;
     }
 
+    public void setBulletsOfPlayerData(PlayerData player, int bulletCount) {
+        if (bulletCount < 0) bulletCount = 0;
+        if (bulletCount > player.maxBulletCount) bulletCount = player.maxBulletCount;
+
+        player.bulletCount = bulletCount;
+    }
+
     public ArrayList<EntityData> getPlayers() {
         ArrayList<EntityData> playersData = new ArrayList<>();
 
         entities.values().forEach(entityDataArrayList -> {
             for (EntityData e : entityDataArrayList) {
-                if (e.exists && (e.type == EntityType.PLAYER)){
+                if (e.exists && (e.type == EntityType.PLAYER)) {
                     playersData.add(e);
                 }
-
             }
         });
 
@@ -159,10 +195,14 @@ public class WorldModel {
         entities.values().forEach(entityDataArrayList -> {
             for (EntityData e : entityDataArrayList) {
                 if (e.exists && (e.type == ITEM_APPLE ||
+                        e.type == EntityType.ITEM_MED_KIT ||
+                        e.type == EntityType.ITEM_BULLETS_SMALL ||
+                        e.type == EntityType.ITEM_BULLETS_BIG ||
                         e.type == EntityType.ITEM_SPIKES_HIDDEN ||
-                        e.type == EntityType.ITEM_SPIKES_REVEALED)) {
-                        itemsData.add(e);
-
+                        e.type == EntityType.ITEM_SPIKES_REVEALED ||
+                        e.type == EntityType.ITEM_INVINCIBILITY_POTION ||
+                        e.type == EntityType.ITEM_HEALING_PLATFORM)) {
+                    itemsData.add(e);
                 }
             }
         });
@@ -177,7 +217,6 @@ public class WorldModel {
             for (EntityData e : entityDataArrayList) {
                 if (e.exists && (e.type == BULLET)) {
                     itemsData.add(e);
-
                 }
             }
         });
@@ -201,10 +240,9 @@ public class WorldModel {
 //        try and catch need to catch when you try and access an element which doesn't exist
 //        try {
 
-
         if (clientEntities.get(entity.localID) != null) {
             EntityData cEntityData = clientEntities.get(entity.localID);
-            switch(cEntityData.type){
+            switch (cEntityData.type) {
                 case PLAYER:
                     PlayerData playerData = (PlayerData) cEntityData.typeData;
                     ((PlayerData) entity.typeData).health = playerData.health;
@@ -216,13 +254,13 @@ public class WorldModel {
                 case ITEM_APPLE:
                     ItemData itemData = (ItemData) cEntityData.typeData;
                     ((ItemData) entity.typeData).hidden = itemData.hidden;
-                    ((ItemData) entity.typeData).lastSpikeDamage= itemData.lastSpikeDamage;
+                    ((ItemData) entity.typeData).lastSpikeDamage = itemData.lastSpikeDamage;
                     ((ItemData) entity.typeData).spikeTimer = itemData.spikeTimer;
                     break;
                 case BULLET:
                     BulletData bulletData = (BulletData) cEntityData.typeData;
-                    ((BulletData) entity.typeData).damage =  bulletData.damage;
-                    ((BulletData) entity.typeData).length =  bulletData.length;
+                    ((BulletData) entity.typeData).damage = bulletData.damage;
+                    ((BulletData) entity.typeData).length = bulletData.length;
                     break;
             }
             entity.exists = clientEntities.get(entity.localID).exists;
@@ -238,12 +276,12 @@ public class WorldModel {
     public ArrayList<EntityData> getWorldData(boolean forceUpdate) {
         ArrayList<EntityData> out = new ArrayList<>();
         for (String key : entities.keySet()) {
-            if(!key.equals("items") || forceUpdate) {
+            if (!key.equals("items") || forceUpdate) {
                 out.addAll(this.entities.get(key));
             } else {
-                for(EntityData entityData : entities.get(key)) {
+                for (EntityData entityData : entities.get(key)) {
                     ItemData data = (ItemData) entityData.typeData;
-                    if(data.isChanged) {
+                    if (data.isChanged) {
                         out.add(entityData);
                         data.isChanged = false;
                     }

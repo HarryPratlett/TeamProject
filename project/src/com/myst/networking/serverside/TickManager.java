@@ -27,9 +27,10 @@ public class TickManager extends Thread{
             wm.update();
             itemGenerator.update();
 
+            ArrayList<EntityData> worldData = wm.getWorldData(false);
             for (int i=0; i< senders.length; i++){
                 if(senders[i] != null) {
-                    ArrayList<EntityData> worldData = wm.getWorldData(false);
+
 
                     for(EntityData ed : worldData) {
                         if(ed.type == EntityType.ITEM_APPLE) {

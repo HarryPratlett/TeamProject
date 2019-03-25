@@ -20,6 +20,13 @@ public class Audio {
     public static final String FOOTSTEPS = "footsteps";
     public static final String APPLE = "apple";
     public static final String SPIKES = "spikes";
+    public static final String POTION = "potion";
+    public static final String MONSTER_HIT = "monster";
+    public static final String BULLETS_SMALL = "bullets_small";
+    public static final String BULLETS_BIG = "bullets_big";
+    // TODO - 2 more
+    public static final String MED_KIT = "med_kit";
+    public static final String HEAL_PLATFORM = "healing_platform";
 
     private final String WAV = ".wav";
     private final String PATH = "assets/sounds/";
@@ -27,8 +34,7 @@ public class Audio {
     private final double GUN_DIST = 70;
     private final double SPIKES_DIST = 30;
     private final double HIT_DIST = 35;
-    private final double FOOTSTEPS_DIST = 10;
-    private double distance;
+    private final double NEARBY_DIST = 10;
 
     public static final int MIN_VOLUME = 0;
     public static final int MAX_VOLUME = 5;
@@ -44,6 +50,10 @@ public class Audio {
     private File footsteps = new File(PATH + FOOTSTEPS + WAV);
     private File apple = new File(PATH + APPLE + WAV);
     private File spikes = new File(PATH + SPIKES + WAV);
+    private File potion = new File(PATH + POTION + WAV);
+    private File monsterHit = new File(PATH + MONSTER_HIT + WAV);
+    private File bulletsSmall = new File(PATH + BULLETS_SMALL + WAV);
+    private File bulletsBig = new File(PATH + BULLETS_BIG + WAV);
 
     private AudioInputStream themeStream;
     private AudioInputStream gunStream;
@@ -52,6 +62,10 @@ public class Audio {
     private AudioInputStream footstepsStream;
     private AudioInputStream appleStream;
     private AudioInputStream spikesStream;
+    private AudioInputStream potionStream;
+    private AudioInputStream monsterHitStream;
+    private AudioInputStream bulletsSmallStream;
+    private AudioInputStream bulletsBigStream;
 
     private Clip themeClip;
     private Clip gunClip;
@@ -60,6 +74,10 @@ public class Audio {
     private Clip footstepsClip;
     private Clip appleClip;
     private Clip spikesClip;
+    private Clip potionClip;
+    private Clip monsterHitClip;
+    private Clip bulletsSmallClip;
+    private Clip bulletsBigClip;
 
     private FloatControl themeGainControl;
     private FloatControl gunGainControl;
@@ -68,6 +86,10 @@ public class Audio {
     private FloatControl footstepsGainControl;
     private FloatControl appleGainControl;
     private FloatControl spikesGainControl;
+    private FloatControl potionGainControl;
+    private FloatControl monsterHitGainControl;
+    private FloatControl bulletsSmallGainControl;
+    private FloatControl bulletsBigGainControl;
 
     private float themeRange;
     private float gunRange;
@@ -76,6 +98,10 @@ public class Audio {
     private float footstepsRange;
     private float appleRange;
     private float spikesRange;
+    private float potionRange;
+    private float monsterHitRange;
+    private float bulletsSmallRange;
+    private float bulletsBigRange;
 
     private float gain;
 
@@ -120,6 +146,21 @@ public class Audio {
             spikesClip = AudioSystem.getClip();
             spikesClip.open(spikesStream);
 
+            potionStream = AudioSystem.getAudioInputStream(potion);
+            potionClip = AudioSystem.getClip();
+            potionClip.open(potionStream);
+
+            monsterHitStream = AudioSystem.getAudioInputStream(monsterHit);
+            monsterHitClip = AudioSystem.getClip();
+            monsterHitClip.open(monsterHitStream);
+
+            bulletsSmallStream = AudioSystem.getAudioInputStream(bulletsSmall);
+            bulletsSmallClip = AudioSystem.getClip();
+            bulletsSmallClip.open(bulletsSmallStream);
+
+            bulletsBigStream = AudioSystem.getAudioInputStream(bulletsBig);
+            bulletsBigClip = AudioSystem.getClip();
+            bulletsBigClip.open(bulletsBigStream);
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -135,6 +176,10 @@ public class Audio {
         footstepsGainControl = (FloatControl) footstepsClip.getControl(FloatControl.Type.MASTER_GAIN);
         appleGainControl = (FloatControl) appleClip.getControl(FloatControl.Type.MASTER_GAIN);
         spikesGainControl = (FloatControl) spikesClip.getControl(FloatControl.Type.MASTER_GAIN);
+        potionGainControl = (FloatControl) potionClip.getControl(FloatControl.Type.MASTER_GAIN);
+        monsterHitGainControl = (FloatControl) monsterHitClip.getControl(FloatControl.Type.MASTER_GAIN);
+        bulletsSmallGainControl = (FloatControl) bulletsSmallClip.getControl(FloatControl.Type.MASTER_GAIN);
+        bulletsBigGainControl = (FloatControl) bulletsBigClip.getControl(FloatControl.Type.MASTER_GAIN);
 
         themeRange = themeGainControl.getMaximum() - themeGainControl.getMinimum();
         gunRange = gunGainControl.getMaximum() - gunGainControl.getMinimum();
@@ -143,6 +188,10 @@ public class Audio {
         footstepsRange = footstepsGainControl.getMaximum() - footstepsGainControl.getMinimum();
         appleRange = appleGainControl.getMaximum() - appleGainControl.getMinimum();
         spikesRange = spikesGainControl.getMaximum() - spikesGainControl.getMinimum();
+        potionRange = potionGainControl.getMaximum() - potionGainControl.getMinimum();
+        monsterHitRange = monsterHitGainControl.getMaximum() - monsterHitGainControl.getMinimum();
+        bulletsSmallRange = bulletsSmallGainControl.getMaximum() - bulletsSmallGainControl.getMinimum();
+        bulletsBigRange = bulletsBigGainControl.getMaximum() - bulletsBigGainControl.getMinimum();
 
         modVolume(0);
 //        theme();
@@ -185,6 +234,10 @@ public class Audio {
             footstepsClip.stop();
             appleClip.stop();
             spikesClip.stop();
+            potionClip.stop();
+            monsterHitClip.stop();
+            bulletsSmallClip.stop();
+            bulletsBigClip.stop();
         } else {
             themeClip.start();
         }
@@ -228,6 +281,18 @@ public class Audio {
 
         gain = (spikesRange / MAX_VOLUME * volume) + spikesGainControl.getMinimum();
         spikesGainControl.setValue(gain);
+
+        gain = (potionRange / MAX_VOLUME * volume) + potionGainControl.getMinimum();
+        potionGainControl.setValue(gain);
+
+        gain = (monsterHitRange / MAX_VOLUME * volume) + monsterHitGainControl.getMinimum();
+        monsterHitGainControl.setValue(gain);
+
+        gain = (bulletsSmallRange / MAX_VOLUME * volume) + bulletsSmallGainControl.getMinimum();
+        bulletsSmallGainControl.setValue(gain);
+
+        gain = (bulletsBigRange / MAX_VOLUME * volume) + bulletsBigGainControl.getMinimum();
+        bulletsBigGainControl.setValue(gain);
     }
 
     public void setControlVolume(FloatControl control, double volumeMod) {
@@ -261,7 +326,8 @@ public class Audio {
                     gunClip.loop(0);
                     break;
                 case HIT_BY_BULLET:
-                    // setControlVolume
+                    if(dist > HIT_DIST) return;
+                    setControlVolume(hitByBulletGainControl, 1 - dist / NEARBY_DIST);
                     if (hitByBulletClip.getFramePosition() >= hitByBulletClip.getFrameLength())
                         hitByBulletClip.setFramePosition(0);
                     hitByBulletClip.loop(0);
@@ -274,14 +340,16 @@ public class Audio {
                     hitBySpikesClip.loop(0);
                     break;
                 case FOOTSTEPS:
-                    if(dist > FOOTSTEPS_DIST) return;
-                    setControlVolume(footstepsGainControl, 1 - dist / FOOTSTEPS_DIST);
+                    if(dist > NEARBY_DIST) return;
+                    setControlVolume(footstepsGainControl, 1 - dist / NEARBY_DIST);
                     if (footstepsClip.getFramePosition() >= footstepsClip.getFrameLength()) {
                         footstepsClip.setFramePosition(0);
                     }
                     footstepsClip.loop(0);
                     break;
                 case APPLE:
+                    if(dist > NEARBY_DIST) return;
+                    setControlVolume(appleGainControl, 1 - dist / NEARBY_DIST);
                     if (appleClip.getFramePosition() >= appleClip.getFrameLength())
                         appleClip.setFramePosition(0);
                     appleClip.loop(0);
@@ -292,6 +360,34 @@ public class Audio {
                     if (spikesClip.getFramePosition() >= spikesClip.getFrameLength())
                         spikesClip.setFramePosition(0);
                     spikesClip.loop(0);
+                    break;
+                case POTION:
+                    if(dist > NEARBY_DIST) return;
+                    setControlVolume(potionGainControl, 1 - dist / NEARBY_DIST);
+                    if (potionClip.getFramePosition() >= potionClip.getFrameLength())
+                        potionClip.setFramePosition(0);
+                    potionClip.loop(0);
+                    break;
+                case MONSTER_HIT:
+                    if(dist > HIT_DIST) return;
+                    setControlVolume(monsterHitGainControl, 1 - dist / HIT_DIST);
+                    if (monsterHitClip.getFramePosition() >= monsterHitClip.getFrameLength())
+                        monsterHitClip.setFramePosition(0);
+                    monsterHitClip.loop(0);
+                    break;
+                case BULLETS_SMALL:
+                    if(dist > NEARBY_DIST) return;
+                    setControlVolume(bulletsSmallGainControl, 1 - dist / NEARBY_DIST);
+                    if (bulletsSmallClip.getFramePosition() >= bulletsSmallClip.getFrameLength())
+                        bulletsSmallClip.setFramePosition(0);
+                    bulletsSmallClip.loop(0);
+                    break;
+                case BULLETS_BIG:
+                    if(dist > NEARBY_DIST) return;
+                    setControlVolume(bulletsBigGainControl, 1 - dist / NEARBY_DIST);
+                    if (bulletsBigClip.getFramePosition() >= bulletsBigClip.getFrameLength())
+                        bulletsBigClip.setFramePosition(0);
+                    bulletsBigClip.loop(0);
                     break;
                 default:
                     //none
@@ -325,6 +421,18 @@ public class Audio {
                 break;
             case SPIKES:
                 spikesClip.stop();
+                break;
+            case POTION:
+                potionClip.stop();
+                break;
+            case MONSTER_HIT:
+                monsterHitClip.stop();
+                break;
+            case BULLETS_SMALL:
+                bulletsSmallClip.stop();
+                break;
+            case BULLETS_BIG:
+                bulletsBigClip.stop();
                 break;
             default:
                 //none
