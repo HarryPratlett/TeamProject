@@ -18,14 +18,11 @@ import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
-<<<<<<< HEAD:src/com/myst/world/entities/Player.java
 import org.joml.Vector3f;
-=======
 import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
->>>>>>> master:project/src/com/myst/world/entities/Player.java
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -112,13 +109,9 @@ public class Player extends Entity {
 
 
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
-<<<<<<< HEAD:src/com/myst/world/entities/Player.java
             transform.pos.add(MOVEMENT_SPEED * deltaTime, 0
             		, 0);
             moved = true;
-=======
-            transform.pos.add(MOVEMENT_SPEED * deltaTime, 0, 0);
->>>>>>> master:project/src/com/myst/world/entities/Player.java
         }
         if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
             transform.pos.x += -MOVEMENT_SPEED * deltaTime;
@@ -139,30 +132,17 @@ public class Player extends Entity {
             }
         }
 
-<<<<<<< HEAD:src/com/myst/world/entities/Player.java
         if(moved)
             Audio.getAudio().play(Audio.FOOTSTEPS);
         else
             Audio.getAudio().stop(Audio.FOOTSTEPS);
         if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)){
             Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) xMouse,(float) -yMouse));
-=======
-
-        if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
-            Line line = new Line(new Vector2f(transform.pos.x, transform.pos.y), new Vector2f((float) xMouse, (float) -yMouse));
->>>>>>> master:project/src/com/myst/world/entities/Player.java
             bullets.add(line);
             Audio.getAudio().play(Audio.GUN, transform.pos);
             System.out.println("mouse pressed");
         }
 
-<<<<<<< HEAD:src/com/myst/world/entities/Player.java
-=======
-        if (moved)
-            Audio.getAudio().play(Audio.FOOTSTEPS, transform.pos);
-        else
-            Audio.getAudio().stop(Audio.FOOTSTEPS);
->>>>>>> master:project/src/com/myst/world/entities/Player.java
 
         //now that the co-ordinate system has been redone this needs redoing
         this.boundingBox.getCentre().set(transform.pos.x, transform.pos.y);
@@ -193,7 +173,7 @@ public class Player extends Entity {
         }
     }
 
-<<<<<<< HEAD:src/com/myst/world/entities/Player.java
+
 	public boolean attack(World world, int entityID) {
 		//need to add orientation changes i.e. if player is facing towards negative, make line along negative axis.
 		AABB[] line = new AABB[100];
@@ -213,7 +193,6 @@ public class Player extends Entity {
 		}
 		return false;
 	}
-=======
     @Override
     public void readInEntityData(EntityData data) {
         super.readInEntityData(data);
@@ -232,5 +211,5 @@ public class Player extends Entity {
         data.typeData = playerData;
         return data;
     }
->>>>>>> master:project/src/com/myst/world/entities/Player.java
+
 }

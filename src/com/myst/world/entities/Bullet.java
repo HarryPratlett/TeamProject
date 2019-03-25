@@ -33,8 +33,4 @@ public class Bullet extends Entity {
        this.lightDistance = 0f;
        this.lightSource = false;    }    public void update(float deltaTime, Window window, Camera camera, World world){    }
 	
-	public boolean attack(World world, int entityID) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

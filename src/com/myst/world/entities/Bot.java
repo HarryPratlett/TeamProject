@@ -1,9 +1,11 @@
 package com.myst.world.entities;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 
 import com.myst.AI.AI;
 import com.myst.rendering.Window;
@@ -12,6 +14,7 @@ import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
 import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
+import com.myst.world.view.Transform;
 
 public class Bot extends Entity {
 	
@@ -19,6 +22,7 @@ public class Bot extends Entity {
 	private final float MOVEMENT_SPEED = 1f;
 	private ArrayList<Vector3f> path;
 	private ArrayList<Line> bullets;
+	private Random randInt = null;
 	
 	public Bot(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords, ArrayList<Line> bullets) {
 		super(vertices, texture, indices, boundingBoxCoords);
@@ -35,9 +39,26 @@ public class Bot extends Entity {
 	public void update(float deltaTime, Window window, Camera camera, World world) {
 		//add enemy detection method here, so constantly checks for enemies as well as randomly turning on flashlight.
 		intelligence.updateTransform(transform);
+		Transform enemyTransform = intelligence.enemyDetection(entities, visibleToEnemy);
+		if (enemyTransform!=null){
+            Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) enemyTransform.pos.x,(float) enemyTransform.pos.y));
+            bullets.add(line);
+            System.out.println("Enemy Detected");
+        }
 		followPath(deltaTime);
 		this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
-			
+		int random = randInt.nextInt(3000);
+		
+		if(random == 1500){
+			if(this.lightDistance == 0.25f){
+				this.lightDistance = 2.5f;
+				this.visibleToEnemy = true;
+			}else{
+				this.lightDistance = 0.25f;
+				this.visibleToEnemy = false;
+	        }
+	    }
+		
 	    AABB[] boxes = new AABB[25];
 	    for (int i = 0; i < 5; i++) {
 	         for (int j = 0; j < 5; j++) {
@@ -106,25 +127,6 @@ public class Bot extends Entity {
 	
 	public ArrayList<Vector3f> getPath(){
 		return path;
-	}
-	
-	public boolean attack(World world, int entityID) {
-		AABB[] line = new AABB[100];
-		for (int i = 0; i < line.length; i++) {
-			int x = (int) transform.pos.x + i;
-			int y = (int) transform.pos.y + i;
-			line[i] = world.getBoundingBox(x,y);
-		}
-			
-		for(int i = 0; i< line.length; i++) {
-			if(line[i] != null) {
-				Collision collision = boundingBox.getCollision(line[i]);
-				if(collision.isIntersecting) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 }
