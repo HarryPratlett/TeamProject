@@ -35,6 +35,8 @@ public class Menu {
             0,1,2,
             2,3,0
     };
+    private float[] vertices;
+
     private HashMap<Rectangle2D.Float, String> menuButtons = new HashMap<>();
     private HashMap<Rectangle2D.Float, String> multiplayerButtons = new HashMap<>();
     private HashMap<Rectangle2D.Float, String> hostGameButtons = new HashMap<>();
@@ -42,6 +44,7 @@ public class Menu {
     private Window window;
     private Shader shader;
     private Input input;
+    private Model model;
     private MenuStates currentWindow;
     private Boolean multiplayerAccessed;
     private Boolean joinGameAccessed;
@@ -179,6 +182,8 @@ public class Menu {
             case HOST_GAME:
                 System.gc();
                 this.renderHostGame();
+                this.renderText(ipAddress, 0.17f, 0.25f);
+                this.renderText(port, 0.35f, -0.10f);
                 break;
             case HIDDEN:
                 break;
@@ -203,7 +208,7 @@ public class Menu {
                 break;
             case MULTIPLAYER:
                 multiplayerAccessed = true;
-                this.multiplayerInput();
+                state = this.multiplayerInput();
                 break;
             case HOST_GAME:
                 //todo add the render text of the ip and port passed by the main and then add ok button at bottom
@@ -227,6 +232,7 @@ public class Menu {
 
     public void renderMenu()    {
         glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT);
         this.renderBackground();
         setupImages(logo, 0f, 0.65f, false);
         setupImages(menuTextures, 0f, 0.35f, true);
@@ -234,12 +240,14 @@ public class Menu {
 
     public void renderMultiplayer() {
         glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT);
         this.renderBackground();
         setupImages(multiplayerTextures, 0f, 0.33f, true);
     }
 
     public void renderHostGame()    {
         glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT);
         this.renderBackground();
         setupImages(Arrays.copyOfRange(hostGameTextures, 0, 2), -0.5f, 0.25f, false);
         setupImages(Arrays.copyOfRange(hostGameTextures, 2, 4), 0.5f, 0.25f, false);
@@ -299,7 +307,8 @@ public class Menu {
         }
     }
 
-    public void multiplayerInput()   {
+    public ProgramState multiplayerInput()   {
+        ProgramState state = ProgramState.MAIN_MENUS;
         for (Rectangle2D.Float b : multiplayerButtons.keySet())   {
 
             double mouseX = ((this.input.getMouseCoordinates()[0])/(window.getWidth()/2))-1;
@@ -312,6 +321,7 @@ public class Menu {
                         case "host_game_button.png":
                             multiplayerAccessed = false;
                             this.currentWindow = MenuStates.HOST_GAME;
+                            state = ProgramState.START_SERVER;
                             break;
                         case "join_game_button.png":
                             multiplayerAccessed = false;
@@ -325,6 +335,7 @@ public class Menu {
             multiplayerAccessed = false;
             currentWindow = MenuStates.MAIN_MENU;
         }
+        return state;
     }
 
     public ProgramState hostGameInput() {
@@ -373,9 +384,14 @@ public class Menu {
                             this.isIpAddress = false;
                             break;
                         case "submit_button.png":
-                            state =  ProgramState.SWITCH_TO_GAME_FROM_MENU;
-                            break;
+                            if (ipAddress == "" || port == "")  {
+                                break;
+                            } else {
+                                state = ProgramState.SWITCH_TO_GAME_FROM_MENU;
+                                break;
+                            }
                     }
+
                 }
             }
         }
@@ -404,9 +420,9 @@ public class Menu {
     public void setupImages(Texture[] textureArray, Float x, Float y, Boolean isButton)  {
         Float yPos = y;
         for (Texture t: textureArray)   {
-            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+            vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
-            Model model = new Model(vertices, textureDocks, indices);
+            model = new Model(vertices, textureDocks, indices);
             renderImage(shader, t, x, yPos, new Matrix4f(), model);
             if(isButton) {
                 this.addButton(0 + vertices[0], yPos + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
@@ -488,15 +504,15 @@ public class Menu {
         for(char c : charInput) {
 
             if (Character.toString(c).equals("."))   {
-                float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+                vertices = Arrays.copyOf(baseVertices, baseVertices.length);
                 vertices = this.alterVertices(vertices, dot.getHeight(), dot.getWidth(), 0.005, 0.006);
-                Model model = new Model(vertices, textureDocks, indices);
+                model = new Model(vertices, textureDocks, indices);
                 this.renderImage(shader, dot, x, y, new Matrix4f(), model);
             }
             else {
-                float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+                vertices = Arrays.copyOf(baseVertices, baseVertices.length);
                 vertices = this.alterVertices(vertices, numberTextures[Character.getNumericValue(c)].getHeight(), numberTextures[Character.getNumericValue(c)].getWidth(), 0.002, 0.006);
-                Model model = new Model(vertices, textureDocks, indices);
+                model = new Model(vertices, textureDocks, indices);
                 this.renderImage(shader, numberTextures[Character.getNumericValue(c)], x, y, new Matrix4f(), model);
             }
             x = x + 0.065f;
@@ -504,9 +520,9 @@ public class Menu {
     }
 
     public void renderBackground()  {
-        float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+        vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);
-        Model model = new Model(vertices, textureDocks, indices);
+        model = new Model(vertices, textureDocks, indices);
         this.renderImage(shader, background, 0, 0, new Matrix4f(), model);
     }
 }

@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientConnection extends Thread{
-    private static final int PORT = 4444;
+    private Integer PORT = 4444;
     private String hostname;
     private ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities;
     private ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender;
@@ -44,11 +44,13 @@ public class ClientConnection extends Thread{
     public ClientConnection(ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities,
                             ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender,
                             String host,
+                            Integer port,
                             String clientID) {
         this.hostname = host;
         this.entities = entities;
         this.toRender = toRender;
         this.clientID = clientID;
+        this.PORT = port;
     }
 
     public void run() {
