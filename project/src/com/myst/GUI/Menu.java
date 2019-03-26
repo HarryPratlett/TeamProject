@@ -76,7 +76,11 @@ public class Menu {
             new Texture("assets/main_menu/typing/8.png"), new Texture("assets/main_menu/typing/9.png"),
     };
 
-
+    /**
+     * This is the default constructor for the menu
+     * @param window This is the window that the menu will be displayed on
+     * @param input This is the input for that window
+     */
     public Menu(Window window, Input input)   {
         this.window = window;
         this.shader = new Shader ("assets/shader2");
@@ -89,6 +93,10 @@ public class Menu {
         this.port = "";
     }
 
+    /**
+     * The main which runs the menu code, initialising OpenGL
+     * @param args
+     */
     public static void main(String[] args) {
         Window.setCallbacks();
         if (!glfwInit()) {
@@ -155,6 +163,15 @@ public class Menu {
         System.exit(1);
         }
 
+    /**
+     * This renders any texture passed to it
+     * @param shader Shader that image is rendered on
+     * @param texture Texture to be rendered
+     * @param x X co-ord9inate of image
+     * @param y Y co-ordinate of image
+     * @param scale Scale of image
+     * @param model  Model created to render image
+     */
     public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
@@ -229,7 +246,9 @@ public class Menu {
         return state;
     }
 
-
+    /**
+     * Renders the main menu of the initial menu
+     */
     public void renderMenu()    {
         glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_DEPTH_BUFFER_BIT);
@@ -238,6 +257,9 @@ public class Menu {
         setupImages(menuTextures, 0f, 0.35f, true);
     }
 
+    /**
+     * Renders the screen that the menu goes to when the multiplayer button is clicked
+     */
     public void renderMultiplayer() {
         glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_DEPTH_BUFFER_BIT);
@@ -245,6 +267,9 @@ public class Menu {
         setupImages(multiplayerTextures, 0f, 0.33f, true);
     }
 
+    /**
+     * Renders the host game window when that is clicked on multiplayer
+     */
     public void renderHostGame()    {
         glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_DEPTH_BUFFER_BIT);
@@ -253,6 +278,10 @@ public class Menu {
         setupImages(Arrays.copyOfRange(hostGameTextures, 2, 4), 0.5f, 0.25f, false);
         setupImages(Arrays.copyOfRange(hostGameTextures, 4, 5 ), 0f, -0.5f, true);
     }
+
+    /**
+     * Renders join game window
+     */
     public void renderJoinGame()    {
         glClear(GL_COLOR_BUFFER_BIT);
         this.renderBackground();
@@ -262,6 +291,14 @@ public class Menu {
 
     }
 
+    /**
+     * Adds a button for a given image
+     * @param x X co-ordinate of image
+     * @param y Y co-ordinate of image
+     * @param width Width of the button/image
+     * @param height Height of the button/image
+     * @param filepath The filepath of the image
+     */
     public void addButton(float x, float y, float width, float height, String filepath) {
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
         if (multiplayerAccessed)    {
@@ -278,6 +315,9 @@ public class Menu {
         }
     }
 
+    /**
+     * The input sensor for the main menu screen
+     */
     public void mainMenuInput()   {
         for (Rectangle2D.Float b : menuButtons.keySet())   {
 
@@ -307,6 +347,10 @@ public class Menu {
         }
     }
 
+    /**
+     * Sensor for multiplayer input
+     * @return Returns the program state of this window
+     */
     public ProgramState multiplayerInput()   {
         ProgramState state = ProgramState.MAIN_MENUS;
         for (Rectangle2D.Float b : multiplayerButtons.keySet())   {
@@ -338,6 +382,10 @@ public class Menu {
         return state;
     }
 
+    /**
+     * Sensor for host game window
+     * @return Returns the program state for the host game window
+     */
     public ProgramState hostGameInput() {
         ProgramState state = ProgramState.MAIN_MENUS;
         for (Rectangle2D.Float b : hostGameButtons.keySet())   {
@@ -355,7 +403,7 @@ public class Menu {
                 }
             }
         }
-        if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {
+        if (window.getInput().isKeyPressed(GLFW_KEY_ESCAPE)) {  
             this.ipAddress = "";
             this.port = "";
             this.hostGameAccessed = false;
@@ -364,6 +412,10 @@ public class Menu {
         return state;
     }
 
+    /**
+     * Sensor for join game window
+     * @return Returns the program state after this input
+     */
     public ProgramState joinGameInput()   {
         ProgramState state = ProgramState.MAIN_MENUS;
         for (Rectangle2D.Float b : joinGameButtons.keySet())   {
@@ -404,6 +456,15 @@ public class Menu {
         return state;
     }
 
+    /**
+     * Alters a given float array of vertices
+     * @param vertices Vertices to be altered
+     * @param height Height of an image they will be altered for
+     * @param width Width of an image they will be altered for
+     * @param widthScale Scale for the image
+     * @param heightScale Scale for the image
+     * @return Returns the altered float array
+     */
     public float[] alterVertices(float[] vertices, int height, int width, double widthScale, double heightScale) {
         vertices[0] *= width * widthScale;
         vertices[3] *= width * widthScale;
@@ -417,6 +478,13 @@ public class Menu {
         return vertices;
     }
 
+    /**
+     * Renders a given set of images
+     * @param textureArray The set of textures to be rendered
+     * @param x X co-ordinate of images
+     * @param y Y co-ordinate of images
+     * @param isButton Whether a given array of textures should also be buttons
+     */
     public void setupImages(Texture[] textureArray, Float x, Float y, Boolean isButton)  {
         Float yPos = y;
         for (Texture t: textureArray)   {
@@ -431,6 +499,9 @@ public class Menu {
         }
     }
 
+    /**
+     * Takes input when typing for an entry box
+     */
     public void takeInput() {
         glfwPollEvents();
         if(isIpAddress) {
@@ -498,6 +569,12 @@ public class Menu {
 
     }
 
+    /**
+     * Renders a given string
+     * @param input The string to be rendered
+     * @param x x co-ordinate
+     * @param y y co-ordinate
+     */
     public void renderText(String input, float x, float y)    {
         char[] charInput = input.toCharArray();
 
@@ -519,6 +596,9 @@ public class Menu {
         }
     }
 
+    /**
+     * Renders the background of the menu
+     */
     public void renderBackground()  {
         vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);

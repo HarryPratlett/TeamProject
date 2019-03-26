@@ -182,7 +182,7 @@ public class GUI {
      */
     public void addButton(float x, float y, float width, float height, String filepath) {
         Rectangle2D.Float bounds = new Rectangle2D.Float(x, y, width , height);
-        if(settings_accessed)  {
+        if(settings_accessed)  { 
             settings_buttons.put(bounds, filepath);
         }
         else {
