@@ -1,3 +1,6 @@
+
+package junit.myst.Map;
+
 import static org.junit.Assert.*;
 
 import java.awt.image.BufferedImage;
