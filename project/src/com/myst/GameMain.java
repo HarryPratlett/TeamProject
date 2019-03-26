@@ -35,6 +35,7 @@ public class GameMain {
 
     static int IDCounter = 0;
     static String clientID;
+    public static boolean endOfGame = false;
 
     public static void main(Window window, Tile[][] map,
                             ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities,
@@ -70,9 +71,6 @@ public class GameMain {
 
         ArrayList<Line> playerBullets = new ArrayList<>();
 
-
-        window.setFullscreen(false);
-        window.createWindow(clientID);
 
         GL.createCapabilities();
 
@@ -137,7 +135,7 @@ public class GameMain {
 //        item.transform.pos.add(1, -2, 0);
 //        myEntities.put(44, item);
 
-        while (!window.shouldClose()) {
+        while (!window.shouldClose() && !endOfGame) {
 
             renderFrame = false;
 
@@ -178,6 +176,8 @@ public class GameMain {
 
             if (frame_time >= 1) {
                 System.out.println(frames);
+                System.out.println(player.health);
+                System.out.println(endOfGame);
                 frame_time = 0;
                 frames = 0;
             }
@@ -206,11 +206,13 @@ public class GameMain {
             }
         }
 
-//        clears everything we have used from memory
-        glfwTerminate();
+        if(endOfGame){
+            System.out.println("this is the end of the game");
 
-//        sloppy and needs tidying
-        System.exit(1);
+        }
+
+
+
     }
 
     public static void calculateBullets(ConcurrentHashMap<Integer, Entity> myEntities, ArrayList<Line> bullets, Tile[][] map) {

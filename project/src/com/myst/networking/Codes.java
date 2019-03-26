@@ -11,5 +11,7 @@ public enum Codes implements Serializable {
     SUCCESS,
     ID_UNAVAILABLE,
     PLAY_AUDIO,
-    GET_MAP
+    GET_MAP,
+    GAME_STARTED,
+    GAME_ENDED
 }

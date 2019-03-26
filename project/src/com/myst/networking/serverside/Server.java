@@ -25,6 +25,8 @@ public class Server extends Thread{
     public static Integer port = null;
     public static String IP;
     public static boolean foundIPAndPort = false;
+    public boolean endMe = false;
+
 
     /**
      * Start the server listening for connections.
@@ -35,6 +37,7 @@ public class Server extends Thread{
 
 
     public void run() {
+        int playerCount;
         System.out.println("starting server");
         WorldModel world = new WorldModel();
 
@@ -91,6 +94,7 @@ public class Server extends Thread{
         System.out.println("found IP and port");
 
         Object IDKey = new Object();
+        Object PlayerKey = new Object();
 
         ArrayList<String> usedIDs = new ArrayList<>();
 
