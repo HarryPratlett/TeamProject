@@ -1,3 +1,6 @@
+/**
+ * @author Aled Jackson
+ */
 package com.myst.world.map.rendering;
 
 import com.myst.datatypes.TileCoords;
@@ -13,7 +16,7 @@ import java.util.HashMap;
 
 import static com.myst.helper.Flatten.flatten;
 
-public class TileRenderer {
+public class  TileRenderer {
     private HashMap<String, Texture> tileTextures;
     private Model model;
 //    public Tile[][] tileMap;
@@ -55,6 +58,14 @@ public class TileRenderer {
 //    this renders a given tile at location x y
 //    x and y should be according to the new co-ordinate system
 //    where x is positive and y is negative
+
+    /**
+     * Renders a given tile
+     * @param tile The tile to be rendered
+     * @param coords The co-ordinates of the tiles
+     * @param shader Shader which they will be rendered upon
+     * @param cam Camera that the user has
+     */
     public void renderTile(Tile tile, TileCoords coords, Shader shader, Camera cam){
         shader.bind();
         if(tileTextures.containsKey(tile.getTexture())) {

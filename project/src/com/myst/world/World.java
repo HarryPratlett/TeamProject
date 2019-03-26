@@ -1,3 +1,6 @@
+/**
+ * @author Aled Jackson
+ */
 package com.myst.world;
 
 import com.myst.datatypes.TileCoords;

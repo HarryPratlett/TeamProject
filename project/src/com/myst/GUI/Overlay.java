@@ -1,0 +1,105 @@
+package com.myst.GUI;
+
+import com.myst.input.Input;
+import com.myst.rendering.Model;
+import com.myst.rendering.Shader;
+import com.myst.rendering.Texture;
+import com.myst.rendering.Window;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
+import java.util.Arrays;
+
+public class Overlay {
+    private int health;
+    private int ammo;
+
+    private Window window;
+    private Input input;
+
+    private final float[] baseVertices = new float[] {
+            -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
+            -1f, -0.5f, 0f/*3*/
+    };
+    private final float[] textureDocks = new float[] {
+            0f, 0f,   1, 0f,  1f, 1f,
+            0f, 1f
+    };
+    private final int[] indices = new int[] {
+            0,1,2,
+            2,3,0
+    };
+
+    public Overlay(Window window, Input input, int health, int ammo)    {
+        this.window = window;
+        this.health = health;
+        this.ammo = ammo;
+        this.input = input;
+
+
+    }
+
+    private Texture[] numberTextures = new Texture[]{
+            new Texture("assets/main_menu/typing/0.png"), new Texture("assets/main_menu/typing/1.png"),
+            new Texture("assets/main_menu/typing/2.png"), new Texture("assets/main_menu/typing/3.png"),
+            new Texture("assets/main_menu/typing/4.png"), new Texture("assets/main_menu/typing/5.png"),
+            new Texture("assets/main_menu/typing/6.png"), new Texture("assets/main_menu/typing/7.png"),
+            new Texture("assets/main_menu/typing/8.png"), new Texture("assets/main_menu/typing/9.png"),
+    };
+
+    public void render(Shader shader)    {
+        String health = Integer.toString(this.health);
+        String ammo = Integer.toString(this.ammo);
+        float xHealth = 0.5f;
+        float xAmmo = 0.5f;
+
+
+
+
+        for(int i = 0; i < health.length(); i++)  {
+            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+            vertices = this.alterVertices(vertices, new Texture("assets/main_menu/typing/0.png").getHeight(), numberTextures[Integer.valueOf(health.substring(i, i+1))].getWidth(), 0.002, 0.005);
+            Model model = new Model(vertices, textureDocks, indices);
+            this.renderImage(shader, new Texture("assets/main_menu/typing/0.png"), xHealth, 0.9f, new Matrix4f(), model);
+//            xHealth += 0.1f;
+        }
+//        for(int i = 0; i < ammo.length(); i++)   {
+//            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+//            vertices = this.alterVertices(vertices, numberTextures[Integer.valueOf(health.substring(i, i+1))].getHeight(), numberTextures[Integer.valueOf(health.substring(i, i+1))].getWidth(), 0.002, 0.005);
+//            Model model = new Model(vertices, textureDocks, indices);
+//            this.renderImage(shader, numberTextures[Integer.valueOf(ammo.substring(i, i+1))], xAmmo, 0.75f, new Matrix4f(), model);
+//            xAmmo += 0.1f;
+//        }
+    }
+
+    public void update(int playerHealth)    {
+        this.health = playerHealth;
+    }
+
+    public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
+        shader.bind();
+        texture.bind(0);
+        Matrix4f target = new Matrix4f();
+
+        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x,y,0));
+        scale.mul(tile_pos, target);
+
+
+        shader.setUniform("sampler",0);
+        shader.setUniform("projection", target);
+        model.render();
+    }
+
+    public float[] alterVertices(float[] vertices, int height, int width, double widthScale, double heightScale) {
+        vertices[0] *= width * widthScale;
+        vertices[3] *= width * widthScale;
+        vertices[6] *= width * widthScale;
+        vertices[9] *= width * widthScale;
+
+        vertices[1] *= height * heightScale;
+        vertices[4] *= height * heightScale;
+        vertices[7] *= height * heightScale;
+        vertices[10] *= height * heightScale;
+        return vertices;
+    }
+}
