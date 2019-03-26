@@ -26,22 +26,11 @@ public class TickManager extends Thread{
         while(true){
             wm.update();
             itemGenerator.update();
-
             ArrayList<EntityData> worldData = wm.getWorldData(false);
             for (int i=0; i< senders.length; i++){
                 if(senders[i] != null) {
-
-
-                    for(EntityData ed : worldData) {
-                        if(ed.type == EntityType.ITEM_APPLE) {
-                            ItemData id = (ItemData) ed.typeData;
-                            System.out.println(id.hidden);
-                        }
-                    }
-
                     senders[i].requestClientUpdate();
                     senders[i].addMessage(new Message(Codes.ENTITY_UPDATE, worldData));
-
                 }
             }
 

@@ -89,7 +89,6 @@ public class ClientConnection {
 //      you ask the server if the client ID is available, if so then it returns true else it returns false
             toServer.writeObject(new Message(Codes.SET_CLIENT_ID, clientID));
             Message response = (Message) fromServer.readObject();
-            System.out.println(response.header);
             switch (response.header) {
                 case SUCCESS:
                     return true;

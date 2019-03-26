@@ -211,7 +211,11 @@ public class Main {
                 for (String owner : entities.keySet()) {
                     for (Integer entityID : entities.get(owner).keySet()) {
                         Entity e = entities.get(owner).get(entityID);
-                        if(!e.hidden) e.render(camera, environmentShader);
+                        if(e instanceof Item) {
+                            if(!((ItemData) e.typeData).hidden) e.render(camera, environmentShader);
+                        } else {
+                            e.render(camera, environmentShader);
+                        }
                     }
                 }
 

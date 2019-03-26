@@ -27,7 +27,8 @@ public abstract class Entity implements Serializable {
     public Integer localID;
     public boolean visibleToEnemy;
     public boolean exists = true;
-    public boolean hidden = false;
+
+    public Object typeData;
 
     public Entity(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords){
         model = new Model(vertices, texture, indices);
@@ -42,7 +43,7 @@ public abstract class Entity implements Serializable {
     public abstract void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer,Entity> items);
 
     public void render(Camera camera, Shader shader){
-        if(!exists || hidden) return;
+        if(!exists || (this instanceof Item && ((ItemData) typeData).hidden)) return;
 
         shader.bind();
         shader.setUniform("sampler", 0);
@@ -70,7 +71,7 @@ public abstract class Entity implements Serializable {
         data.lightSource = this.lightSource;
         data.lightDistance = this.lightDistance;
         data.exists = this.exists;
-
+        data.typeData = typeData;
         return data;
     }
 
@@ -82,5 +83,6 @@ public abstract class Entity implements Serializable {
         this.lightSource = data.lightSource;
         this.lightDistance = data.lightDistance;
         this.exists = data.exists;
+        this.typeData = data.typeData;
     }
 }

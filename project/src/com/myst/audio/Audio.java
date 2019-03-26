@@ -314,8 +314,6 @@ public class Audio {
      */
     public void play(String clipName, Vector3f location) { //, Vector2f playerLocation, Vector2f soundLocation) {
         double dist = calculateDistanceToPlayer(location);
-
-        if(clipName == APPLE) System.out.println(muted);
         if (!muted) {
             switch (clipName) {
                 case GUN:

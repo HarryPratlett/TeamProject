@@ -38,7 +38,6 @@ public class ClientReceiver extends Thread {
         while(true){
             try {
                 Message msg = (Message) fromServer.readObject();
-//                System.out.println(msg.header.toString());
                 switch(msg.header){
                     case ENTITY_UPDATE:
                         readInEntities(msg.data);

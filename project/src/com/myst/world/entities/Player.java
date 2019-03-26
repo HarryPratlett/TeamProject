@@ -21,15 +21,14 @@ public class Player extends Entity {
 
     private final float MOVEMENT_SPEED = 10f;
 
-    private float health = 100;
+    private float health = 50;
     private float maxHealth = 100;
     private int bulletCount = 50;
     private int maxBulletCount = 200;
-
-    private long spikeDamageDelay = 1000;
-    private long lastSpikeDamage = 0;
-    private long healDelay = 1000;
-    private long lastHealOnPlatform = 0;
+    private long lastSpikeDamage;
+    private long lastPlatformHeal;
+    private long lastInvincibilityPickup;
+    private boolean isInvincible = false;
 
 //    private static final float[] vertices =
 //
@@ -55,44 +54,6 @@ public class Player extends Entity {
         this.type = PLAYER;
         this.visibleToEnemy = true;
         this.bullets = bullets;
-    }
-
-    public float getHealth() {
-        return health;
-    }
-
-    public void setHealth(float health) {
-        if (health < 0) health = 0;
-        if (health > maxHealth) health = maxHealth;
-
-        this.health = health;
-    }
-
-    public int getBulletCount() {
-        return bulletCount;
-    }
-
-    public void getBulletcount(int bulletCount) {
-        if (bulletCount < 0) bulletCount = 0;
-        if (bulletCount > maxBulletCount) bulletCount = bulletCount;
-
-        this.bulletCount = bulletCount;
-    }
-
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    public void heal(int heal) {
-        setHealth(health + heal);
-    }
-
-    public void damage(int dmg) {
-        setHealth(health - dmg);
-    }
-
-    private boolean canTakeSpikeDamage() {
-        return System.currentTimeMillis() - lastSpikeDamage > spikeDamageDelay;
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer, Entity> items) {
@@ -136,7 +97,6 @@ public class Player extends Entity {
             }
         }
 
-
         if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
             Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) xMouse, (float) -yMouse));
             bullets.add(line);
@@ -179,8 +139,12 @@ public class Player extends Entity {
         super.readInEntityData(data);
         this.health = ((PlayerData) data.typeData).health;
         this.maxHealth = ((PlayerData) data.typeData).maxHealth;
+        this.bulletCount = ((PlayerData) data.typeData).bulletCount;
+        this.maxBulletCount = ((PlayerData) data.typeData).maxBulletCount;
         this.lastSpikeDamage = ((PlayerData) data.typeData).lastSpikeDamage;
-        this.lastHealOnPlatform = ((PlayerData) data.typeData).lastHealOnPlatform;
+        this.lastPlatformHeal = ((PlayerData) data.typeData).lastHealOnPlatform;
+        this.isInvincible = ((PlayerData) data.typeData).isInvincible;
+        this.lastInvincibilityPickup = ((PlayerData) data.typeData).lastInvincibilityPickup;
     }
 
     @Override
@@ -192,7 +156,9 @@ public class Player extends Entity {
         playerData.bulletCount = bulletCount;
         playerData.maxBulletCount = maxBulletCount;
         playerData.lastSpikeDamage = lastSpikeDamage;
-        playerData.lastHealOnPlatform = lastHealOnPlatform;
+        playerData.lastHealOnPlatform = lastPlatformHeal;
+        playerData.isInvincible = isInvincible;
+        playerData.lastInvincibilityPickup = lastInvincibilityPickup;
         data.typeData = playerData;
         return data;
     }

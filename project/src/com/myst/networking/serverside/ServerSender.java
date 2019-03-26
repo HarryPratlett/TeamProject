@@ -37,15 +37,8 @@ public class ServerSender extends Thread {
 //        don't know why but it won't work without a thread.sleep()
                 Thread.sleep(1);
                     while (!clientQueue.isEmpty()) {
-//                        System.out.println("size: " + clientQueue.size());
+                        System.out.println("size: " + clientQueue.size());
                         Object msg = clientQueue.take();
-
-                        try {
-                            Message m = (Message) msg;
-                            if(m.header == Codes.ENTITY_UPDATE) {
-                                ArrayList<EntityData> dataArrayList = (ArrayList<EntityData>) m.data;
-                            }
-                        } catch(Exception e){}
 
                         client.writeObject(msg);
                         client.reset();

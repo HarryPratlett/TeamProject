@@ -9,6 +9,6 @@ public class PlayerData implements Serializable {
     public int maxBulletCount;
     public long lastSpikeDamage;
     public long lastHealOnPlatform;
+    public long lastInvincibilityPickup;
     public boolean isInvincible;
-    public long invincibilityTimer;
 }

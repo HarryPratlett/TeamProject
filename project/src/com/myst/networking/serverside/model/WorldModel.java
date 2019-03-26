@@ -70,6 +70,10 @@ public class WorldModel {
 //              item update code
                 if ((playerX - itemX < 0.5f) && (playerX - itemX > -0.5f)) {
                     if ((playerY - itemY < 0.5f) && (playerY - itemY > -0.5f)) {
+                        System.out.println("Health: " + playerSpecific.health);
+                        System.out.println("Bullets: " + playerSpecific.bulletCount);
+                        System.out.println("Invincibility is on: " + playerSpecific.isInvincible);
+
                         switch (itemData.type) {
                             case ITEM_APPLE:
                                 itemData.exists = false;
@@ -89,13 +93,15 @@ public class WorldModel {
                                 itemData.exists = false;
                                 itemSpecific.hidden = true;
                                 itemSpecific.isChanged = true;
-                                // TODO - make invincibility a thing
+                                playerSpecific.isInvincible = true;
+                                playerSpecific.lastInvincibilityPickup = System.currentTimeMillis();
                                 playSound(Audio.POTION, playerData.transform.pos);
                                 break;
                             case ITEM_SPIKES_HIDDEN:
                                 if (!itemSpecific.hidden) {
                                     itemSpecific.spikeTimer = System.currentTimeMillis();
                                     itemSpecific.hidden = true;
+                                    itemSpecific.isChanged = true;
                                     playSound(Audio.SPIKES, playerData.transform.pos);
                                 }
                                 break;
@@ -103,6 +109,7 @@ public class WorldModel {
                                 if (itemSpecific.hidden) {
                                     itemSpecific.spikeTimer = System.currentTimeMillis();
                                     itemSpecific.hidden = false;
+                                    itemSpecific.isChanged = true;
                                 } else {
                                     if (canTakeSpikeDamage(playerSpecific)) {
                                         setHealthOfPlayerData(playerSpecific, playerSpecific.health - 10);
@@ -110,6 +117,7 @@ public class WorldModel {
                                         playSound(Audio.HIT_BY_SPIKES, playerData.transform.pos);
                                     }
                                 }
+                                break;
                             case ITEM_BULLETS_SMALL:
                                 itemData.exists = false;
                                 itemSpecific.hidden = true;
@@ -130,14 +138,16 @@ public class WorldModel {
                                     playerSpecific.lastHealOnPlatform = System.currentTimeMillis();
 //                                    playSound(Audio.HIT_BY_SPIKES, playerData.transform.pos);
                                 }
+                            default:
+                                break;
                         }
-                        break;
                     }
                 }
 
 //              bullet collision code
             }
             for (EntityData bulletData : bulletsData) {
+
             }
         }
 
@@ -145,8 +155,16 @@ public class WorldModel {
             if (itemData.type == ITEM_SPIKES_REVEALED || itemData.type == ITEM_SPIKES_HIDDEN) {
                 ItemData itemSpecific = (ItemData) itemData.typeData;
                 if (System.currentTimeMillis() - itemSpecific.spikeTimer > 5000) {
-                    if (itemData.type == ITEM_SPIKES_HIDDEN) itemSpecific.hidden = false;
-                    else itemSpecific.hidden = true;
+                    if (itemData.type == ITEM_SPIKES_HIDDEN) {
+                        if(itemSpecific.hidden) {
+                            itemSpecific.hidden = false;
+                        }
+                    } else {
+                        if(!itemSpecific.hidden) {
+                            itemSpecific.hidden = true;
+                        }
+                    }
+                    itemSpecific.isChanged = true;
                     itemSpecific.spikeTimer = Long.MAX_VALUE;
                 }
             }
@@ -162,10 +180,15 @@ public class WorldModel {
     }
 
     public void setHealthOfPlayerData(PlayerData player, float health) {
+        if (System.currentTimeMillis() - player.lastInvincibilityPickup > 20000)
+            player.isInvincible = false;
+
         if (health < 0) health = 0;
         if (health > player.maxHealth) health = player.maxHealth;
 
-        player.health = health;
+        if(!player.isInvincible || health > player.health) {
+            player.health = health;
+        }
     }
 
     public void setBulletsOfPlayerData(PlayerData player, int bulletCount) {
@@ -247,15 +270,27 @@ public class WorldModel {
                     PlayerData playerData = (PlayerData) cEntityData.typeData;
                     ((PlayerData) entity.typeData).health = playerData.health;
                     ((PlayerData) entity.typeData).maxHealth = playerData.maxHealth;
+                    ((PlayerData) entity.typeData).bulletCount = playerData.bulletCount;
+                    ((PlayerData) entity.typeData).maxBulletCount = playerData.maxBulletCount;
                     ((PlayerData) entity.typeData).lastSpikeDamage = playerData.lastSpikeDamage;
+                    ((PlayerData) entity.typeData).lastHealOnPlatform = playerData.lastHealOnPlatform;
+                    ((PlayerData) entity.typeData).lastInvincibilityPickup = playerData.lastInvincibilityPickup;
+                    ((PlayerData) entity.typeData).isInvincible = playerData.isInvincible;
                     break;
                 case ITEM_SPIKES_HIDDEN:
                 case ITEM_SPIKES_REVEALED:
                 case ITEM_APPLE:
+                case ITEM_MED_KIT:
+                case ITEM_BULLETS_SMALL:
+                case ITEM_BULLETS_BIG:
+                case ITEM_INVINCIBILITY_POTION:
+                case ITEM_HEALING_PLATFORM:
                     ItemData itemData = (ItemData) cEntityData.typeData;
                     ((ItemData) entity.typeData).hidden = itemData.hidden;
                     ((ItemData) entity.typeData).lastSpikeDamage = itemData.lastSpikeDamage;
                     ((ItemData) entity.typeData).spikeTimer = itemData.spikeTimer;
+                    ((ItemData) entity.typeData).healingTimer = itemData.healingTimer;
+                    ((ItemData) entity.typeData).isChanged = itemData.isChanged;
                     break;
                 case BULLET:
                     BulletData bulletData = (BulletData) cEntityData.typeData;

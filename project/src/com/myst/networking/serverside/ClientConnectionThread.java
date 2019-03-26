@@ -91,7 +91,6 @@ public class ClientConnectionThread extends Thread {
             ServerReceiver serverReceiver = new ServerReceiver(clientID, fromClient, clientTable, serverSender, world);
 
 //              the ticker controls when the server sender sends out to the client
-            System.out.println();
             serverReceiver.start();
             ticker.addSender(serverSender);
 
