@@ -1,14 +1,10 @@
 package com.myst.world.map.generating;
 
 import java.awt.image.BufferedImage;
-//import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-
 import javax.imageio.ImageIO;
-
-//import javax.imageio.ImageIO;
 
 import com.myst.datatypes.TileCoords;
 import com.myst.rendering.Texture;
@@ -97,7 +93,7 @@ public class MapGenerator {
 	
 	
 	public Tile[][] generateMap(int width, int height) {
-		String path = "/Users/seongheehan/Documents/myst/project/assets/Tile_sheet/";
+		String path = "assets/Tile_sheet/";
 
 		Tile[][] map = new Tile[width][height];
 		for (int x = 0; x < width; x++) {
