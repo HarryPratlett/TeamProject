@@ -1,5 +1,6 @@
 package com.myst;
 
+import com.myst.AI.BotMain;
 import com.myst.GUI.GUI;
 import com.myst.GUI.Menu;
 import com.myst.GUI.MenuStates;
@@ -104,6 +105,8 @@ public class Main {
                         }
                         menu.ipAddress = myServer.IP;
                         menu.port = (myServer.port).toString();
+                        new BotMain(myServer.port).start();
+
                         state = ProgramState.MAIN_MENUS;
                         amHost = true;
 

@@ -133,6 +133,7 @@ public class ClientReceiver extends Thread {
                         case PLAYER:
                             ((Player) clientEntity).health = ((PlayerData) entity.typeData).health;
                             break;
+                            
                     }
                 }
                 else if (!entity.ownerID.equals(clientID)) {
