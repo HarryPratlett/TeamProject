@@ -30,6 +30,8 @@ public class GUI {
 
     public HashMap<Rectangle2D.Float, String> buttons = new HashMap<>();
     public HashMap<Rectangle2D.Float, String> settings_buttons = new HashMap<>();
+    public HashMap<Texture[], Model> models = new HashMap<>();
+
 
     private final float[] baseVertices = new float[] {
             -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
@@ -52,11 +54,12 @@ public class GUI {
     private GUIStates currentWindow;
     private Boolean settings_accessed;
     private Input input;
+    private Model model;
     private int volume;
     private int brightness;
-    private Texture background = new Texture("assets/main_menu/NighBg.png");
-    private Texture controlsTexture = new Texture("assets/Keyboard_asset.png");
-    private Texture menuTexture = new Texture("assets/settings_button.png");
+    private Texture[] background = {new Texture("assets/main_menu/NighBg.png")};
+    private Texture[] controlsTexture = {new Texture("assets/Keyboard_asset.png")};
+    private Texture[] menuTexture = {new Texture("assets/settings_button.png")};
     private Texture[] menuTextures = new Texture[]{
             new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
             new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
@@ -164,7 +167,13 @@ public class GUI {
         for (Texture t : menuTextures) {
             vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
-            Model model = new Model(vertices, textureDocks, indices);
+            if (models.get(menuTextures) == null) {
+                model = new Model(vertices, textureDocks, indices);
+                models.put(menuTextures, model);
+            }
+            else    {
+                model = models.get(menuTextures);
+            }
             renderImage(shader, t, 0f, y, new Matrix4f(), model);
             this.addButton(0 + vertices[0], y + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
             y += (-0.35f);
@@ -269,10 +278,16 @@ public class GUI {
 
         glClear(GL_COLOR_BUFFER_BIT);
         vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-        vertices = this.alterVertices(vertices, controlsTexture.getHeight(), controlsTexture.getWidth(), 0.0007, 0.0025);
-        Model model = new Model(vertices, textureDocks, indices);
+        vertices = this.alterVertices(vertices, controlsTexture[0].getHeight(), controlsTexture[0].getWidth(), 0.0007, 0.0025);
+        if (models.get(controlsTexture) == null) {
+            model = new Model(vertices, textureDocks, indices);
+            models.put(controlsTexture, model);
+        }
+        else    {
+            model = models.get(controlsTexture);
+        }
         Matrix4f scale = new Matrix4f();
-        this.renderImage(shader, controlsTexture, 0, 0, scale, model);
+        this.renderImage(shader, controlsTexture[0], 0, 0, scale, model);
     }
 
     /**
@@ -286,20 +301,40 @@ public class GUI {
         float y = 0;
 
         float[] titleVertices = Arrays.copyOf(baseVertices, baseVertices.length);
-        titleVertices = this.alterVertices(titleVertices, menuTexture.getHeight(), menuTexture.getWidth(), 0.002, 0.005);
-        Model titleModel = new Model(titleVertices, textureDocks, indices);
-        this.renderImage(shader, menuTexture, 0, 0.75f, scale, titleModel);
+        titleVertices = this.alterVertices(titleVertices, menuTexture[0].getHeight(), menuTexture[0].getWidth(), 0.002, 0.005);
+        if (models.get(menuTexture) == null) {
+            model = new Model(titleVertices, textureDocks, indices);
+            models.put(menuTexture, model);
+        }
+        else    {
+            model = models.get(menuTexture);
+        }
+        this.renderImage(shader, menuTexture[0], 0, 0.75f, scale, model);
+
+
         for (Texture t : settingsTextures)   {
             vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
-            Model model = new Model(vertices, textureDocks, indices);
+            if (models.get(settingsTextures) == null) {
+                model = new Model(vertices, textureDocks, indices);
+                models.put(settingsTextures, model);
+            } else  {
+                model = models.get(settingsTextures);
+            }
             this.renderImage(shader, t, -0.5f, y, scale, model);
             y -= -0.35f;
         }
+
+
         vertices = Arrays.copyOf(baseVertices, baseVertices.length);
         vertices = this.alterVertices(vertices, alterTextures[0].getWidth(), alterTextures[0].getHeight(), 0.002, 0.005);
-
-        Model model = new Model(vertices, textureDocks, indices);
+        if (models.get(alterTextures) ==  null) {
+            model = new Model(vertices, textureDocks, indices);
+            models.put(alterTextures, model);
+        }
+        else    {
+            model = models.get(alterTextures);
+        }
         this.renderImage(shader, alterTextures[0], 0f, 0.35f, scale, model);
         this.addButton(0 + vertices[0], 0.35f + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], alterTextures[0].getPath());
         this.renderImage(shader, alterTextures[1], 0.5f, 0.35f, scale, model);
@@ -311,6 +346,7 @@ public class GUI {
 
         for (Texture t: audioTextures)  {
             if (t.getPath().contains(Integer.toString(volume))) {
+
                 this.renderImage(shader, t, 0.25f, 0.35f, scale, model);
             }
             if (t.getPath().contains(Integer.toString(brightness))) {
@@ -354,8 +390,15 @@ public class GUI {
      */
     public void renderBackground(Shader shader)  {
         vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-        vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);
-        Model model = new Model(vertices, textureDocks, indices);
-        this.renderImage(shader, background, 0, 0, new Matrix4f(), model);
+        vertices = this.alterVertices(vertices, background[0].getHeight(), background[0].getWidth(), 0.001, 0.003);
+
+        if(models.get(background) == null) {
+            model = new Model(vertices, textureDocks, indices);
+            models.put(background, model);
+        }
+        else    {
+            model = models.get(background);
+        }
+        this.renderImage(shader, background[0], 0, 0, new Matrix4f(), model);
     }
 }

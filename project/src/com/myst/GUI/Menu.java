@@ -41,6 +41,7 @@ public class Menu {
     private HashMap<Rectangle2D.Float, String> multiplayerButtons = new HashMap<>();
     private HashMap<Rectangle2D.Float, String> hostGameButtons = new HashMap<>();
     private HashMap<Rectangle2D.Float, String> joinGameButtons = new HashMap<>();
+    private HashMap<Texture[], Model> models = new HashMap<>();
     private Window window;
     private Shader shader;
     private Input input;
@@ -53,8 +54,8 @@ public class Menu {
     public  String ipAddress;
     public  String port;
     private Texture[] logo = {new Texture("assets/myst_logo.png")};
-    private Texture dot = new Texture("assets/main_menu/typing/dot.png");
-    private Texture background = new Texture("assets/main_menu/NighBg0.jpg");
+    private Texture[] dot = {new Texture("assets/main_menu/typing/dot.png")};
+    private Texture[] background = {new Texture("assets/main_menu/NighBg0.jpg")};
     private Texture[] menuTextures = new Texture[]{
             new Texture("assets/main_menu/singleplayer_button.png"), new Texture("assets/main_menu/multiplayer_button.png"),
             new Texture("assets/main_menu/quit_button.png")};
@@ -95,7 +96,7 @@ public class Menu {
 
     /**
      * The main which runs the menu code, initialising OpenGL
-     * @param args
+     * @param args Main args
      */
     public static void main(String[] args) {
         Window.setCallbacks();
@@ -490,7 +491,13 @@ public class Menu {
         for (Texture t: textureArray)   {
             vertices = Arrays.copyOf(baseVertices, baseVertices.length);
             vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
-            model = new Model(vertices, textureDocks, indices);
+            if (models.get(textureArray) != null) {
+                model = models.get(textureArray);
+            }
+            else {
+                model = new Model(vertices, textureDocks, indices);
+                models.put(textureArray, model);
+            }
             renderImage(shader, t, x, yPos, new Matrix4f(), model);
             if(isButton) {
                 this.addButton(0 + vertices[0], yPos + vertices[1], vertices[3] - vertices[0], vertices[1] - vertices[7], t.getPath());
@@ -582,9 +589,15 @@ public class Menu {
 
             if (Character.toString(c).equals("."))   {
                 vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-                vertices = this.alterVertices(vertices, dot.getHeight(), dot.getWidth(), 0.005, 0.006);
-                model = new Model(vertices, textureDocks, indices);
-                this.renderImage(shader, dot, x, y, new Matrix4f(), model);
+                vertices = this.alterVertices(vertices, dot[0].getHeight(), dot[0].getWidth(), 0.005, 0.006);
+                if(models.get(dot) == null) {
+                    model = new Model(vertices, textureDocks, indices);
+                    models.put(dot, model);
+                }
+                else    {
+                    model = models.get(dot);
+                }
+                this.renderImage(shader, dot[0], x, y, new Matrix4f(), model);
             }
             else {
                 vertices = Arrays.copyOf(baseVertices, baseVertices.length);
@@ -600,9 +613,16 @@ public class Menu {
      * Renders the background of the menu
      */
     public void renderBackground()  {
+
         vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-        vertices = this.alterVertices(vertices, background.getHeight(), background.getWidth(), 0.001, 0.003);
-        model = new Model(vertices, textureDocks, indices);
-        this.renderImage(shader, background, 0, 0, new Matrix4f(), model);
+        vertices = this.alterVertices(vertices, background[0].getHeight(), background[0].getWidth(), 0.001, 0.003);
+        if (models.get(background) == null) {
+            model = new Model(vertices, textureDocks, indices);
+            models.put(background, model);
+        }
+        else    {
+            model = models.get(background);
+        }
+        this.renderImage(shader, background[0], 0, 0, new Matrix4f(), model);
     }
 }
