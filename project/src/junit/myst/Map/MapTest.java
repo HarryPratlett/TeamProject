@@ -1,4 +1,3 @@
-
 package junit.myst.Map;
 
 import static org.junit.Assert.*;
@@ -21,7 +20,7 @@ public class MapGenTest {
 	@Test
 	public void test() {
 		 String[] textures = new String[20];
-	        String path = ("/assets/tileset/");
+	        String path = ("assets/tileset/");
 	        textures[0] = path + "tile_01";
 	        textures[1] = path + "tile_02";
 	        textures[2] = path + "tile_03";
@@ -54,7 +53,7 @@ public class MapGenTest {
 	@Test
 	public void readcolour() {
 		String[] textures = new String[20];
-        String path = ("/Users/seongheehan/Documents/myst/project/assets/tileset/");
+        String path = ("assets/tileset/");
         textures[0] = path + "tile_01";
         textures[1] = path + "tile_02";
         textures[2] = path + "tile_03";
