@@ -81,13 +81,16 @@ public class Server extends Thread{
 
         try {
             serverSocket = new ServerSocket(PORT);
+            IP = Inet6Address.getLocalHost().getHostAddress();
+            System.out.println(IP);
+
         } catch (IOException e) {
             Report.errorAndGiveUp("Couldn't listen on port " + PORT);
         }
         System.out.println("i create the socket");
 
         port = serverSocket.getLocalPort();
-        IP = "1000";
+
 
         foundIPAndPort = true;
 
@@ -105,8 +108,8 @@ public class Server extends Thread{
         try {
             // We loop for ever, as servers usually do.
             while (true) {
-                // Listen to the socket, accepting connections from new clients:
                 Socket socket = s.accept(); // Matches AAAAA in ClientConnection
+                // Listen to the socket, accepting connections from new clients:
                 // By creating another thread to deal with client connection it allows
                 // multiple users to connect at once
                 new ClientConnectionThread(socket, clientTable, usedIDs, IDKey, world, ticker).start();

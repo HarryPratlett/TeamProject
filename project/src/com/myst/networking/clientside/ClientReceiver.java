@@ -6,10 +6,7 @@ import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.serverside.PlayAudioData;
-import com.myst.world.entities.Enemy;
-import com.myst.world.entities.Entity;
-import com.myst.world.entities.Player;
-import com.myst.world.entities.PlayerData;
+import com.myst.world.entities.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -131,7 +128,11 @@ public class ClientReceiver extends Thread {
                     Entity clientEntity = entities.get(clientID).get(entity.localID);
                     switch(clientEntity.getType()){
                         case PLAYER:
-                            ((Player) clientEntity).health = ((PlayerData) entity.typeData).health;
+                            try {
+                                ((Player) clientEntity).health = ((PlayerData) entity.typeData).health;
+                            } catch (ClassCastException e){
+                                ((Bot) clientEntity).health = ((PlayerData) entity.typeData).health;
+                            }
                             break;
                             
                     }

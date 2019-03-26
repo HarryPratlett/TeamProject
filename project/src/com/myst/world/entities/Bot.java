@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.myst.networking.EntityData;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -24,13 +25,20 @@ public class Bot extends Entity {
     private ArrayList<Vector3f> path;
     private ArrayList<Line> bullets;
     private Random randInt = null;
+    public float health = 50;
+    private float maxHealth = 50;
+    private long lastSpikeDamage = 0;
+
 
     public Bot(Vector2f boundingBoxCoords, ArrayList<Line> bullets) {
         super(boundingBoxCoords);
         type = EntityType.PLAYER;
         this.visibleToEnemy = true;
         this.bullets = bullets;
+        this.exists = true;
+
     }
+
 
     public void initialiseAI(World world) {
         intelligence = new AI(transform, world);
@@ -127,6 +135,16 @@ public class Bot extends Entity {
 
     public ArrayList<Vector3f> getPath(){
         return path;
+    }
+    @Override
+    public EntityData getData() {
+        EntityData data = super.getData();
+        PlayerData playerData = new PlayerData();
+        playerData.health = health;
+        playerData.maxHealth = maxHealth;
+        playerData.lastSpikeDamage = lastSpikeDamage;
+        data.typeData = playerData;
+        return data;
     }
 
     @Override

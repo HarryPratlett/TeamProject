@@ -75,7 +75,7 @@ public class BotMain extends Thread{
         bot.owner = clientID;
         IDCounter++;
 
-        bot.transform.pos.add(2, -2, 1);
+        bot.transform.pos.add(10, -2, 1);
 
         bot.initialiseAI(world);
         System.out.println("trying to find a path");
@@ -106,7 +106,6 @@ public class BotMain extends Thread{
             debugCurrentTime = Timer.getTime();
             double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
             debugLastTime = debugCurrentTime;
-
             bot.updateBot((float) timeSinceLastUpdate, world, entities);
             botBullets.clear();
 
