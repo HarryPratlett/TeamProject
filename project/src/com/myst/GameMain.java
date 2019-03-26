@@ -1,4 +1,6 @@
-
+/**
+ * @author Aled Jackson, Harry Pratlett, Seonghee Han, Yue Xu, Killu-Smilla Palk, Brendan Kedwards
+ */
 package com.myst;
 
 import com.myst.GUI.GUI;
@@ -13,7 +15,6 @@ import com.myst.world.World;
 import com.myst.world.collisions.Bullet;
 import com.myst.world.collisions.Line;
 import com.myst.world.entities.*;
-import com.myst.world.lighting.Darkness;
 import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
@@ -32,6 +33,9 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * Runs the game
+ */
 public class GameMain {
 
     static int IDCounter = 0;
@@ -128,7 +132,7 @@ public class GameMain {
         camera.bindPlayer(player);
 
         GUI gui = new GUI(window, window.getInput());
-        Overlay overlay = new Overlay(window, window.getInput(), (int) player.health, 0);
+        //Overlay overlay = new Overlay(window, window.getInput(), (int) player.health, 0);
 
 
         Audio.getAudio().initInput(window.getInput());
@@ -173,7 +177,7 @@ public class GameMain {
 
 
                 player.update((float) timeSinceLastUpdate, window, camera, world, entities.get("items"));
-                overlay.update((int)player.health);
+                //overlay.update((int)player.health);
                 gui.update();
                 calculateBullets(myEntities, playerBullets, map);
                 playerBullets.clear();
@@ -203,7 +207,7 @@ public class GameMain {
                 createAndRender(toRender, entities);
 
                 gui.render(menuShader);
-                overlay.render(menuShader);
+                //overlay.render(menuShader);
 
 
                 window.swapBuffers();
@@ -219,6 +223,12 @@ public class GameMain {
         System.exit(1);
     }
 
+    /**
+     * Calculates bullet positions/directions
+     * @param myEntities List of entities
+     * @param bullets Bullet direction/line
+     * @param map Map which entities are on
+     */
     public static void calculateBullets(ConcurrentHashMap<Integer, Entity> myEntities, ArrayList<Line> bullets, Tile[][] map) {
         for (Line bullet : bullets) {
             Vector2f bulletVec = bullet.vector;
@@ -310,6 +320,13 @@ public class GameMain {
         }
     }
 
+    /**
+     * Calculates where the lighting should be
+     * @param entities List of entities on the map
+     * @param camera The camera for the user
+     * @param environmentShader The shader which provides the torch effect
+     * @param window The window which this is displayed in
+     */
     public static void calculateLighting(ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities, Camera camera, Shader environmentShader, Window window) {
         float[] lightPositions = new float[16];
         int[] lightsOn = new int[8];
@@ -347,6 +364,11 @@ public class GameMain {
         environmentShader.setUniform("winWidth", window.getWidth());
     }//    make this render all the objects in the hashmap then set the hasmap to null
 
+    /**
+     * Renders everything
+     * @param items The items that are on the map e.g. health, invincibility
+     * @param entities The entities which are on the map
+     */
     public static void createAndRender(ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> items, ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities) {
         for (String owner : items.keySet()) {
             for (Integer id : items.get(owner).keySet()) {

@@ -1,7 +1,20 @@
+/**
+ * @author Aled Jackson
+ */
 package com.myst.helper;
 
+/**
+ * Flattens a 2D array into a 1D array for openGL
+ */
 public class Flatten {
 
+    /**
+     * Flattens a 2D array into a 1D array for OpenGL
+     * @param array 2D input array
+     * @param outputArray 1D output array
+     * @param <E> Type of the array
+     * @return The 1D array returned of type E
+     */
     public static < E > E[]  flatten(E[][] array, E[] outputArray){
         int xLength = array.length;
         int yLength = array[0].length;

@@ -1,3 +1,6 @@
+/**
+ * @author Killu-Smilla Palk
+ */
 package com.myst.audio;
 import com.myst.input.Input;
 import com.myst.world.entities.Player;
@@ -9,6 +12,9 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Creates the audio for the player
+ */
 public class Audio {
 
     Vector3f playerLocation;

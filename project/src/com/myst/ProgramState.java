@@ -1,5 +1,11 @@
+/**
+ * @author Aled Jackson, Harry Pratlett
+ */
 package com.myst;
 
+/**
+ * Possible programs states for the main menu
+ */
 public enum ProgramState {
     MAIN_MENUS,
     IN_GAME,

@@ -1,4 +1,8 @@
+/**
+ * @author Aled Jackson
+ */
 package com.myst.datatypes;
+
 
 public class TileCoords {
     public int x;
@@ -13,13 +17,16 @@ public class TileCoords {
 //        y
 //
 
-
-
-
+    /**
+     * Constructor for the tile co-ordinates
+     * @param x X co-ordinate
+     * @param y Y co-ordinate
+     */
     public TileCoords(int x, int y){
         this.x = x;
         this.y = y;
     }
+
 
     public WorldCoords asWorldCoords(float tileSize){
         return new WorldCoords(-x * tileSize, -y * tileSize );

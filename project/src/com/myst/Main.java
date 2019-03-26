@@ -1,3 +1,6 @@
+/**
+ * @author Harry Pratlett, Aled Jackson, Seonghee Han, Brendan Kedwards, Yue Xu, Killu-Smilla Palk
+ */
 package com.myst;
 
 import com.myst.GUI.GUI;
