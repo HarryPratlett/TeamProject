@@ -32,7 +32,6 @@ public class GUI {
     public HashMap<Rectangle2D.Float, String> settings_buttons = new HashMap<>();
     public HashMap<Texture[], Model> models = new HashMap<>();
 
-
     private final float[] baseVertices = new float[] {
             -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
             -1f, -0.5f, 0f/*3*/
@@ -47,6 +46,7 @@ public class GUI {
             0,1,2,
             2,3,0
     };
+
 
     private float[] vertices;
 

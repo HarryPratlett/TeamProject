@@ -132,7 +132,7 @@ public class GameMain {
         camera.bindPlayer(player);
 
         GUI gui = new GUI(window, window.getInput());
-        //Overlay overlay = new Overlay(window, window.getInput(), (int) player.health, 0);
+        Overlay overlay = new Overlay(50, 50);
 
 
         Audio.getAudio().initInput(window.getInput());
@@ -177,7 +177,7 @@ public class GameMain {
 
 
                 player.update((float) timeSinceLastUpdate, window, camera, world, entities.get("items"));
-                //overlay.update((int)player.health);
+                overlay.update(50);
                 gui.update();
                 calculateBullets(myEntities, playerBullets, map);
                 playerBullets.clear();
@@ -207,7 +207,7 @@ public class GameMain {
                 createAndRender(toRender, entities);
 
                 gui.render(menuShader);
-                //overlay.render(menuShader);
+                overlay.render(menuShader);
 
 
                 window.swapBuffers();
