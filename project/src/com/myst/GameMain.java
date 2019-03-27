@@ -44,7 +44,7 @@ public class GameMain {
 
     public static void main(Window window, Tile[][] map,
                             ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities,
-                            ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender, String clientID1) {
+                            ConcurrentHashMap<String, ConcurrentHashMap<Integer, EntityData>> toRender, String clientID1, Vector2f startLocation) {
 
         clientID = clientID1;
 
@@ -100,7 +100,7 @@ public class GameMain {
         player.lightSource = true;
 
 
-        player.transform.pos.add(new Vector3f(1, -1, 0));
+        player.transform.pos.add(new Vector3f(startLocation.x, startLocation.y, 0));
 
         player.localID = IDCounter;
         player.owner = clientID;
@@ -175,7 +175,6 @@ public class GameMain {
 
 
                 player.update((float) timeSinceLastUpdate, window, camera, world, entities.get("items"));
-                //overlay.update((int)player.health);
                 gui.update();
                 calculateBullets(myEntities, playerBullets, map);
                 playerBullets.clear();

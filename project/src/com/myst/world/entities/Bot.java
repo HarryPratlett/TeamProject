@@ -57,15 +57,15 @@ public class Bot extends Entity {
         this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
         int random = (int) (Math.random() * 3000);
 
-        if(random == 1500){
-            if(this.lightDistance == 0.25f){
-                this.lightDistance = 2.5f;
-                this.visibleToEnemy = true;
-            }else{
-                this.lightDistance = 0.25f;
-                this.visibleToEnemy = false;
-            }
-        }
+//        if(random == 1500){
+//            if(this.lightDistance == 0.25f){
+//                this.lightDistance = 2.5f;
+//                this.visibleToEnemy = true;
+//            }else{
+//                this.lightDistance = 0.25f;
+//                this.visibleToEnemy = false;
+//            }
+//        }
 
         AABB[] boxes = new AABB[25];
         for (int i = 0; i < 5; i++) {

@@ -108,7 +108,7 @@ public class Main {
                         }
                         menu.ipAddress = myServer.IP;
                         menu.port = (myServer.port).toString();
-                        new BotMain(myServer.port).start();
+//                        new BotMain(myServer.port).start();
 
                         state = ProgramState.MAIN_MENUS;
                         amHost = true;
@@ -129,10 +129,15 @@ public class Main {
                         state = ProgramState.IN_GAME;
                         break;
                     case IN_GAME:
-                        GameMain.main(window,connection.map,entities,toRender,clientID);
+                        GameMain.main(window,connection.map,entities,toRender,clientID,connection.startLoc);
                         state = ProgramState.MAIN_MENUS;
                         menu.currentWindow = MenuStates.MAIN_MENU;
                         break;
+                }
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
 
             }

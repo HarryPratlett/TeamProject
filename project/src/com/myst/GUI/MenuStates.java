@@ -12,5 +12,6 @@ public enum MenuStates {
     MULTIPLAYER,
     HOST_GAME,
     JOIN_GAME,
-    ENTERING
+    ENTERING,
+
 }

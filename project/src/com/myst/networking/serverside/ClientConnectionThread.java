@@ -88,10 +88,11 @@ public class ClientConnectionThread extends Thread {
 
             toClient.writeObject(world.map);
 
+            int playerCountAtStart = playerCount;
             while(playerCount < 2){
                 Thread.sleep(100);
             }
-            toClient.writeObject(new Message(Codes.GAME_STARTED,null));
+            toClient.writeObject(new Message(Codes.GAME_STARTED,(int) playerCountAtStart ));
 
 
 

@@ -20,6 +20,7 @@ import com.myst.networking.Message;
 import com.myst.networking.Report;
 import com.myst.world.entities.Entity;
 import com.myst.world.map.rendering.Tile;
+import org.joml.Vector2f;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -38,6 +39,7 @@ public class ClientConnection extends Thread{
     private ObjectOutputStream toServer;
     private ObjectInputStream fromServer;
     private ClientReceiver receiver;
+    public  Vector2f startLoc = new Vector2f();
     private String clientID;
     public Tile[][] map;
 
@@ -75,7 +77,13 @@ public class ClientConnection extends Thread{
             }
 
             map = (Tile[][]) fromServer.readObject();
-            fromServer.readObject();
+            Message msg = (Message) fromServer.readObject();
+            startLoc.x = ((((int) msg.data) % 2) * 97) + 1;
+            if((int) msg.data == 3 || (int) msg.data == 4){
+                startLoc.y = -99;
+            } else{
+                startLoc.y = -1;
+            }
 
             ClientSender sender = new ClientSender(toServer, clientqueue);
             receiver = new ClientReceiver(fromServer, sender, this.entities, toRender, clientID);
