@@ -17,6 +17,7 @@ public class ServerSender extends Thread {
     private String clientID;
     private WorldModel world;
     private boolean updateClient;
+    private boolean end = false;
 
     public ServerSender(BlockingQueue<Object> q, ObjectOutputStream c, String clientID, WorldModel world) {
         clientQueue = q;
@@ -31,7 +32,7 @@ public class ServerSender extends Thread {
     @Override
     public void run() {
         try {
-            while (true) {
+            while (!end) {
 //        don't know why but it won't work without a thread.sleep()
                 Thread.sleep(1);
                 if (updateClient) {
@@ -63,6 +64,12 @@ public class ServerSender extends Thread {
     public void addMessage(Message message) {
         clientQueue.add(message);
         this.updateClient = true;
+    }
+
+    public void end(){end = true;}
+
+    public void endGame(){
+        clientQueue.add(new Message(Codes.GAME_ENDED,null));
     }
 }
 

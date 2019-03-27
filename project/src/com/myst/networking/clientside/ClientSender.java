@@ -14,6 +14,7 @@ public class ClientSender extends Thread {
     private ObjectOutputStream toServer;
     private BlockingQueue<Object> queue;
     private boolean sendQueue;
+    public boolean endMe = false;
 
     public ClientSender(ObjectOutputStream toServer, BlockingQueue<Object> q){
         this.toServer = toServer;
@@ -25,7 +26,7 @@ public class ClientSender extends Thread {
     @Override
     public void run(){
         try {
-            while(true) {
+            while(!endMe) {
 //                don't know why I have to have a thread.sleep in here but it won't work without
 //                due to concurrency issues, needs refactoring
                 Thread.sleep(1);
@@ -43,6 +44,13 @@ public class ClientSender extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("im ending");
+        try {
+            toServer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void addToQueue(Object object){

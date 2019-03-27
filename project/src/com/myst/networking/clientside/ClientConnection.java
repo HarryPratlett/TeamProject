@@ -75,6 +75,7 @@ public class ClientConnection extends Thread{
             }
 
             map = (Tile[][]) fromServer.readObject();
+            fromServer.readObject();
 
             ClientSender sender = new ClientSender(toServer, clientqueue);
             receiver = new ClientReceiver(fromServer, sender, this.entities, toRender, clientID);

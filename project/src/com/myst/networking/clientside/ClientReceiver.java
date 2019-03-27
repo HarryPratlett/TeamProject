@@ -1,5 +1,6 @@
 package com.myst.networking.clientside;
 
+import com.myst.GameMain;
 import com.myst.audio.Audio;
 import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
@@ -22,7 +23,7 @@ public class ClientReceiver extends Thread {
     private ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities;
     private ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender;
     private String clientID;
-
+    private boolean endMe = false;
 //    convert entity[] into hash map potentially currently the arrays indexes corresponds to the entity's ID
     public ClientReceiver(ObjectInputStream fromServer,
                           ClientSender toServer,
@@ -38,7 +39,7 @@ public class ClientReceiver extends Thread {
 
     @Override
     public void run(){
-        while(true){
+        while(!endMe){
             try {
                 Message msg = (Message) fromServer.readObject();
                 switch(msg.header){
@@ -54,6 +55,10 @@ public class ClientReceiver extends Thread {
                         break;
                     case PLAY_AUDIO:
                         playAudio((PlayAudioData) msg.data);
+                    case GAME_ENDED:
+                        System.out.println("trying to end game");
+                        endMe = true;
+                        GameMain.endOfGame = true;
                     default:
                         break;
                 }
@@ -64,6 +69,13 @@ public class ClientReceiver extends Thread {
                 e.printStackTrace();
             }
         }
+        toServer.endMe = true;
+        try {
+            fromServer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Client receiver ended");
     }
 
     public void playAudio(PlayAudioData playAudioData) {

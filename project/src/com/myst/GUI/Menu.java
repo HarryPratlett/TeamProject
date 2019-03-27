@@ -46,7 +46,7 @@ public class Menu {
     private Shader shader;
     private Input input;
     private Model model;
-    private MenuStates currentWindow;
+    public MenuStates currentWindow;
     private Boolean multiplayerAccessed;
     private Boolean joinGameAccessed;
     private Boolean hostGameAccessed;

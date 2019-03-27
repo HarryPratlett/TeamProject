@@ -28,6 +28,8 @@ public class WorldModel {
     private ArrayList<EntityData> bulletsData;
     private int entityCount;
     public Tile[][] map;
+    public int playersAlive = 0;
+    public int players = 0;
 
     private ArrayList<ServerSender> senders;
 
@@ -54,11 +56,17 @@ public class WorldModel {
         playersData = getPlayers();
         itemsData = getItems();
         bulletsData = getBullets();
+        int alivePlayers = 0;
+        int players = 0;
 
         for (EntityData playerData : playersData) {
+            players++;
             float playerX = playerData.transform.pos.x;
             float playerY = playerData.transform.pos.y;
             PlayerData playerSpecific = (PlayerData) playerData.typeData;
+            if (playerSpecific.health > 0){
+                alivePlayers++;
+            }
 
             for (EntityData itemData : itemsData) {
                 ItemData itemSpecific = (ItemData) itemData.typeData;
@@ -132,6 +140,8 @@ public class WorldModel {
                 }
             }
         }
+        this.playersAlive = alivePlayers;
+        this.players = players;
     }
 
     public boolean canTakeSpikeDamage(PlayerData player) {
@@ -192,7 +202,6 @@ public class WorldModel {
         return itemsData;
     }
 
-
     public void updateWorld(EntityData entity) {
         ArrayList<EntityData> clientEntities = entities.get(entity.ownerID);
 
@@ -241,6 +250,7 @@ public class WorldModel {
     public void addClient(String clientID) {
         entities.put(clientID, new ArrayList<>());
     }
+
 
     //    simply returns all the data stored by the world model in a form for networking to send
     public ArrayList<EntityData> getWorldData() {

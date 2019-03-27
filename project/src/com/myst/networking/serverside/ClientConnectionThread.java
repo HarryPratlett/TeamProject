@@ -25,6 +25,7 @@ public class ClientConnectionThread extends Thread {
     private Object key;
     private WorldModel world;
     private TickManager ticker;
+    private static int playerCount=0;
 
     public ClientConnectionThread(Socket _socket, ClientTable _clientTable, ArrayList<String> usedIDs, Object key, WorldModel world, TickManager ticker) {
         this.socket = _socket;
@@ -77,12 +78,26 @@ public class ClientConnectionThread extends Thread {
                     clientID = requestID;
                     usedIDs.add(clientID);
                     toClient.writeObject(new Message(Codes.SUCCESS, null));
+                    playerCount++;
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
+
+
             toClient.writeObject(world.map);
+
+            while(playerCount < 2){
+                Thread.sleep(100);
+            }
+            toClient.writeObject(new Message(Codes.GAME_STARTED,null));
+
+
+
+//            I'm now adding a client
+
+
 
             System.out.println(clientID);
 
@@ -105,6 +120,8 @@ public class ClientConnectionThread extends Thread {
             e.printStackTrace();
             // A more sophisticated approach could try to establish a new
             // connection. But this is beyond the scope of this simple exercise.
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

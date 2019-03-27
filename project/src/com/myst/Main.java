@@ -5,6 +5,7 @@ package com.myst;
 
 import com.myst.GUI.GUI;
 import com.myst.GUI.Menu;
+import com.myst.GUI.MenuStates;
 import com.myst.helper.Timer;
 import com.myst.networking.EntityData;
 import com.myst.networking.clientside.ClientConnection;
@@ -65,6 +66,9 @@ public class Main {
 
         double frame_time = 0;
         int frames = 0;
+        String clientID = String.valueOf(Math.random());
+
+        boolean amHost = false;
 
         double debugCurrentTime;
         double debugLastTime = Timer.getTime();
@@ -77,6 +81,7 @@ public class Main {
             unprocessed += deltaTime;
             frame_time += deltaTime;
 
+            Server myServer = null;
             while (unprocessed >= frame_cap) {
                 unprocessed -= frame_cap;
                 renderFrame = true;
@@ -84,7 +89,7 @@ public class Main {
                 double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
                 debugLastTime = debugCurrentTime;
                 window.update();
-                Server myServer = null;
+
 
                 switch(state){
                     case MAIN_MENUS:
@@ -93,26 +98,37 @@ public class Main {
                     case START_SERVER:
                         myServer = new Server();
                         myServer.start();
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                        while(!myServer.foundIPAndPort) {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                         menu.ipAddress = myServer.IP;
                         menu.port = (myServer.port).toString();
                         state = ProgramState.MAIN_MENUS;
+                        amHost = true;
+
                         break;
                     case SWITCH_TO_GAME_FROM_MENU:
-                        String server = menu.ipAddress + ":" + menu.port;
                         entities = new ConcurrentHashMap<>();
                         toRender = new ConcurrentHashMap<>();
 
-                        connection = new ClientConnection(entities,toRender,menu.ipAddress,Integer.parseInt(menu.port), "MYID");
+                        if(amHost){
+                            connection = new ClientConnection(entities,toRender,"127.0.0.1",Integer.parseInt(menu.port), clientID);
+                        } else{
+                            connection = new ClientConnection(entities,toRender,menu.ipAddress,Integer.parseInt(menu.port), clientID);
+                        }
+
+
                         connection.run();
                         state = ProgramState.IN_GAME;
                         break;
                     case IN_GAME:
-                        GameMain.main(window,connection.map,entities,toRender,"MYID");
+                        GameMain.main(window,connection.map,entities,toRender,clientID);
+                        state = ProgramState.MAIN_MENUS;
+                        menu.currentWindow = MenuStates.MAIN_MENU;
                         break;
                 }
 
@@ -137,9 +153,8 @@ public class Main {
                 frames += 1;
             }
         }
-
         glfwTerminate();
-        System.exit(1);
+
 
     }
     public static ProgramState updateMenu(Menu menu){
