@@ -44,10 +44,10 @@ public class MapGenTest {
 
 	        Tile[][] map = new MapGenerator(textures).generateMap(100, 100);
 	        Tile[][] test = null;
-	        
-	     
+
+
 		assertTrue(!Arrays.equals(map,test));
-		
+
 
 	}
 	@Test
@@ -84,7 +84,7 @@ public class MapGenTest {
 			int preset = (int) Math.floor(Math.random() * 4);
 			System.out.println(preset);
 			String subpath = null;
-	
+
 			switch (preset) {
 			case 0:
 				subpath = "brick/";
@@ -134,7 +134,7 @@ public class MapGenTest {
 				for (int x = 1; x < 33; x++) {
 
 					int red = (colourTileSheet[(x - 1) + (y - 1) * 32] >> 16) & 0xFF;
-				
+
 					assertTrue(red==8);
 					assertTrue(red==219);
 					assertTrue(red==227);
@@ -143,9 +143,9 @@ public class MapGenTest {
 					assertTrue(red==28);
 					assertTrue(red==1);
 					assertTrue(red==88);
-					
-					
-				
+
+
+
 
 					//Maze water object
 					//R:8 G:26 B:253
@@ -201,7 +201,7 @@ public class MapGenTest {
 
 			e.printStackTrace();
 		}
-        
+
 	}
 
 }
