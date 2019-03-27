@@ -141,6 +141,9 @@ public class GameMain {
 //        Item item = new Item();
 //        item.transform.pos.add(1, -2, 0);
 //        myEntities.put(44, item);
+        overlay.render(menuShader);
+
+        boolean renderOverlay = false;
 
         while (!window.shouldClose() && !endOfGame) {
 
@@ -185,6 +188,7 @@ public class GameMain {
                 System.out.println(frames);
                 System.out.println(player.health);
                 System.out.println(endOfGame);
+                renderOverlay = true;
                 frame_time = 0;
                 frames = 0;
             }
@@ -206,8 +210,8 @@ public class GameMain {
 
                 createAndRender(toRender, entities);
 
-                gui.render(menuShader);
-                overlay.render(menuShader);
+                if(renderOverlay) overlay.render(menuShader);
+
 
 
                 window.swapBuffers();

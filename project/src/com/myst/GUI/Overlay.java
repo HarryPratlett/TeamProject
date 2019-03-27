@@ -34,7 +34,7 @@ public class Overlay {
             new Texture("assets/main_menu/typing/8.png"), new Texture("assets/main_menu/typing/9.png"),
     };
 
-    private Model model;
+    private Model model = new Model(baseVertices,textureDocks,indices);
     private float[] vertices;
     private int health;
     private int ammo;
@@ -49,6 +49,7 @@ public class Overlay {
         String strHealth = Integer.toString(health);
         String strAmmo = Integer.toString(ammo);
         Texture t;
+
         for (int i = 0; i < strHealth.length(); i++) {
             t = numberTextures[Integer.parseInt(strHealth.substring(i, i + 1))];
             vertices = Arrays.copyOf(baseVertices, baseVertices.length);
@@ -64,7 +65,7 @@ public class Overlay {
         this.health = newHealth;
     }
 
-    public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
+    public static void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
         Matrix4f target = new Matrix4f();
