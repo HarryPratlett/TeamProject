@@ -1,6 +1,3 @@
-/**
- * @author Harry Pratlett
- */
 package com.myst.GUI;
 
 import com.myst.input.Input;
@@ -14,12 +11,6 @@ import org.joml.Vector3f;
 import java.util.Arrays;
 
 public class Overlay {
-    private int health;
-    private int ammo;
-
-    private Window window;
-    private Input input;
-
     private final float[] baseVertices = new float[] {
             -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
             -1f, -0.5f, 0f/*3*/
@@ -35,22 +26,6 @@ public class Overlay {
             2,3,0
     };
 
-    /**
-     * Default constructor that takes the window its an overlay for, the input for that window and default values for health and ammo
-     * @param window Window that the overlay is on
-     * @param input Input listener for that window
-     * @param health Default health value
-     * @param ammo Default ammo value
-     */
-    public Overlay(Window window, Input input, int health, int ammo)    {
-        this.window = window;
-        this.health = health;
-        this.ammo = ammo;
-        this.input = input;
-
-
-    }
-
     private Texture[] numberTextures = new Texture[]{
             new Texture("assets/main_menu/typing/0.png"), new Texture("assets/main_menu/typing/1.png"),
             new Texture("assets/main_menu/typing/2.png"), new Texture("assets/main_menu/typing/3.png"),
@@ -59,50 +34,38 @@ public class Overlay {
             new Texture("assets/main_menu/typing/8.png"), new Texture("assets/main_menu/typing/9.png"),
     };
 
-    /**
-     * Renders the ammo and health overlays
-     * @param shader The shader used to render them
-     */
-    public void render(Shader shader)    {
-        String health = Integer.toString(this.health);
-        String ammo = Integer.toString(this.ammo);
-        float xHealth = 0.5f;
-        float xAmmo = 0.5f;
+    private Model model = new Model(baseVertices,textureDocks,indices);
+    private float[] vertices;
+    private int health;
+    private int ammo;
 
-        for(int i = 0; i < health.length(); i++)  {
-            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-            vertices = this.alterVertices(vertices, new Texture("assets/main_menu/typing/0.png").getHeight(), numberTextures[Integer.valueOf(health.substring(i, i+1))].getWidth(), 0.002, 0.005);
-            Model model = new Model(vertices, textureDocks, indices);
-            this.renderImage(shader, new Texture("assets/main_menu/typing/0.png"), xHealth, 0.9f, new Matrix4f(), model);
-//            xHealth += 0.1f;
+    public Overlay(int initialHealth, int initialAmmo)    {
+        this.health = initialHealth;
+        this.ammo = initialAmmo;
+    }
+
+    public void render(Shader shader) {
+        float xHealth = 0.55f;
+        String strHealth = Integer.toString(health);
+        String strAmmo = Integer.toString(ammo);
+        Texture t;
+
+        for (int i = 0; i < strHealth.length(); i++) {
+            t = numberTextures[Integer.parseInt(strHealth.substring(i, i + 1))];
+            vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+            vertices = this.alterVertices(vertices, t.getHeight(), t.getWidth(), 0.002, 0.005);
+            model = new Model(vertices, textureDocks, indices);
+            renderImage(shader, t, xHealth, 0.55f, new Matrix4f(), model);
+            xHealth += 0.1f;
         }
-//        for(int i = 0; i < ammo.length(); i++)   {
-//            float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-//            vertices = this.alterVertices(vertices, numberTextures[Integer.valueOf(health.substring(i, i+1))].getHeight(), numberTextures[Integer.valueOf(health.substring(i, i+1))].getWidth(), 0.002, 0.005);
-//            Model model = new Model(vertices, textureDocks, indices);
-//            this.renderImage(shader, numberTextures[Integer.valueOf(ammo.substring(i, i+1))], xAmmo, 0.75f, new Matrix4f(), model);
-//            xAmmo += 0.1f;
-//        }
+
     }
 
-    /**
-     * Updates the players health and ammo
-     * @param playerHealth The updated health
-     */
-    public void update(int playerHealth)    {
-        this.health = playerHealth;
+    public void update(int newHealth)  {
+        this.health = newHealth;
     }
 
-    /**
-     * Renders a given image on the screen
-     * @param shader Shader used to render the image
-     * @param texture Texture that will be rendered
-     * @param x X co-ordinate of texture
-     * @param y Y co-ordinate of texture
-     * @param scale Scale of image
-     * @param model Model of the image that is used to render the image
-     */
-    public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
+    public static void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
         Matrix4f target = new Matrix4f();

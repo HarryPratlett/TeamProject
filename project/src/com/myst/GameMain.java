@@ -147,7 +147,7 @@ public class GameMain {
         camera.bindPlayer(player);
 
         GUI gui = new GUI(window, window.getInput());
-        //Overlay overlay = new Overlay(window, window.getInput(), (int) player.health, 0);
+        Overlay overlay = new Overlay((int) player.health, 0);
 
 
         Audio.getAudio().initInput(window.getInput());
@@ -159,6 +159,7 @@ public class GameMain {
 //        item.transform.pos.add(1, -2, 0);
 //        myEntities.put(44, item);
 
+        boolean renderOverlay = false;
         while (!window.shouldClose() && !endOfGame) {
 
             renderFrame = false;
@@ -169,6 +170,7 @@ public class GameMain {
 
             unprocessed += deltaTime;
             frame_time += deltaTime;
+
 
 
 
@@ -193,6 +195,7 @@ public class GameMain {
 
                 player.update((float) timeSinceLastUpdate, window, camera, world, entities.get("items"));
                 gui.update();
+                overlay.update((int)player.getHealth());
                 calculateBullets(myEntities, playerBullets, map);
                 playerBullets.clear();
             }
@@ -201,6 +204,7 @@ public class GameMain {
                 System.out.println(frames);
                 System.out.println(player.health);
                 System.out.println(endOfGame);
+                renderOverlay = true;
                 frame_time = 0;
                 frames = 0;
             }
@@ -223,7 +227,7 @@ public class GameMain {
                 createAndRender(toRender, entities);
 
                 gui.render(menuShader);
-                //overlay.render(menuShader);
+                //if(renderOverlay) overlay.render(menuShader);
 
 
                 window.swapBuffers();
