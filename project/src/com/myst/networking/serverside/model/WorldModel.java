@@ -42,6 +42,11 @@ public class WorldModel {
         senders.add(sender);
     }
 
+    /**
+     * Sends the server messages to play sounds
+     * @param clipName Name of the Clip to be played
+     * @param location Location of the sound to be played
+     */
     public void playSound(String clipName, Vector3f location) {
         Message soundMessage = new Message(Codes.PLAY_AUDIO, new PlayAudioData(clipName, location));
 
@@ -142,9 +147,9 @@ public class WorldModel {
                                 playSound(Audio.BULLETS_BIG, playerData.transform.pos);
                                 break;
                             case ITEM_LIGHT_TRAP:
-                                if (canHealOnPlatform(playerSpecific) && itemSpecific.isHealingLightTrap) {
+                                if (canHealOnLightTrap(playerSpecific) && itemSpecific.isHealingLightTrap) {
                                     setHealthOfPlayerData(playerSpecific, playerSpecific.health + 1);
-                                    playerSpecific.lastHealOnPlatform = System.currentTimeMillis();
+                                    playerSpecific.lastHealOnLightTrap = System.currentTimeMillis();
                                     playSound(Audio.HEALTH_UP, playerData.transform.pos);
                                 }
                             default:
@@ -180,14 +185,29 @@ public class WorldModel {
         }
     }
 
+    /**
+     * Checks if the player can take spike damage
+     * @param player The player
+     * @return True if the player can take spike damage
+     */
     public boolean canTakeSpikeDamage(PlayerData player) {
         return System.currentTimeMillis() - player.lastSpikeDamage > 1000;
     }
 
-    public boolean canHealOnPlatform(PlayerData player) {
-        return System.currentTimeMillis() - player.lastHealOnPlatform > 1000;
+    /**
+     * Checks if the player can heal on light trap
+     * @param player The player
+     * @return True if the player can take spike damage
+     */
+    public boolean canHealOnLightTrap(PlayerData player) {
+        return System.currentTimeMillis() - player.lastHealOnLightTrap > 1000;
     }
 
+    /**
+     * Sets health of the player (unless the player is invincible)
+     * @param player The player
+     * @param health The new health of the player
+     */
     public void setHealthOfPlayerData(PlayerData player, float health) {
         if (System.currentTimeMillis() - player.lastInvincibilityPickup > 20000)
             player.isInvincible = false;
@@ -199,6 +219,11 @@ public class WorldModel {
             player.health = health;
     }
 
+    /**
+     * Sets bullet count of the player (unless the player has infinite bullets)
+     * @param player The player
+     * @param bulletCount The new bullet count of the player
+     */
     public void setBulletsOfPlayerData(PlayerData player, int bulletCount) {
         if (System.currentTimeMillis() - player.lastInfiniteBulletsPickup > 20000)
             player.hasInfiniteBullets = false;
@@ -210,6 +235,9 @@ public class WorldModel {
             player.bulletCount = bulletCount;
     }
 
+    /**
+     * @return ArrayList of current players in the game
+     */
     public ArrayList<EntityData> getPlayers() {
         ArrayList<EntityData> playersData = new ArrayList<>();
 
@@ -224,6 +252,9 @@ public class WorldModel {
         return playersData;
     }
 
+    /**
+     * @return ArrayList of current items in the game
+     */
     public ArrayList<EntityData> getItems() {
         ArrayList<EntityData> itemsData = new ArrayList<>();
 
@@ -246,6 +277,9 @@ public class WorldModel {
         return itemsData;
     }
 
+    /**
+     * @return ArrayList of current bullets in the game
+     */
     public ArrayList<EntityData> getBullets() {
         ArrayList<EntityData> itemsData = new ArrayList<>();
 
@@ -286,7 +320,7 @@ public class WorldModel {
                     ((PlayerData) entity.typeData).bulletCount = playerData.bulletCount;
                     ((PlayerData) entity.typeData).maxBulletCount = playerData.maxBulletCount;
                     ((PlayerData) entity.typeData).lastSpikeDamage = playerData.lastSpikeDamage;
-                    ((PlayerData) entity.typeData).lastHealOnPlatform = playerData.lastHealOnPlatform;
+                    ((PlayerData) entity.typeData).lastHealOnLightTrap = playerData.lastHealOnLightTrap;
                     ((PlayerData) entity.typeData).lastInvincibilityPickup = playerData.lastInvincibilityPickup;
                     ((PlayerData) entity.typeData).lastInfiniteBulletsPickup = playerData.lastInfiniteBulletsPickup;
                     ((PlayerData) entity.typeData).isInvincible = playerData.isInvincible;

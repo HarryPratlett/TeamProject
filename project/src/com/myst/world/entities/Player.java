@@ -147,7 +147,7 @@ public class Player extends Entity {
         this.bulletCount = data.bulletCount;
         this.maxBulletCount = data.maxBulletCount;
         this.lastSpikeDamage = data.lastSpikeDamage;
-        this.lastPlatformHeal = data.lastHealOnPlatform;
+        this.lastPlatformHeal = data.lastHealOnLightTrap;
         this.lastInvincibilityPickup = data.lastInvincibilityPickup;
         this.lastInfiniteBulletsPickup = data.lastInfiniteBulletsPickup;
         this.isInvincible = data.isInvincible;
@@ -163,7 +163,7 @@ public class Player extends Entity {
         playerData.bulletCount = bulletCount;
         playerData.maxBulletCount = maxBulletCount;
         playerData.lastSpikeDamage = lastSpikeDamage;
-        playerData.lastHealOnPlatform = lastPlatformHeal;
+        playerData.lastHealOnLightTrap = lastPlatformHeal;
         playerData.lastInvincibilityPickup = lastInvincibilityPickup;
         playerData.lastInfiniteBulletsPickup = lastInfiniteBulletsPickup;
         playerData.isInvincible = isInvincible;
