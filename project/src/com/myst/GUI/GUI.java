@@ -101,6 +101,8 @@ public class GUI {
             case SETTINGS:
                 this.renderSettings(shader);
                 break;
+            case HIDDEN:
+                break;
         }
     }
 
@@ -146,7 +148,7 @@ public class GUI {
      * @param scale The scale of the image with regards to sizing
      * @param model
      */
-    public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
+    public static void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
         Matrix4f target = new Matrix4f();
@@ -160,8 +162,12 @@ public class GUI {
         model.render();
     }
 
+    public void renderHidden(Shader shader){
+        renderImage(shader,new Texture("assets/main_menu/typing/0.png"),0,0,new Matrix4f(),new Model(baseVertices,textureDocks,indices));
+    }
+
     public void renderGUI(Shader shader) {
-        renderBackground(shader);     
+//        renderBackground(shader);
         float y = 0.55f;
 
         for (Texture t : menuTextures) {

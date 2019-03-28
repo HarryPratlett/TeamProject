@@ -173,7 +173,7 @@ public class Menu {
      * @param scale Scale of image
      * @param model  Model created to render image
      */
-    public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
+    public static void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
         Matrix4f target = new Matrix4f();
