@@ -9,7 +9,7 @@ import org.junit.Test;
 public class LineTest {
 
     @Test
-    public void testLineIntersection(){
+    public void testLineIntersectionCo(){
         Line line1 = new Line(new Vector2f(-1,-1), new Vector2f(1,1));
         Line line2 = new Line(new Vector2f(3,0), new Vector2f(0,1));
 
@@ -28,6 +28,7 @@ public class LineTest {
         lambda = line1.intersectionCo(line2);
         assertNull(lambda);
     }
+
 
     @Test
     public void testDistBetween(){

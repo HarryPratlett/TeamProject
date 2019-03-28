@@ -45,6 +45,7 @@ public class Line implements Serializable {
         return intersection;
     }
 
+
 //    returns the coefficient of intersection for the second vector
     public Float intersectionCo(Line line2){
         if(this.vector.x == line2.vector.x && this.vector.y == line2.vector.y){

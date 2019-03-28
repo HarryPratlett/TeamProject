@@ -217,7 +217,6 @@ public class GameMain {
 
         if(endOfGame){
             System.out.println("this is the end of the game");
-
         }
 
 
@@ -232,8 +231,10 @@ public class GameMain {
      */
     public static void calculateBullets(ConcurrentHashMap<Integer, Entity> myEntities, ArrayList<Line> bullets, Tile[][] map) {
         for (Line bullet : bullets) {
-            Vector2f bulletVec = bullet.vector;
-            Vector2f currentPos = bullet.position;
+            Vector2f bulletVec = new Vector2f(bullet.vector.x, bullet.vector.y);
+            Vector2f currentPos = new Vector2f(bullet.position.x,-bullet.position.y);
+            Line currentXSide;
+            Line currentYSide;
             boolean posXDirection = true;
             boolean posYDirection = true;
             int stepX = 1;
@@ -241,71 +242,76 @@ public class GameMain {
 
             bulletVec.normalize();
 
+            int yDirection;
+            int xDirection;
+            int xSide;
+            int ySide;
             if (bulletVec.x < 0) {
-                posXDirection = false;
-                stepX = -1;
+                xDirection = -1;
+                xSide = (int) currentPos.x;
+            }else{
+                xDirection = 1;
+                xSide = ((int) currentPos.x) + 1;
             }
             if (bulletVec.y < 0) {
-                posYDirection = false;
-                stepY = -1;
+                yDirection = -1;
+                ySide = (int) currentPos.y;
+            }else{
+                yDirection = 1;
+                ySide = ((int) currentPos.y + 1);
             }
 
-            float deltaX = Math.abs(1 / bulletVec.x);
-            float deltaY = Math.abs(1 / bulletVec.y);
 
-//          distance to the closest x edge
-            float xDist;
-            if (posXDirection) {
-                xDist = (float) Math.floor((double) currentPos.x) + 1;
-            } else {
-                xDist = (float) Math.floor((double) currentPos.x);
-            }
+            currentXSide = new Line(new Vector2f(xSide,0),new Vector2f(0,-1));
+            currentYSide = new Line(new Vector2f(0,ySide),new Vector2f(1,0));
 
-            xDist = (xDist - currentPos.x) * deltaX;
-
-//          distance to the closest y edge
-            float yDist;
-            if (posYDirection) {
-                yDist = (float) Math.floor((double) currentPos.y) + 1;
-            } else {
-                yDist = (float) Math.floor((double) currentPos.y);
-            }
-
-            yDist = (yDist + currentPos.y) * deltaY;
-
-            int mapX = (int) Math.floor((double) currentPos.x);
-            int mapY = (int) Math.floor((double) -currentPos.y);
 
             boolean hitWall = false;
-            int total = 0;
-            // if if was an x side then 0 if it was a y side then side = 1
-            int side = 0;
-            while (!hitWall && total < 20) {
-                if (xDist < yDist) {
-                    xDist += deltaX;
-                    mapX += stepX;
-                    side = 0;
-                    total++;
-                } else {
-                    yDist += deltaY;
-                    mapY += stepY;
-                    side = 1;
-                    total++;
-                }
-                if (map[mapX][mapY].isSolid()) {
-                    hitWall = true;
+//            Vector2f xIntersection = currentXSide.intersection(bullet);
+//            Vector2f yIntersection = currentYSide.intersection(bullet);
+            Line tempLine= new Line(currentPos,bulletVec);
+            float xDistToWall = tempLine.distanceTo(currentXSide);
+            float yDistToWall = tempLine.distanceTo(currentYSide);
+            int mapX = (int) currentPos.x;
+            int mapY = (int) currentPos.y;
+
+//            whichwall returns which wall it collided with ( an X wall or a Y wall) X is 0 Y is 1
+            int whichWall = 0;
+
+            while(!hitWall){
+                if(xDistToWall < yDistToWall){
+                    mapX += xDirection;
+                    if(map[mapX][mapY].isSolid()){
+                        hitWall = true;
+                        whichWall = 0;
+                    } else{
+                        currentXSide.position.x += xDirection;
+                        xDistToWall = tempLine.distanceTo(currentXSide);
+                    }
+                } else{
+                    mapY += yDirection;
+                    if(map[mapX][mapY].isSolid()){
+                        hitWall = true;
+                        whichWall = 1;
+                    }else{
+                        currentYSide.position.y += yDirection;
+                        yDistToWall = tempLine.distanceTo(currentYSide);
+                    }
                 }
             }
+
 
             float wallDist;
-
-            if (side == 0) {
-                wallDist = (mapX - currentPos.x + (1 - stepX) / 2) / bulletVec.x;
-            } else {
-                wallDist = (mapY + currentPos.y + (1 - stepY) / 2) / bulletVec.y;
+            if(whichWall == 1){
+                wallDist = yDistToWall;
+            } else{
+                wallDist = xDistToWall;
             }
 
-            Bullet newBullet = new Bullet(bullet, wallDist, 100f);
+
+
+            tempLine.position.y *= -1;
+            Bullet newBullet = new Bullet(tempLine, wallDist, 100f);
             newBullet.owner = clientID;
             newBullet.localID = IDCounter;
             IDCounter++;
