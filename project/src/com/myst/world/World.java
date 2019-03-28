@@ -123,6 +123,14 @@ public class World {
         }
     }
 
+    public Tile getTile(int x,int y){
+        try {
+            return map[x][y];
+        }catch (ArrayIndexOutOfBoundsException e){
+            return null;
+        }
+    }
+
 
     public AABB getBoundingBox(int x, int y){
         try{

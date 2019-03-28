@@ -158,7 +158,9 @@ public class Bot extends Entity {
 
     public void setPath(Vector3f goal) {
         intelligence.updateTransform(transform);
+
         path = intelligence.pathFind(goal);
+
         System.out.print(path);
     }
 

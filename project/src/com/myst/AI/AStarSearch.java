@@ -8,6 +8,7 @@ import org.joml.Vector3f;
 
 import com.myst.datatypes.TileCoords;
 import com.myst.datatypes.WorldCoords;
+import com.myst.helper.Timer;
 import com.myst.world.World;
 
 public class AStarSearch {
@@ -60,11 +61,15 @@ public class AStarSearch {
 
     private ArrayList<MapNode> generateChildren(MapNode parent){
         ArrayList<MapNode> children = new ArrayList<MapNode>();
+        //double startTime = Timer.getTime();
         for(int x = -1; x <= 1; x++) {
             for(int y = -1; y <= 1; y++) {
                 Vector3f childPosition = new Vector3f(parent.getPosition().x + x, parent.getPosition().y + y, 1);
-                if(world.getTile(new TileCoords((int)childPosition.x,(int)-childPosition.y)) != null && world.getTile(new TileCoords((int)childPosition.x,(int)-childPosition.y)).isSolid() == false) {
+                if(world.getTile((int)childPosition.x,(int)-childPosition.y) != null && !world.getTile((int) childPosition.x, (int) -childPosition.y).isSolid()) {
                     children.add(new MapNode(childPosition, goal, parent, world));
+                    //if((Timer.getTime()-startTime)>= 3.00) {
+                      //  return children;
+                    //}
                     System.out.println(childPosition.toString());
                 }
             }
