@@ -1,3 +1,6 @@
+/**
+ * @author Harry Pratlett
+ */
 package com.myst.GUI;
 
 import com.myst.input.Input;
@@ -30,6 +33,13 @@ public class Overlay {
             2,3,0
     };
 
+    /**
+     * Default constructor that takes the window its an overlay for, the input for that window and default values for health and ammo
+     * @param window Window that the overlay is on
+     * @param input Input listener for that window
+     * @param health Default health value
+     * @param ammo Default ammo value
+     */
     public Overlay(Window window, Input input, int health, int ammo)    {
         this.window = window;
         this.health = health;
@@ -47,14 +57,15 @@ public class Overlay {
             new Texture("assets/main_menu/typing/8.png"), new Texture("assets/main_menu/typing/9.png"),
     };
 
+    /**
+     * Renders the ammo and health overlays
+     * @param shader The shader used to render them
+     */
     public void render(Shader shader)    {
         String health = Integer.toString(this.health);
         String ammo = Integer.toString(this.ammo);
         float xHealth = 0.5f;
         float xAmmo = 0.5f;
-
-
-
 
         for(int i = 0; i < health.length(); i++)  {
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
@@ -72,10 +83,23 @@ public class Overlay {
 //        }
     }
 
+    /**
+     * Updates the players health and ammo
+     * @param playerHealth The updated health
+     */
     public void update(int playerHealth)    {
         this.health = playerHealth;
     }
 
+    /**
+     * Renders a given image on the screen
+     * @param shader Shader used to render the image
+     * @param texture Texture that will be rendered
+     * @param x X co-ordinate of texture
+     * @param y Y co-ordinate of texture
+     * @param scale Scale of image
+     * @param model Model of the image that is used to render the image
+     */
     public void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
         shader.bind();
         texture.bind(0);
@@ -90,6 +114,15 @@ public class Overlay {
         model.render();
     }
 
+    /**
+     * Alters a given float array of vertices to fit an image
+     * @param vertices The float array to be altered
+     * @param height The height of the image it is being altered for
+     * @param width The width of the image it is being altered for
+     * @param widthScale The scale of the subsequent rendering
+     * @param heightScale The scale of the subsequent rendering
+     * @return Returns an altered float array from these parameters
+     */
     public float[] alterVertices(float[] vertices, int height, int width, double widthScale, double heightScale) {
         vertices[0] *= width * widthScale;
         vertices[3] *= width * widthScale;
