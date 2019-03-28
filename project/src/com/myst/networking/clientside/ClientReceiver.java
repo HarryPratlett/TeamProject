@@ -110,6 +110,10 @@ public class ClientReceiver extends Thread {
                 }
                 else if (!entity.ownerID.equals(clientID)) {
                     entities.get(entity.ownerID).get(entity.localID).readInEntityData(entityData.get(i));
+                } else {
+                    if(entity.type == EntityType.PLAYER) {
+                        ((Player) entities.get(entity.ownerID).get(entity.localID)).readInPlayerData((PlayerData) entity.typeData);
+                    }
                 }
             }
         }

@@ -11,4 +11,6 @@ public class PlayerData implements Serializable {
     public long lastHealOnPlatform;
     public long lastInvincibilityPickup;
     public boolean isInvincible;
+    public long lastInfiniteBulletsPickup;
+    public boolean hasInfiniteBullets;
 }

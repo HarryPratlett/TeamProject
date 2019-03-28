@@ -5,7 +5,8 @@ import java.io.Serializable;
 public class ItemData implements Serializable {
     public boolean hidden;
     public long lastSpikeDamage;
-    public long spikeTimer = Long.MAX_VALUE;
+    public long spikeTimer;
     public long healingTimer;
+    public boolean heals;
     public boolean isChanged;
 }

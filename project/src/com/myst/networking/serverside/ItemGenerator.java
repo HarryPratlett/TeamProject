@@ -23,12 +23,38 @@ public class ItemGenerator {
     public ItemGenerator(WorldModel wm) {
         this.wm = wm;
         r = new Random();
+
+        genLightTraps();
     }
 
     public void update() {
         if (System.currentTimeMillis() - lastItemGen > 3 * 60 * 1000) {
             genItems();
             lastItemGen = System.currentTimeMillis();
+        }
+    }
+
+    public void genLightTraps() {
+        int numHealthyBois = 0;
+
+        int minX = wm.map.length / 5;
+        int maxX = minX * 4;
+        int minY = wm.map[0].length / 5;
+        int maxY = minY * 4;
+
+        for(int i = 0; i < 10; i++) {
+            int x = 0, y = 0;
+
+            while(wm.map[x][y].getId() != 0) {
+                x = (int) (r.nextFloat() * (maxX - minX) + minX);
+                y = (int) (r.nextFloat() * (maxY - minY) + minY);
+            }
+
+            boolean heals = r.nextInt(2) == 0 ? true : false;
+            if(i == 10 && numHealthyBois < 3) heals = true;
+            if(numHealthyBois == 3) heals = false;
+
+            addLightTrap(x, y, heals);
         }
     }
 
@@ -74,7 +100,8 @@ public class ItemGenerator {
                     addBulletsBig(x, y);
                     break;
                 case 9:
-                    addInvincibilityPotion(x, y);
+                    if(r.nextInt(2) == 0) addInvincibilityPotion(x, y);
+                    else addInfiniteBulletsPotion(x, y);
                     break;
             }
         }
@@ -121,12 +148,19 @@ public class ItemGenerator {
         wm.updateWorld(invincibilityPotion);
     }
 
-    public void addHealingPlatform(int x, int y) {
-        EntityData healingPlatform = createBaseItem(x, y, false);
-        healingPlatform.type = EntityType.ITEM_HEALING_PLATFORM;
-        healingPlatform.lightSource = true;
-        healingPlatform.lightDistance = 2.5f;
-        wm.updateWorld(healingPlatform);
+    public void addInfiniteBulletsPotion(int x, int y) {
+        EntityData infiniteBulletsPotion = createBaseItem(x, y, false);
+        infiniteBulletsPotion.type = EntityType.ITEM_INFINITE_BULLETS_POTION;
+        wm.updateWorld(infiniteBulletsPotion);
+    }
+
+    public void addLightTrap(int x, int y, boolean heals) {
+        EntityData lightTrap = createBaseItem(x, y, false);
+        lightTrap.type = EntityType.ITEM_LIGHT_TRAP;
+        lightTrap.lightSource = true;
+        lightTrap.lightDistance = 2.5f;
+        ((ItemData) lightTrap.typeData).heals = heals;
+        wm.updateWorld(lightTrap);
     }
 
     public EntityData createBaseItem(int x, int y, boolean hidden) {

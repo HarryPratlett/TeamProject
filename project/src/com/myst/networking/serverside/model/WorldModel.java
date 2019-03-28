@@ -73,6 +73,7 @@ public class WorldModel {
                         System.out.println("Health: " + playerSpecific.health);
                         System.out.println("Bullets: " + playerSpecific.bulletCount);
                         System.out.println("Invincibility is on: " + playerSpecific.isInvincible);
+                        System.out.println("Infinite bullets is on: " + playerSpecific.hasInfiniteBullets);
 
                         switch (itemData.type) {
                             case ITEM_APPLE:
@@ -87,7 +88,7 @@ public class WorldModel {
                                 itemSpecific.hidden = true;
                                 itemSpecific.isChanged = true;
                                 setHealthOfPlayerData(playerSpecific, playerSpecific.health + 30);
-//                                playSound(Audio.MED_KIT, playerData.transform.pos);
+                                // TODO - sound
                                 break;
                             case ITEM_INVINCIBILITY_POTION:
                                 itemData.exists = false;
@@ -95,6 +96,14 @@ public class WorldModel {
                                 itemSpecific.isChanged = true;
                                 playerSpecific.isInvincible = true;
                                 playerSpecific.lastInvincibilityPickup = System.currentTimeMillis();
+                                playSound(Audio.POTION, playerData.transform.pos);
+                                break;
+                            case ITEM_INFINITE_BULLETS_POTION:
+                                itemData.exists = false;
+                                itemSpecific.hidden = true;
+                                itemSpecific.isChanged = true;
+                                playerSpecific.hasInfiniteBullets = true;
+                                playerSpecific.lastInfiniteBulletsPickup = System.currentTimeMillis();
                                 playSound(Audio.POTION, playerData.transform.pos);
                                 break;
                             case ITEM_SPIKES_HIDDEN:
@@ -132,11 +141,11 @@ public class WorldModel {
                                 setBulletsOfPlayerData(playerSpecific, playerSpecific.bulletCount + 30);
                                 playSound(Audio.BULLETS_BIG, playerData.transform.pos);
                                 break;
-                            case ITEM_HEALING_PLATFORM:
-                                if (canHealOnPlatform(playerSpecific)) {
+                            case ITEM_LIGHT_TRAP:
+                                if (canHealOnPlatform(playerSpecific) && itemSpecific.heals) {
                                     setHealthOfPlayerData(playerSpecific, playerSpecific.health + 1);
                                     playerSpecific.lastHealOnPlatform = System.currentTimeMillis();
-//                                    playSound(Audio.HIT_BY_SPIKES, playerData.transform.pos);
+                                    // TODO - sound
                                 }
                             default:
                                 break;
@@ -186,16 +195,19 @@ public class WorldModel {
         if (health < 0) health = 0;
         if (health > player.maxHealth) health = player.maxHealth;
 
-        if(!player.isInvincible || health > player.health) {
+        if(!player.isInvincible || health > player.health)
             player.health = health;
-        }
     }
 
     public void setBulletsOfPlayerData(PlayerData player, int bulletCount) {
+        if (System.currentTimeMillis() - player.lastInfiniteBulletsPickup > 20000)
+            player.hasInfiniteBullets = false;
+
         if (bulletCount < 0) bulletCount = 0;
         if (bulletCount > player.maxBulletCount) bulletCount = player.maxBulletCount;
 
-        player.bulletCount = bulletCount;
+        if(!player.hasInfiniteBullets || bulletCount > player.bulletCount)
+            player.bulletCount = bulletCount;
     }
 
     public ArrayList<EntityData> getPlayers() {
@@ -224,7 +236,8 @@ public class WorldModel {
                         e.type == EntityType.ITEM_SPIKES_HIDDEN ||
                         e.type == EntityType.ITEM_SPIKES_REVEALED ||
                         e.type == EntityType.ITEM_INVINCIBILITY_POTION ||
-                        e.type == EntityType.ITEM_HEALING_PLATFORM)) {
+                        e.type == EntityType.ITEM_INFINITE_BULLETS_POTION ||
+                        e.type == EntityType.ITEM_LIGHT_TRAP)) {
                     itemsData.add(e);
                 }
             }
@@ -284,7 +297,8 @@ public class WorldModel {
                 case ITEM_BULLETS_SMALL:
                 case ITEM_BULLETS_BIG:
                 case ITEM_INVINCIBILITY_POTION:
-                case ITEM_HEALING_PLATFORM:
+                case ITEM_INFINITE_BULLETS_POTION:
+                case ITEM_LIGHT_TRAP:
                     ItemData itemData = (ItemData) cEntityData.typeData;
                     ((ItemData) entity.typeData).hidden = itemData.hidden;
                     ((ItemData) entity.typeData).lastSpikeDamage = itemData.lastSpikeDamage;
@@ -299,6 +313,17 @@ public class WorldModel {
                     break;
             }
             entity.exists = clientEntities.get(entity.localID).exists;
+        } else {
+            if(entity.type == BULLET) {
+                String owner = entity.ownerID;
+                for(EntityData ed : entities.get(owner)) {
+                    if(ed.type == PLAYER) {
+                        PlayerData pd = (PlayerData) ed.typeData;
+                        pd.bulletCount--;
+                        break;
+                    }
+                }
+            }
         }
         clientEntities.set(entity.localID, entity);
     }

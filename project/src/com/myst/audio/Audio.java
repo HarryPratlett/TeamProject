@@ -26,7 +26,7 @@ public class Audio {
     public static final String BULLETS_BIG = "bullets_big";
     // TODO - 2 more
     public static final String MED_KIT = "med_kit";
-    public static final String HEAL_PLATFORM = "healing_platform";
+    public static final String HEALTH_UP = "health_up";
 
     private final String WAV = ".wav";
     private final String PATH = "assets/sounds/";
@@ -222,7 +222,7 @@ public class Audio {
     }
 
     /**
-     * muting the client
+     * Muting / un-muting the client
      */
     public void mute() {
         muted = !muted;
@@ -244,8 +244,8 @@ public class Audio {
     }
 
     /**
-     * changing the modVolume
-     * @param change how much the modVolume is increased / decreased
+     * Changing the volume of the client
+     * @param change How much the volume is increased / decreased
      */
     public void modVolume(int change) {
         if (change < MIN_VOLUME) {

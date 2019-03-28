@@ -23,12 +23,14 @@ public class Player extends Entity {
 
     private float health = 50;
     private float maxHealth = 100;
-    private int bulletCount = 50;
+    private int bulletCount = 5;
     private int maxBulletCount = 200;
     private long lastSpikeDamage;
     private long lastPlatformHeal;
     private long lastInvincibilityPickup;
+    private long lastInfiniteBulletsPickup;
     private boolean isInvincible = false;
+    private boolean hasInfiniteBullets = false;
 
 //    private static final float[] vertices =
 //
@@ -97,11 +99,10 @@ public class Player extends Entity {
             }
         }
 
-        if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
+        if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1) && bulletCount > 0) {
             Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) xMouse, (float) -yMouse));
             bullets.add(line);
             Audio.getAudio().play(Audio.GUN, transform.pos);
-            System.out.println("mouse pressed");
         }
 
         if (moved)
@@ -137,14 +138,20 @@ public class Player extends Entity {
     @Override
     public void readInEntityData(EntityData data) {
         super.readInEntityData(data);
-        this.health = ((PlayerData) data.typeData).health;
-        this.maxHealth = ((PlayerData) data.typeData).maxHealth;
-        this.bulletCount = ((PlayerData) data.typeData).bulletCount;
-        this.maxBulletCount = ((PlayerData) data.typeData).maxBulletCount;
-        this.lastSpikeDamage = ((PlayerData) data.typeData).lastSpikeDamage;
-        this.lastPlatformHeal = ((PlayerData) data.typeData).lastHealOnPlatform;
-        this.isInvincible = ((PlayerData) data.typeData).isInvincible;
-        this.lastInvincibilityPickup = ((PlayerData) data.typeData).lastInvincibilityPickup;
+        readInPlayerData((PlayerData) data.typeData);
+    }
+
+    public void readInPlayerData(PlayerData data) {
+        this.health = data.health;
+        this.maxHealth = data.maxHealth;
+        this.bulletCount = data.bulletCount;
+        this.maxBulletCount = data.maxBulletCount;
+        this.lastSpikeDamage = data.lastSpikeDamage;
+        this.lastPlatformHeal = data.lastHealOnPlatform;
+        this.lastInvincibilityPickup = data.lastInvincibilityPickup;
+        this.lastInfiniteBulletsPickup = data.lastInfiniteBulletsPickup;
+        this.isInvincible = data.isInvincible;
+        this.hasInfiniteBullets = data.hasInfiniteBullets;
     }
 
     @Override
@@ -157,8 +164,10 @@ public class Player extends Entity {
         playerData.maxBulletCount = maxBulletCount;
         playerData.lastSpikeDamage = lastSpikeDamage;
         playerData.lastHealOnPlatform = lastPlatformHeal;
-        playerData.isInvincible = isInvincible;
         playerData.lastInvincibilityPickup = lastInvincibilityPickup;
+        playerData.lastInfiniteBulletsPickup = lastInfiniteBulletsPickup;
+        playerData.isInvincible = isInvincible;
+        playerData.hasInfiniteBullets = hasInfiniteBullets;
         data.typeData = playerData;
         return data;
     }

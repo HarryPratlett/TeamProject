@@ -12,8 +12,6 @@ import com.myst.world.World;
 import com.myst.world.collisions.Bullet;
 import com.myst.world.collisions.Line;
 import com.myst.world.entities.*;
-import com.myst.world.lighting.Darkness;
-import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
 import com.myst.world.view.Camera;
@@ -23,7 +21,6 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -384,8 +381,10 @@ public class Main {
                         ent = new Item(Item.BULLETS_BIG);
                     else if (entitiesData.type == EntityType.ITEM_INVINCIBILITY_POTION)
                         ent = new Item(Item.INVINCIBILITY_POTION);
-                    else if (entitiesData.type == EntityType.ITEM_HEALING_PLATFORM)
-                        ent = new Item(Item.HEALING_PLATFORM);
+                    else if (entitiesData.type == EntityType.ITEM_INFINITE_BULLETS_POTION)
+                        ent = new Item(Item.INFINITE_BULLETS_POTION);
+                    else if (entitiesData.type == EntityType.ITEM_LIGHT_TRAP)
+                        ent = new Item(Item.LIGHT_TRAP);
                     else if (entitiesData.type == EntityType.BULLET)
                         ent = new Bullet(new Line(new Vector2f(), new Vector2f()), 0, 0);
                     else
