@@ -7,6 +7,6 @@ public class ItemData implements Serializable {
     public long lastSpikeDamage;
     public long spikeTimer;
     public long healingTimer;
-    public boolean heals;
+    public boolean isHealingLightTrap;
     public boolean isChanged;
 }

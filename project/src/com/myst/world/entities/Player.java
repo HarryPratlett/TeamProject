@@ -21,10 +21,10 @@ public class Player extends Entity {
 
     private final float MOVEMENT_SPEED = 10f;
 
-    private float health = 50;
+    private float health = 100;
     private float maxHealth = 100;
-    private int bulletCount = 5;
-    private int maxBulletCount = 200;
+    private int bulletCount = 30;
+    private int maxBulletCount = 100;
     private long lastSpikeDamage;
     private long lastPlatformHeal;
     private long lastInvincibilityPickup;

@@ -88,7 +88,7 @@ public class WorldModel {
                                 itemSpecific.hidden = true;
                                 itemSpecific.isChanged = true;
                                 setHealthOfPlayerData(playerSpecific, playerSpecific.health + 30);
-                                // TODO - sound
+                                playSound(Audio.MED_KIT, playerData.transform.pos);
                                 break;
                             case ITEM_INVINCIBILITY_POTION:
                                 itemData.exists = false;
@@ -142,10 +142,10 @@ public class WorldModel {
                                 playSound(Audio.BULLETS_BIG, playerData.transform.pos);
                                 break;
                             case ITEM_LIGHT_TRAP:
-                                if (canHealOnPlatform(playerSpecific) && itemSpecific.heals) {
+                                if (canHealOnPlatform(playerSpecific) && itemSpecific.isHealingLightTrap) {
                                     setHealthOfPlayerData(playerSpecific, playerSpecific.health + 1);
                                     playerSpecific.lastHealOnPlatform = System.currentTimeMillis();
-                                    // TODO - sound
+                                    playSound(Audio.HEALTH_UP, playerData.transform.pos);
                                 }
                             default:
                                 break;
@@ -163,7 +163,7 @@ public class WorldModel {
         for (EntityData itemData : itemsData) {
             if (itemData.type == ITEM_SPIKES_REVEALED || itemData.type == ITEM_SPIKES_HIDDEN) {
                 ItemData itemSpecific = (ItemData) itemData.typeData;
-                if (System.currentTimeMillis() - itemSpecific.spikeTimer > 5000) {
+                if (System.currentTimeMillis() - itemSpecific.spikeTimer > 3000) {
                     if (itemData.type == ITEM_SPIKES_HIDDEN) {
                         if(itemSpecific.hidden) {
                             itemSpecific.hidden = false;
@@ -304,6 +304,7 @@ public class WorldModel {
                     ((ItemData) entity.typeData).lastSpikeDamage = itemData.lastSpikeDamage;
                     ((ItemData) entity.typeData).spikeTimer = itemData.spikeTimer;
                     ((ItemData) entity.typeData).healingTimer = itemData.healingTimer;
+                    ((ItemData) entity.typeData).isHealingLightTrap = itemData.isHealingLightTrap;
                     ((ItemData) entity.typeData).isChanged = itemData.isChanged;
                     break;
                 case BULLET:
