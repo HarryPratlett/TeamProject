@@ -27,8 +27,8 @@ public class Bullet extends Entity {
 
     public Bullet(Line line, float length, float damage){
         super( new float[]{
-                -0.1f, 1f * length, 0f, /*0*/  0.1f, 1f * length, 0f, /*1*/    0.1f, 0.1f, 0f, /*2*/
-                -0.1f, 0.1f, 0f/*3*/
+                -0.1f, 1f * length, 0f, /*0*/  0.1f, 1f * length, 0f, /*1*/    0.1f, 0f, 0f, /*2*/
+                -0.1f, 0f, 0f/*3*/
         },new float[] {
                         0f, 0f,   1, 0f,  1f, 1f,
                         0f, 1f
