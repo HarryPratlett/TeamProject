@@ -82,7 +82,6 @@ public class MapGenTest {
 			// File("/Users/seongheehan/Documents/myst/project/assets/tile_sheet/map.png");
 			// BufferedImage tile_sheet = ImageIO.read(tileSheet);
 			int preset = (int) Math.floor(Math.random() * 4);
-			System.out.println(preset);
 			String subpath = null;
 
 			switch (preset) {
@@ -103,7 +102,6 @@ public class MapGenTest {
 			}
 
 			int random = (int) Math.floor(Math.random() * 3);
-			System.out.println(random);
 
 			String mapnum = null;
 			switch (random) {
@@ -119,7 +117,6 @@ public class MapGenTest {
 			default:
 				break;
 			}
-			System.out.println(path+subpath+mapnum);
 			BufferedImage tile_sheet = ImageIO.read(new File(path + subpath + mapnum));
 
 			// 32 * 32 PNG

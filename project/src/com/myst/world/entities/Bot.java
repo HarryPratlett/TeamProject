@@ -80,7 +80,6 @@ public class Bot extends Entity {
         if (enemyTransform!=null){
             Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) enemyTransform.pos.x,(float) enemyTransform.pos.y));
             bullets.add(line);
-            System.out.println("Enemy Detected");
         }
         followPath(deltaTime);
         this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );

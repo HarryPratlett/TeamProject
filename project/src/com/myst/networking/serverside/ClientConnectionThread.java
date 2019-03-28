@@ -37,8 +37,6 @@ public class ClientConnectionThread extends Thread {
         // we have a maximum of 8 clients per server
 //      availableIDs is a list of booleans which if an element is true means it's index is available as an ID e.g.
 //      [T,F,F,F,T] ->  IDs 0,4 are available IDs 1,2,3 are not
-
-
     }
 
     @Override
@@ -104,13 +102,13 @@ public class ClientConnectionThread extends Thread {
 
             clientTable.addClient(clientID);
             BlockingQueue<Object> clientQueue = clientTable.getQueue(clientID);
+            clientQueue.add(new Message(Codes.ENTITY_UPDATE, world.getWorldData(true)));
             world.addClient(clientID);
 
             ServerSender serverSender = new ServerSender(clientQueue, toClient, clientID, world);
             ServerReceiver serverReceiver = new ServerReceiver(clientID, fromClient, clientTable, serverSender, world);
 
 //              the ticker controls when the server sender sends out to the client
-            System.out.println();
             serverReceiver.start();
             ticker.addSender(serverSender);
 
@@ -125,6 +123,4 @@ public class ClientConnectionThread extends Thread {
             e.printStackTrace();
         }
     }
-
-
 }

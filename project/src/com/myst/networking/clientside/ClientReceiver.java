@@ -52,10 +52,12 @@ public class ClientReceiver extends Thread {
                         break;
                     case PLAY_AUDIO:
                         playAudio((PlayAudioData) msg.data);
+                        break;
                     case GAME_ENDED:
                         System.out.println("trying to end game");
                         endMe = true;
                         GameMain.endOfGame = true;
+                        break;
                     default:
                         break;
                 }
@@ -108,13 +110,9 @@ public class ClientReceiver extends Thread {
     //    this can be modified
     private void readInEntities(Object data) {
         ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
-
-//        System.out.println("Entity data length " + entityData.size());
         for (int i = 0; i < entityData.size(); i++) {
             if (entityData.get(i) != null) {
-//                System.out.println(entityData.get(i).ownerID + " => " + entityData.get(i).localID);
                 EntityData entity = entityData.get(i);
-//                System.out.println(entityData.get(i).transform.pos);
                 if(!toRender.containsKey(entity.ownerID)){
                     toRender.put(entity.ownerID, new ConcurrentHashMap<Integer,EntityData>());
                 }
@@ -139,6 +137,10 @@ public class ClientReceiver extends Thread {
                 }
                 else if (!entity.ownerID.equals(clientID)) {
                     entities.get(entity.ownerID).get(entity.localID).readInEntityData(entityData.get(i));
+                } else {
+                    if(entity.type == EntityType.PLAYER) {
+                        ((Player) entities.get(entity.ownerID).get(entity.localID)).readInPlayerData((PlayerData) entity.typeData);
+                    }
                 }
             }
         }

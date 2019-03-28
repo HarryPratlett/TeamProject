@@ -45,7 +45,6 @@ public class ServerReceiver extends Thread {
                             break;
 
                     }
-
                 } catch (ClassNotFoundException e) {
                     Report.error("corrupted / incorrect information received from the client");
                 }
@@ -64,9 +63,7 @@ public class ServerReceiver extends Thread {
     public void updateWorld(Object data) {
         ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
         for (int i = 0; i < entityData.size(); i++) {
-//      System.out.println("receiving entity with transform : ");
-//      System.out.println(entityData.get(i).transform.pos);
-            world.updateWorld(entityData.get(i));
+          world.updateWorld(entityData.get(i));
         }
     }
 }

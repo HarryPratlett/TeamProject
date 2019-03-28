@@ -1,11 +1,15 @@
 package com.myst.networking.serverside;
 
 import com.myst.networking.Codes;
+import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.serverside.model.WorldModel;
+import com.myst.world.entities.EntityType;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
 // Continuously reads from message queue for a particular client,
@@ -24,7 +28,6 @@ public class ServerSender extends Thread {
         client = c;
         this.clientID = clientID;
         this.world = world;
-        this.updateClient = false;
 
         world.addSender(this);
     }
@@ -35,26 +38,18 @@ public class ServerSender extends Thread {
             while (!end) {
 //        don't know why but it won't work without a thread.sleep()
                 Thread.sleep(1);
-                if (updateClient) {
-//          System.out.println("updating client");
-                    this.updateClient = false;
                     while (!clientQueue.isEmpty()) {
+//                        System.out.println("size: " + clientQueue.size());
                         Object msg = clientQueue.take();
-                        client.writeObject(msg);
-                    }
-                }
 
+                        client.writeObject(msg);
+                        client.reset();
+                    }
             }
 
         } catch (IOException | InterruptedException e) {
             System.out.println("server sender for " + clientID + " ending");
-
         }
-    }
-
-    public void updateClient() {
-        clientQueue.add(new Message(Codes.ENTITY_UPDATE, world.getWorldData()));
-        this.updateClient = true;
     }
 
     public void requestClientUpdate() {
@@ -63,7 +58,6 @@ public class ServerSender extends Thread {
 
     public void addMessage(Message message) {
         clientQueue.add(message);
-        this.updateClient = true;
     }
 
     public void end(){end = true;}
@@ -71,6 +65,7 @@ public class ServerSender extends Thread {
     public void endGame(){
         clientQueue.add(new Message(Codes.GAME_ENDED,null));
     }
+
 }
 
 

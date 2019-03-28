@@ -24,11 +24,19 @@ public class Player extends Entity {
     private ArrayList<Line> bullets;
     private final float MOVEMENT_SPEED = 10f;
 
-    public float maxHealth = 100;
-    public float health = 50;
+
 
     private long spikeDamageDelay = 1000;
-    private long lastSpikeDamage = 0;
+    private long lastSpikeDamage;
+    public float health = 100;
+    private float maxHealth = 100;
+    private int bulletCount = 30;
+    private int maxBulletCount = 100;
+    private long lastPlatformHeal;
+    private long lastInvincibilityPickup;
+    private long lastInfiniteBulletsPickup;
+    private boolean isInvincible = false;
+    private boolean hasInfiniteBullets = false;
 
 //    private static final float[] vertices =
 //
@@ -54,33 +62,6 @@ public class Player extends Entity {
         this.type = PLAYER;
         this.visibleToEnemy = true;
         this.bullets = bullets;
-    }
-
-    public float getHealth() {
-        return health;
-    }
-
-    public void setHealth(float health) {
-        if (health < 0) health = 0;
-        if (health > maxHealth) health = maxHealth;
-
-        this.health = health;
-    }
-
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    public void heal(int heal) {
-        setHealth(health + heal);
-    }
-
-    public void damage(int dmg) {
-        setHealth(health - dmg);
-    }
-
-    private boolean canTakeSpikeDamage() {
-        return System.currentTimeMillis() - lastSpikeDamage > spikeDamageDelay;
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer, Entity> items) {
@@ -122,11 +103,10 @@ public class Player extends Entity {
         }
 
 
-        if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
+        if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1) && bulletCount > 0) {
             Line line = new Line(new Vector2f(transform.pos.x + 0.5f, transform.pos.y - 0.5f), new Vector2f((float) xMouse, (float) -yMouse));
             bullets.add(line);
             Audio.getAudio().play(Audio.GUN, transform.pos);
-            System.out.println("mouse pressed");
         }
 
         if (moved)
@@ -164,9 +144,20 @@ public class Player extends Entity {
     @Override
     public void readInEntityData(EntityData data) {
         super.readInEntityData(data);
-        this.health = ((PlayerData) data.typeData).health;
-        this.maxHealth = ((PlayerData) data.typeData).maxHealth;
-        this.lastSpikeDamage = ((PlayerData) data.typeData).lastSpikeDamage;
+        readInPlayerData((PlayerData) data.typeData);
+    }
+
+    public void readInPlayerData(PlayerData data) {
+        this.health = data.health;
+        this.maxHealth = data.maxHealth;
+        this.bulletCount = data.bulletCount;
+        this.maxBulletCount = data.maxBulletCount;
+        this.lastSpikeDamage = data.lastSpikeDamage;
+        this.lastPlatformHeal = data.lastHealOnLightTrap;
+        this.lastInvincibilityPickup = data.lastInvincibilityPickup;
+        this.lastInfiniteBulletsPickup = data.lastInfiniteBulletsPickup;
+        this.isInvincible = data.isInvincible;
+        this.hasInfiniteBullets = data.hasInfiniteBullets;
     }
 
     @Override
@@ -175,7 +166,14 @@ public class Player extends Entity {
         PlayerData playerData = new PlayerData();
         playerData.health = health;
         playerData.maxHealth = maxHealth;
+        playerData.bulletCount = bulletCount;
+        playerData.maxBulletCount = maxBulletCount;
         playerData.lastSpikeDamage = lastSpikeDamage;
+        playerData.lastHealOnLightTrap = lastPlatformHeal;
+        playerData.lastInvincibilityPickup = lastInvincibilityPickup;
+        playerData.lastInfiniteBulletsPickup = lastInfiniteBulletsPickup;
+        playerData.isInvincible = isInvincible;
+        playerData.hasInfiniteBullets = hasInfiniteBullets;
         data.typeData = playerData;
         return data;
     }

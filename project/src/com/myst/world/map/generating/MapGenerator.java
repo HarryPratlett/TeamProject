@@ -178,8 +178,7 @@ public class MapGenerator {
 			// File("/Users/seongheehan/Documents/myst/project/assets/tile_sheet/map.png");
 			// BufferedImage tile_sheet = ImageIO.read(tileSheet);
 			int preset = (int) Math.floor(Math.random() * 4);
-			System.out.println(preset);
-			System.out.println(preset);
+
 			String subpath = null;
 	
 			switch (preset) {
@@ -216,7 +215,6 @@ public class MapGenerator {
 			default:
 				break;
 			}
-			System.out.println(path+subpath+mapnum);
 			BufferedImage tile_sheet = ImageIO.read(new File(path + subpath + mapnum));
 
 			// 32 * 32 PNG
@@ -793,8 +791,7 @@ public class MapGenerator {
 					
 					int red = (colourTileSheet[(x-1) + (y-67) * 32] >> 16) & 0xFF;
 
-					System.out.println(red);
-					
+
 					//Maze water object
 					//R:8 G:26 B:253
 					if (red == 8) {

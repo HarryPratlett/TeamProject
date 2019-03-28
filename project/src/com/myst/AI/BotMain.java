@@ -69,7 +69,6 @@ public class BotMain extends Thread{
         // player.localID = IDCounter;
         // player.owner = clientID;
         Bot bot = new Bot(new Vector2f(0.5f,0.5f), botBullets);
-        System.out.println("I exist");
 
         bot.localID = IDCounter;
         bot.owner = clientID;

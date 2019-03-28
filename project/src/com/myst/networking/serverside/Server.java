@@ -72,12 +72,10 @@ public class Server extends Thread{
         textures[19] = path + "tile_20";
 
 
-        System.out.println("i can't generate the map");
         Tile[][] map = new MapGenerator(textures).generateMap(100, 100);
 
 //        Tile [][] map = null;
         world.map = map;
-        System.out.println("i generate the map");
 
         try {
             serverSocket = new ServerSocket(PORT);
@@ -87,7 +85,6 @@ public class Server extends Thread{
         } catch (IOException e) {
             Report.errorAndGiveUp("Couldn't listen on port " + PORT);
         }
-        System.out.println("i create the socket");
 
         port = serverSocket.getLocalPort();
 
@@ -121,12 +118,12 @@ public class Server extends Thread{
             // connection. But this is beyond the scope of this simple exercise.
         }
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                ItemGen.genItems();
-            }
-        }, 5000);
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                ItemGenerator.genItems();
+//            }
+//        }, 5000);
 
     }
 

@@ -6,6 +6,8 @@ package com.myst;
 import com.myst.GUI.GUI;
 import com.myst.GUI.Overlay;
 import com.myst.audio.Audio;
+import com.myst.datatypes.TileCoords;
+import com.myst.datatypes.WorldCoords;
 import com.myst.helper.Timer;
 import com.myst.networking.EntityData;
 import com.myst.networking.clientside.ClientConnection;
@@ -21,6 +23,7 @@ import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
 import com.myst.world.view.Camera;
+import com.myst.world.view.Transform;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -58,6 +61,15 @@ public class GameMain {
     static int IDCounter = 0;
     static String clientID;
     public static boolean endOfGame = false;
+
+    static float leftBorder;
+    static float rightBorder;
+    static float topBorder;
+    static float bottomBorder;
+    static WorldCoords topLeft = new WorldCoords(0,0);
+    static WorldCoords bottomRight = new WorldCoords(0,0);
+    static TileCoords topLeftTile = new TileCoords(0,0);
+    static TileCoords bottomRightTile = new TileCoords(0,0);
 
     public static void main(Window window, Tile[][] map,
                             ConcurrentHashMap<String, ConcurrentHashMap<Integer, Entity>> entities,
@@ -200,7 +212,6 @@ public class GameMain {
             if (frame_time >= 1) {
                 System.out.println(frames);
                 System.out.println(player.health);
-                System.out.println(endOfGame);
                 frame_time = 0;
                 frames = 0;
             }
@@ -216,7 +227,13 @@ public class GameMain {
                 for (String owner : entities.keySet()) {
                     for (Integer entityID : entities.get(owner).keySet()) {
                         Entity e = entities.get(owner).get(entityID);
-                        if(!e.hidden) e.render(camera, environmentShader);
+                        if(isEntityInRenderRange(e.transform, camera)) {
+                            if (e instanceof Item) {
+                                if (!((ItemData) e.typeData).hidden) e.render(camera, environmentShader);
+                            } else {
+                                e.render(camera, environmentShader);
+                            }
+                        }
                     }
                 }
 
@@ -233,7 +250,7 @@ public class GameMain {
         }
         glClear(GL_COLOR_BUFFER_BIT);
         if(endOfGame){
-            if (player.getHealth() > 0) {
+            if (player.health > 0) {
 
                 Texture t = new Texture("assets/winner.png");
                 vertices = Arrays.copyOf(baseVertices, baseVertices.length);
@@ -429,10 +446,22 @@ public class GameMain {
                     Entity ent;
                     if (entitiesData.type == EntityType.ITEM_APPLE)
                         ent = new Item(Item.APPLE);
+                    else if (entitiesData.type == EntityType.ITEM_MED_KIT)
+                        ent = new Item(Item.MED_KIT);
                     else if (entitiesData.type == EntityType.ITEM_SPIKES_HIDDEN)
                         ent = new Item(Item.SPIKES_HIDDEN);
                     else if (entitiesData.type == EntityType.ITEM_SPIKES_REVEALED)
                         ent = new Item(Item.SPIKES_REVEALED);
+                    else if (entitiesData.type == EntityType.ITEM_BULLETS_SMALL)
+                        ent = new Item(Item.BULLETS_SMALL);
+                    else if (entitiesData.type == EntityType.ITEM_BULLETS_BIG)
+                        ent = new Item(Item.BULLETS_BIG);
+                    else if (entitiesData.type == EntityType.ITEM_INVINCIBILITY_POTION)
+                        ent = new Item(Item.INVINCIBILITY_POTION);
+                    else if (entitiesData.type == EntityType.ITEM_INFINITE_BULLETS_POTION)
+                        ent = new Item(Item.INFINITE_BULLETS_POTION);
+                    else if (entitiesData.type == EntityType.ITEM_LIGHT_TRAP)
+                        ent = new Item(Item.LIGHT_TRAP);
                     else if (entitiesData.type == EntityType.BULLET)
                         ent = new Bullet(new Line(new Vector2f(), new Vector2f()), 0, 0);
                     else
@@ -471,4 +500,40 @@ public class GameMain {
         vertices[10] *= height * heightScale;
         return vertices;
     }
+
+    public static boolean isEntityInRenderRange(Transform entityTransform, Camera camera){
+        leftBorder = (camera.position.x + (camera.getWidth() / 2));
+        rightBorder = (camera.position.x - (camera.getWidth() / 2));
+    
+        topBorder = (-camera.position.y + (camera.getHeight() / 2));
+        bottomBorder = (-camera.position.y - (camera.getHeight() / 2));
+    
+        topLeft.x = leftBorder;
+        topLeft.y = topBorder;
+        bottomRight.x = rightBorder;
+        bottomRight.y = bottomBorder;
+    
+        topLeftTile = topLeft.asTileCoords(camera.scale);
+        bottomRightTile = bottomRight.asTileCoords(camera.scale);
+    
+        bottomRightTile.x = bottomRightTile.x + 1;
+        bottomRightTile.y = bottomRightTile.y + 1;
+    
+        if(entityTransform.pos.x > bottomRightTile.x){
+            return false;
+        }
+        if(-entityTransform.pos.y > bottomRightTile.y){
+            return false;
+        }
+        if(entityTransform.pos.x < topLeftTile.x){
+            return false;
+        }
+        if(-entityTransform.pos.y < topLeftTile.y){
+            return false;
+        }
+        return true;
+    
+    }
+
+    
 }

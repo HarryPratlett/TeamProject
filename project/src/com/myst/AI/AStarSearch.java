@@ -28,7 +28,6 @@ public class AStarSearch {
     public ArrayList<Vector3f> getPath(){
         ArrayList<Vector3f> routeAsCoords = new ArrayList<Vector3f>();
         ArrayList<MapNode> route = search();
-        System.out.println(route.get(0).getPosition());
         for(MapNode node : route) {
             routeAsCoords.add(node.getPosition());
 
@@ -70,7 +69,6 @@ public class AStarSearch {
                     //if((Timer.getTime()-startTime)>= 3.00) {
                       //  return children;
                     //}
-                    System.out.println(childPosition.toString());
                 }
             }
         }
