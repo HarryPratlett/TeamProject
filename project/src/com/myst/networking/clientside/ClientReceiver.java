@@ -128,13 +128,12 @@ public class ClientReceiver extends Thread {
                     Entity clientEntity = entities.get(clientID).get(entity.localID);
                     switch(clientEntity.getType()){
                         case PLAYER:
-                            try {
-                                ((Player) clientEntity).health = ((PlayerData) entity.typeData).health;
-                            } catch (ClassCastException e){
+                            if (clientID.equals("bot")) {
                                 ((Bot) clientEntity).health = ((PlayerData) entity.typeData).health;
+                            } else {
+                                ((Player) clientEntity).health = ((PlayerData) entity.typeData).health;
                             }
                             break;
-                            
                     }
                 }
                 else if (!entity.ownerID.equals(clientID)) {

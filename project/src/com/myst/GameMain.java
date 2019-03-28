@@ -365,8 +365,8 @@ public class GameMain {
             if (bulletVec.y > 0) {
                 newBullet.transform.rotation += Math.PI;
             }
-            newBullet.transform.pos.x = currentPos.x;
-            newBullet.transform.pos.y = currentPos.y;
+            newBullet.transform.pos.x = currentPos.x -0.5f;
+            newBullet.transform.pos.y = currentPos.y +0.5f;
 
             myEntities.put(newBullet.localID, newBullet);
         }

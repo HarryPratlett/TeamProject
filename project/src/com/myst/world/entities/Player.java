@@ -123,7 +123,7 @@ public class Player extends Entity {
 
 
         if (window.getInput().isMousePressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
-            Line line = new Line(new Vector2f(transform.pos.x + 0.5f, transform.pos.y), new Vector2f((float) xMouse, (float) -yMouse));
+            Line line = new Line(new Vector2f(transform.pos.x + 0.5f, transform.pos.y - 0.5f), new Vector2f((float) xMouse, (float) -yMouse));
             bullets.add(line);
             Audio.getAudio().play(Audio.GUN, transform.pos);
             System.out.println("mouse pressed");
