@@ -24,11 +24,13 @@ public class Overlay {
             -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
             -1f, -0.5f, 0f/*3*/
     };
-    private final float[] textureDocks = new float[] {
+
+    private float[] textureDocks = new float[] {
             0f, 0f,   1, 0f,  1f, 1f,
             0f, 1f
     };
-    private final int[] indices = new int[] {
+
+    private int[] indices = new int[] {
             0,1,2,
             2,3,0
     };
