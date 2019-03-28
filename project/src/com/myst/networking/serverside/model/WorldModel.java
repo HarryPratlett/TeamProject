@@ -288,7 +288,9 @@ public class WorldModel {
                     ((PlayerData) entity.typeData).lastSpikeDamage = playerData.lastSpikeDamage;
                     ((PlayerData) entity.typeData).lastHealOnPlatform = playerData.lastHealOnPlatform;
                     ((PlayerData) entity.typeData).lastInvincibilityPickup = playerData.lastInvincibilityPickup;
+                    ((PlayerData) entity.typeData).lastInfiniteBulletsPickup = playerData.lastInfiniteBulletsPickup;
                     ((PlayerData) entity.typeData).isInvincible = playerData.isInvincible;
+                    ((PlayerData) entity.typeData).hasInfiniteBullets = playerData.hasInfiniteBullets;
                     break;
                 case ITEM_SPIKES_HIDDEN:
                 case ITEM_SPIKES_REVEALED:
@@ -320,7 +322,8 @@ public class WorldModel {
                 for(EntityData ed : entities.get(owner)) {
                     if(ed.type == PLAYER) {
                         PlayerData pd = (PlayerData) ed.typeData;
-                        pd.bulletCount--;
+                        if(!((PlayerData) ed.typeData).hasInfiniteBullets)
+                            pd.bulletCount--;
                         break;
                     }
                 }
