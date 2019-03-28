@@ -30,18 +30,47 @@ public class Bot extends Entity {
     private long lastSpikeDamage = 0;
 
 
+    private long spikeDamageDelay = 1000;
     public Bot(Vector2f boundingBoxCoords, ArrayList<Line> bullets) {
         super(boundingBoxCoords);
         type = EntityType.PLAYER;
         this.visibleToEnemy = true;
         this.bullets = bullets;
         this.exists = true;
+        this.isBot = true;
 
     }
 
 
     public void initialiseAI(World world) {
         intelligence = new AI(transform, world);
+    }
+
+    public float getHealth() {
+        return health;
+    }
+
+    public void setHealth(float health) {
+        if (health < 0) health = 0;
+        if (health > maxHealth) health = maxHealth;
+
+        this.health = health;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public void heal(int heal) {
+        setHealth(health + heal);
+    }
+
+    public void damage(int dmg) {
+        setHealth(health - dmg);
+    }
+
+    private boolean canTakeSpikeDamage() {
+        return System.currentTimeMillis() - lastSpikeDamage > spikeDamageDelay;
     }
 
     public void updateBot(float deltaTime, World world, ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities) {
@@ -57,15 +86,15 @@ public class Bot extends Entity {
         this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
         int random = (int) (Math.random() * 3000);
 
-//        if(random == 1500){
-//            if(this.lightDistance == 0.25f){
-//                this.lightDistance = 2.5f;
-//                this.visibleToEnemy = true;
-//            }else{
-//                this.lightDistance = 0.25f;
-//                this.visibleToEnemy = false;
-//            }
-//        }
+        if(random == 1500){
+            if(this.lightDistance == 0.25f){
+                this.lightDistance = 2.5f;
+                this.visibleToEnemy = true;
+            }else{
+                this.lightDistance = 0.25f;
+                this.visibleToEnemy = false;
+            }
+        }
 
         AABB[] boxes = new AABB[25];
         for (int i = 0; i < 5; i++) {
@@ -146,6 +175,7 @@ public class Bot extends Entity {
         data.typeData = playerData;
         return data;
     }
+
 
     @Override
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer, Entity> items) {

@@ -21,7 +21,7 @@ public class ClientReceiver extends Thread {
     private ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender;
     private String clientID;
     private boolean endMe = false;
-//    convert entity[] into hash map potentially currently the arrays indexes corresponds to the entity's ID
+    //    convert entity[] into hash map potentially currently the arrays indexes corresponds to the entity's ID
     public ClientReceiver(ObjectInputStream fromServer,
                           ClientSender toServer,
                           ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities,
@@ -79,7 +79,7 @@ public class ClientReceiver extends Thread {
         Audio.getAudio().play(playAudioData.clipName, playAudioData.location);
     }
 
-//    sends the entities positions to the server
+    //    sends the entities positions to the server
     private void sendEntities(){
 //        this needs refactoring
         ConcurrentHashMap<Integer, Entity> myEntities = this.entities.get(clientID);
@@ -105,7 +105,7 @@ public class ClientReceiver extends Thread {
         toServer.sendQueue();
     }
 
-//    this can be modified
+    //    this can be modified
     private void readInEntities(Object data) {
         ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
 
@@ -122,18 +122,19 @@ public class ClientReceiver extends Thread {
                     entities.put(entity.ownerID, new ConcurrentHashMap<Integer,Entity>());
                 }
                 if(!entities.get(entity.ownerID).containsKey(entity.localID)){
-                        toRender.get(entity.ownerID).put(entity.localID, entity);
+                    toRender.get(entity.ownerID).put(entity.localID, entity);
                 }
                 else if(entity.ownerID.equals(clientID)){
                     Entity clientEntity = entities.get(clientID).get(entity.localID);
                     switch(clientEntity.getType()){
                         case PLAYER:
-                            if (clientID.equals("bot")) {
+                            if(clientEntity.isBot()) {
                                 ((Bot) clientEntity).health = ((PlayerData) entity.typeData).health;
-                            } else {
+                            }else {
                                 ((Player) clientEntity).health = ((PlayerData) entity.typeData).health;
                             }
                             break;
+
                     }
                 }
                 else if (!entity.ownerID.equals(clientID)) {

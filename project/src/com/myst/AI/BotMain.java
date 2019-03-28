@@ -78,9 +78,9 @@ public class BotMain extends Thread{
         bot.transform.pos.add(10, -2, 1);
 
         bot.initialiseAI(world);
-        System.out.println("trying to find a path");
-        bot.setPath(new Vector3f(1,-1,1));
-        System.out.println("I found a path");
+        //System.out.println("trying to find a path");
+        //bot.setPath(new Vector3f(1,-1,1));
+        //System.out.println("I found a path");
 
         entities.put(clientID, new ConcurrentHashMap<Integer,Entity>());
 
@@ -106,6 +106,11 @@ public class BotMain extends Thread{
             debugCurrentTime = Timer.getTime();
             double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
             debugLastTime = debugCurrentTime;
+            if(bot.getPath() == null) {
+                int x = (int) Math.random() * 100;
+                int y = (int) Math.random() * 100;
+                bot.setPath(new Vector3f(x,-y,1));
+            }
             bot.updateBot((float) timeSinceLastUpdate, world, entities);
             botBullets.clear();
 

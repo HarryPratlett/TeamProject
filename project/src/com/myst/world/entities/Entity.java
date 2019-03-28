@@ -28,6 +28,7 @@ public abstract class Entity implements Serializable {
     public boolean visibleToEnemy;
     public boolean exists = true;
     public boolean hidden = false;
+    protected boolean isBot = false;
 
     public Entity(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords){
         model = new Model(vertices, texture, indices);
@@ -88,5 +89,9 @@ public abstract class Entity implements Serializable {
         this.lightSource = data.lightSource;
         this.lightDistance = data.lightDistance;
         this.exists = data.exists;
+    }
+
+    public boolean isBot() {
+        return this.isBot;
     }
 }
