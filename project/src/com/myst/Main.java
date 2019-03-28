@@ -114,6 +114,22 @@ public class Main {
                         amHost = true;
 
                         break;
+
+                    case START_SINGLE_PLAYER:
+                        myServer = new Server();
+                        myServer.start();
+                        while(!myServer.foundIPAndPort) {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        menu.ipAddress = myServer.IP;
+                        menu.port = (myServer.port).toString();
+                        new BotMain(Integer.parseInt(menu.port)).start();
+                        state = ProgramState.SWITCH_TO_GAME_FROM_MENU;
+                        break;
                     case SWITCH_TO_GAME_FROM_MENU:
                         entities = new ConcurrentHashMap<>();
                         toRender = new ConcurrentHashMap<>();

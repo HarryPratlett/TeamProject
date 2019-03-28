@@ -222,7 +222,7 @@ public class Menu {
         ProgramState state = ProgramState.MAIN_MENUS;
         switch(currentWindow){
             case MAIN_MENU:
-                this.mainMenuInput();
+                state = this.mainMenuInput();
                 break;
             case MULTIPLAYER:
                 multiplayerAccessed = true;
@@ -319,7 +319,7 @@ public class Menu {
     /**
      * The input sensor for the main menu screen
      */
-    public void mainMenuInput()   {
+    public ProgramState mainMenuInput()   {
         for (Rectangle2D.Float b : menuButtons.keySet())   {
 
             double mouseX = ((this.input.getMouseCoordinates()[0])/(window.getWidth()/2))-1;
@@ -330,7 +330,7 @@ public class Menu {
                     String buttonName = menuButtons.get(b);
                     switch(buttonName) {
                         case "singleplayer_button.png":
-                            break;
+                            return ProgramState.START_SINGLE_PLAYER;
                         case "multiplayer_button.png":
                             try {
                                 Thread.sleep(70);
@@ -346,6 +346,7 @@ public class Menu {
                 }
             }
         }
+        return ProgramState.MAIN_MENUS;
     }
 
     /**
@@ -400,6 +401,7 @@ public class Menu {
                     switch(buttonName) {
                         case "submit_button.png":
                             state = ProgramState.SWITCH_TO_GAME_FROM_MENU;
+                            break;
                     }
                 }
             }
