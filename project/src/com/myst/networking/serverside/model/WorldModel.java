@@ -6,10 +6,7 @@ import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.serverside.PlayAudioData;
 import com.myst.networking.serverside.ServerSender;
-import com.myst.world.entities.BulletData;
-import com.myst.world.entities.EntityType;
-import com.myst.world.entities.ItemData;
-import com.myst.world.entities.PlayerData;
+import com.myst.world.entities.*;
 import com.myst.world.map.rendering.Tile;
 import org.joml.Vector3f;
 
@@ -241,13 +238,13 @@ public class WorldModel {
     public ArrayList<EntityData> getPlayers() {
         ArrayList<EntityData> playersData = new ArrayList<>();
 
-        entities.values().forEach(entityDataArrayList -> {
-            for (EntityData e : entityDataArrayList) {
-                if (e.exists && (e.type == EntityType.PLAYER)) {
+        for(String key: entities.keySet()){
+            for(EntityData e: entities.get(key)){
+                if(e.exists && (e.type == EntityType.PLAYER)){
                     playersData.add(e);
                 }
             }
-        });
+        }
 
         return playersData;
     }
@@ -258,8 +255,10 @@ public class WorldModel {
     public ArrayList<EntityData> getItems() {
         ArrayList<EntityData> itemsData = new ArrayList<>();
 
-        entities.values().forEach(entityDataArrayList -> {
-            for (EntityData e : entityDataArrayList) {
+
+
+        for(String key: entities.keySet()){
+            for(EntityData e: entities.get(key)){
                 if (e.exists && (e.type == ITEM_APPLE ||
                         e.type == EntityType.ITEM_MED_KIT ||
                         e.type == EntityType.ITEM_BULLETS_SMALL ||
@@ -272,8 +271,7 @@ public class WorldModel {
                     itemsData.add(e);
                 }
             }
-        });
-
+        }
         return itemsData;
     }
 
@@ -283,13 +281,14 @@ public class WorldModel {
     public ArrayList<EntityData> getBullets() {
         ArrayList<EntityData> itemsData = new ArrayList<>();
 
-        entities.values().forEach(entityDataArrayList -> {
-            for (EntityData e : entityDataArrayList) {
+        for(String key: entities.keySet()){
+            for(EntityData e: entities.get(key)){
                 if (e.exists && (e.type == BULLET)) {
                     itemsData.add(e);
                 }
             }
-        });
+        }
+
 
         return itemsData;
     }
