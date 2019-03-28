@@ -512,7 +512,7 @@ public class Menu {
     public void takeInput() {
         glfwPollEvents();
         if(isIpAddress) {
-            if (this.ipAddress.length() <= 10) {
+            if (this.ipAddress.length() <= 12) {
                 if (input.isKeyPressed(GLFW_KEY_1)) {
                     this.ipAddress += "1";
                 } else if (input.isKeyPressed(GLFW_KEY_2)) {
@@ -589,7 +589,7 @@ public class Menu {
 
             if (Character.toString(c).equals("."))   {
                 vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-                vertices = this.alterVertices(vertices, dot[0].getHeight(), dot[0].getWidth(), 0.005, 0.006);
+                vertices = this.alterVertices(vertices, dot[0].getHeight(), dot[0].getWidth(), 0.004, 0.005);
                 if(models.get(dot) == null) {
                     model = new Model(vertices, textureDocks, indices);
                     models.put(dot, model);
@@ -605,7 +605,7 @@ public class Menu {
                 model = new Model(vertices, textureDocks, indices);
                 this.renderImage(shader, numberTextures[Character.getNumericValue(c)], x, y, new Matrix4f(), model);
             }
-            x = x + 0.065f;
+            x = x + 0.057f;
         }
     }
 

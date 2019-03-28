@@ -9,7 +9,9 @@ import com.myst.audio.Audio;
 import com.myst.helper.Timer;
 import com.myst.networking.EntityData;
 import com.myst.networking.clientside.ClientConnection;
+import com.myst.rendering.Model;
 import com.myst.rendering.Shader;
+import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.Bullet;
@@ -27,6 +29,7 @@ import org.lwjgl.opengl.GL;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -37,6 +40,20 @@ import static org.lwjgl.opengl.GL11.*;
  * Runs the game
  */
 public class GameMain {
+
+    private static final float[] baseVertices = new float[] {
+            -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
+            -1f, -0.5f, 0f/*3*/
+    };
+    private static final float[] textureDocks = new float[] {
+            0f, 0f,   1, 0f,  1f, 1f,
+            0f, 1f
+    };
+    private static final int[] indices = new int[] {
+            0,1,2,
+            2,3,0
+    };
+    public static float[] vertices;
 
     static int IDCounter = 0;
     static String clientID;
@@ -214,8 +231,36 @@ public class GameMain {
                 frames += 1;
             }
         }
-
+        glClear(GL_COLOR_BUFFER_BIT);
         if(endOfGame){
+            if (player.getHealth() > 0) {
+
+                Texture t = new Texture("assets/winner.png");
+                vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+                vertices = alterVertices(vertices, t.getHeight(), t.getWidth(), 0.001, 0.003);
+                Model model = new Model(vertices, textureDocks, indices);
+                renderImage(menuShader, t, 0, 0, new Matrix4f(), model);
+                window.swapBuffers();
+                try {
+                    Thread.sleep(3000);
+
+                } catch (Exception e)   {
+                    e.printStackTrace();
+                }
+            }   else    {
+                Texture t = new Texture("assets/loser.png");
+                vertices = Arrays.copyOf(baseVertices, baseVertices.length);
+                vertices = alterVertices(vertices, t.getHeight(), t.getWidth(), 0.001, 0.003);
+                Model model = new Model(vertices, textureDocks, indices);
+                renderImage(menuShader, t, 0, 0, new Matrix4f(), model);
+                window.swapBuffers();
+                try {
+                    Thread.sleep(3000);
+
+                } catch (Exception e)   {
+                    e.printStackTrace();
+                }
+            }
             System.out.println("this is the end of the game");
         }
 
@@ -398,5 +443,32 @@ public class GameMain {
                 }
             }
         }
+    }
+
+    public static void renderImage(Shader shader, Texture texture, float x, float y, Matrix4f scale, Model model){
+        shader.bind();
+        texture.bind(0);
+        Matrix4f target = new Matrix4f();
+
+        Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x,y,0));
+        scale.mul(tile_pos, target);
+
+
+        shader.setUniform("sampler",0);
+        shader.setUniform("projection", target);
+        model.render();
+    }
+
+    public static float[] alterVertices(float[] vertices, int height, int width, double widthScale, double heightScale) {
+        vertices[0] *= width * widthScale;
+        vertices[3] *= width * widthScale;
+        vertices[6] *= width * widthScale;
+        vertices[9] *= width * widthScale;
+
+        vertices[1] *= height * heightScale;
+        vertices[4] *= height * heightScale;
+        vertices[7] *= height * heightScale;
+        vertices[10] *= height * heightScale;
+        return vertices;
     }
 }
