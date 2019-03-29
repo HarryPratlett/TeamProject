@@ -33,8 +33,8 @@ public class Player extends Entity {
     private long lastSpikeDamage;
     public float health = 100;
     private float maxHealth = 100;
-    private int bulletCount = 30;
-    private int maxBulletCount = 100;
+    private int bulletCount = 10;
+    private int maxBulletCount = 50;
     private long lastPlatformHeal;
     private long lastInvincibilityPickup;
     private long lastInfiniteBulletsPickup;
@@ -58,6 +58,9 @@ public class Player extends Entity {
     Texture healthBarFillerTexture;
 
     Model healthBarModel = null;
+
+    Transform bulletBarTransform;
+    Model 
 
 
 //    private static final float[] vertices =

@@ -229,7 +229,7 @@ public class Audio {
         healthUpRange = healthUpGainControl.getMaximum() - healthUpGainControl.getMinimum();
 
         modifyVolume(0);
-//        theme();
+        theme();
     }
 
     /**
