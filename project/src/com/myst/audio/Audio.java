@@ -12,6 +12,8 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_T;
+
 /**
  * Class for playing and controlling audio
  */
@@ -44,6 +46,7 @@ public class Audio {
     public static final int MIN_VOLUME = 0;
     public static final int MAX_VOLUME = 5;
     boolean muted = false;
+    boolean themeMuted = false;
     int volume = 3;
 
     private Input input;
@@ -228,7 +231,8 @@ public class Audio {
         medKitRange = medKitGainControl.getMaximum() - medKitGainControl.getMinimum();
         healthUpRange = healthUpGainControl.getMaximum() - healthUpGainControl.getMinimum();
 
-        modifyVolume(0);
+        modifySfxVolume(0);
+        modifyThemeVolume(0);
         theme();
     }
 
@@ -266,7 +270,6 @@ public class Audio {
     public void mute() {
         muted = !muted;
         if (muted) {
-            themeClip.stop();
             gunClip.stop();
             hitByBulletClip.stop();
             hitBySpikesClip.stop();
@@ -279,16 +282,26 @@ public class Audio {
             bulletsBigClip.stop();
             medKitClip.stop();
             healthUpClip.stop();
-        } else {
-            themeClip.start();
         }
     }
 
     /**
-     * Changing the volume of the client
+     * Muting music on the client
+     */
+    public void muteTheme() {
+        themeMuted = !themeMuted;
+
+        if(!themeMuted)
+            themeClip.start();
+        else
+            themeClip.stop();
+    }
+
+    /**
+     * Changing the volume of the sfx of the client
      * @param change The amount by which the volume is increased / decreased
      */
-    public void modifyVolume(int change) {
+    public void modifySfxVolume(int change) {
         if (change < MIN_VOLUME) {
 
             if ((volume + change) < MIN_VOLUME) {
@@ -303,9 +316,6 @@ public class Audio {
                 volume = volume + change;
             }
         }
-
-        gain = (themeRange / MAX_VOLUME * volume) + themeGainControl.getMinimum();
-        themeGainControl.setValue(gain);
 
         gain = (gunRange / MAX_VOLUME * volume) + gunGainControl.getMinimum();
         gunGainControl.setValue(gain);
@@ -341,6 +351,30 @@ public class Audio {
 
         gain = (healthUpRange / MAX_VOLUME * volume) + healthUpGainControl.getMinimum();
         healthUpGainControl.setValue(gain);
+    }
+
+    /**
+     * Changing the volume of the music on the client
+     * @param change The amount by which the volume is increased / decreased
+     */
+    public void modifyThemeVolume(int change) {
+        if (change < MIN_VOLUME) {
+
+            if ((volume + change) < MIN_VOLUME) {
+                volume = MIN_VOLUME;
+            } else {
+                volume = volume + change;
+            }
+        } else {
+            if ((volume + change) > MAX_VOLUME) {
+                volume = MAX_VOLUME;
+            } else {
+                volume = volume + change;
+            }
+        }
+
+        gain = (themeRange / MAX_VOLUME * volume) + themeGainControl.getMinimum();
+        themeGainControl.setValue(gain);
     }
 
     /**
@@ -514,8 +548,9 @@ public class Audio {
      * Calls mute when the key M is pressed
      */
     public void update() {
-        if(input.isKeyPressed(GLFW.GLFW_KEY_M)){
+        if(input.isKeyPressed(GLFW.GLFW_KEY_M))
             mute();
-        }
+        else if(input.isKeyPressed(GLFW_KEY_T))
+            muteTheme();
     }
 }

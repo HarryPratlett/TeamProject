@@ -10,6 +10,7 @@
 package com.myst.GUI;
 
 
+import com.myst.audio.Audio;
 import com.myst.input.Input;
 import com.myst.rendering.Model;
 import com.myst.rendering.Texture;
@@ -256,10 +257,12 @@ public class GUI {
                             if (brightness > 0) { brightness -= 1; }
                             break;
                         case "plus.png":
-                            if (volume < 5) { volume += 1;  }
+                            Audio.getAudio().modifySfxVolume(1);
+                            Audio.getAudio().modifyThemeVolume(1);
                             break;
                         case "minus.png":
-                            if (volume > 0) { volume -= 1; }
+                            Audio.getAudio().modifySfxVolume(-1);
+                            Audio.getAudio().modifyThemeVolume(-1);
                             break;
                     }
                 }
