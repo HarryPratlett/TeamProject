@@ -11,7 +11,9 @@ import org.lwjgl.BufferUtils;
 import org.joml.Matrix4f;
 import static org.lwjgl.opengl.GL20.*;
 
-
+/**
+ * Creates a shader to render items
+ */
 public class Shader {
     private int program;
     private int vs;
@@ -20,7 +22,7 @@ public class Shader {
     public Shader(String filepath){
         program = glCreateProgram();
 
-//        vs is the shader id
+
         vs = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vs, readFile(filepath + ".vs"));
         glCompileShader(vs);
@@ -38,8 +40,6 @@ public class Shader {
         glAttachShader(program, vs);
         glAttachShader(program, fs);
 
-
-//        vertices is the name you refer to in the shader.vs and fs files
         glBindAttribLocation(program, 0, "vertices");
         glBindAttribLocation(program, 1, "textures");
 

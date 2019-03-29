@@ -2,6 +2,9 @@ package com.myst.world.entities;
 
 import java.io.Serializable;
 
+/**
+ * A given players data/info
+ */
 public class PlayerData implements Serializable {
     public float health;
     public float maxHealth;

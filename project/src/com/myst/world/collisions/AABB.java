@@ -5,7 +5,9 @@ import org.joml.Vector2f;
 
 import java.io.Serializable;
 
-//axis aligned bounding box
+/**
+ * Axis aligned bounding box
+ */
 public class AABB implements Serializable{
     private Vector2f centre, halfExtent;
     private Line hitboxLineOne;
@@ -28,6 +30,11 @@ public class AABB implements Serializable{
         return new Collision(distance,distance.x < 0 && distance.y < 0);
     }
 
+    /**
+     * Corrects bounding box
+     * @param box2 Given bounding box
+     * @param data Collision data
+     */
     public void correctPosition(AABB box2, Collision data){
         Vector2f correction = box2.centre.sub(centre, new Vector2f());
         if(data.distance.x > data.distance.y){
@@ -45,6 +52,12 @@ public class AABB implements Serializable{
         }
     }
 
+    /**
+     * Decides if a line and bounding box intersect
+     * @param line Given line
+     * @param length Lines length
+     * @return Return if it is colliding as boolean
+     */
     public boolean isColliding(Line line, float length){
         Vector2f hitboxLineOneCentre = new Vector2f();
         Vector2f hitboxLineTwoCentre = new Vector2f();

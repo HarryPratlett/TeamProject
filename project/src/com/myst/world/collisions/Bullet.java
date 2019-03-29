@@ -15,6 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.myst.world.entities.EntityType.BULLET;
 
+/**
+ * Bullet class, controls damaging entities
+ */
 public class Bullet extends Entity {
     private static final float MAX_LENGTH = 20;
     private Texture texture;
@@ -25,6 +28,12 @@ public class Bullet extends Entity {
     private float life = 100000000;
     private float timeOfCreation;
 
+    /**
+     * Constructor for a new bullet
+     * @param line Line bullet follows
+     * @param length Length of line
+     * @param damage Damage bullet will do
+     */
     public Bullet(Line line, float length, float damage){
         super( new float[]{
                 -0.1f, 1f * length, 0f, /*0*/  0.1f, 1f * length, 0f, /*1*/    0.1f, 0f, 0f, /*2*/
@@ -58,6 +67,11 @@ public class Bullet extends Entity {
         this.damage = bData.damage;
     }
 
+    /**
+     * Renders given bullet
+     * @param camera Users camera
+     * @param shader Users shader
+     */
     @Override
     public void render(Camera camera, Shader shader){
         if((System.nanoTime() - timeOfCreation) < life){

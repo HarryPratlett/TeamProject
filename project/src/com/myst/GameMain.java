@@ -161,13 +161,11 @@ public class GameMain {
         camera.bindPlayer(player);
 
         GUI gui = new GUI(window, window.getInput());
-        //Overlay overlay = new Overlay(window, window.getInput(), (int) player.health, 0);
+
 
 
         Audio.getAudio().initInput(window.getInput());
         Audio.getAudio().initAudioWithPlayer(player);
-
-//        Lighting lights = new Lighting(window.getInput(), window);
 
         while (!window.shouldClose() && !endOfGame) {
 
@@ -180,13 +178,8 @@ public class GameMain {
             unprocessed += deltaTime;
             frame_time += deltaTime;
 
-
-
-//            in the case you want to render a frame as you have gone over the frame_cap
-//            a while is used instead of an if incase the performance is less than 30 FPS
             while (unprocessed >= frame_cap) {
-//                look into effects of containing a thread.sleep();
-//                take away the frame cap so that you account for the time you've taken of the next frame
+
                 unprocessed -= frame_cap;
 
                 renderFrame = true;
@@ -327,15 +320,13 @@ public class GameMain {
 
 
             boolean hitWall = false;
-//            Vector2f xIntersection = currentXSide.intersection(bullet);
-//            Vector2f yIntersection = currentYSide.intersection(bullet);
+
             Line tempLine= new Line(currentPos,bulletVec);
             float xDistToWall = tempLine.distanceTo(currentXSide);
             float yDistToWall = tempLine.distanceTo(currentYSide);
             int mapX = (int) currentPos.x;
             int mapY = (int) currentPos.y;
 
-//            whichwall returns which wall it collided with ( an X wall or a Y wall) X is 0 Y is 1
             int whichWall = 0;
 
             while(!hitWall){
@@ -404,8 +395,6 @@ public class GameMain {
             lightRadiai[i] = 0;
         }
 
-//                getting which players have their lights on and then passing that to opengl
-//                this is for the shadows and lighting
         int d = 0;
         for (String owner : entities.keySet()) {
             if (d > 7) break;

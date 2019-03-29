@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Recieves information from server
+ */
 public class ClientReceiver extends Thread {
     private ClientSender toServer;
     private ObjectInputStream fromServer;
@@ -21,7 +24,7 @@ public class ClientReceiver extends Thread {
     private ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender;
     private String clientID;
     private boolean endMe = false;
-    //    convert entity[] into hash map potentially currently the arrays indexes corresponds to the entity's ID
+
     public ClientReceiver(ObjectInputStream fromServer,
                           ClientSender toServer,
                           ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities,
@@ -81,13 +84,11 @@ public class ClientReceiver extends Thread {
         Audio.getAudio().play(playAudioData.clipName, playAudioData.location);
     }
 
-    //    sends the entities positions to the server
     private void sendEntities(){
-//        this needs refactoring
+
         ConcurrentHashMap<Integer, Entity> myEntities = this.entities.get(clientID);
         ArrayList<EntityData> toSend = new ArrayList<EntityData>();
         if(myEntities ==  null){
-//            this is sloppy and needs tidying once debugging has finished
             return;
         }
         for(Integer i: myEntities.keySet()){
@@ -103,11 +104,14 @@ public class ClientReceiver extends Thread {
         }
         Message msg = new Message(Codes.UPDATE_SERVER,toSend);
         toServer.addToQueue(msg);
-//        this tells the Server sender to empty it's queue to the server
+
         toServer.sendQueue();
     }
 
-    //    this can be modified
+    /**
+     * Reads in entities from map
+     * @param data Given map
+     */
     private void readInEntities(Object data) {
         ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
         for (int i = 0; i < entityData.size(); i++) {

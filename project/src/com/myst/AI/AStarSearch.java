@@ -15,6 +15,9 @@ import com.myst.datatypes.WorldCoords;
 import com.myst.helper.Timer;
 import com.myst.world.World;
 
+/**
+ * Algorithm via which bots find players
+ */
 public class AStarSearch {
 
     private World world;
@@ -27,6 +30,12 @@ public class AStarSearch {
     private int mapWidth;
 
 
+    /**
+     * Constrcutor for A* search
+     * @param position Position of bot
+     * @param goal Goal position for bot
+     * @param world World bot is in
+     */
     public AStarSearch(Vector3f position, Vector3f goal, World world) {
         this.position = position;
         this.goal = goal;
@@ -35,6 +44,9 @@ public class AStarSearch {
         this.mapHeight = world.map[0].length;
     }
 
+    /**
+     * Contains whole world mapped out to check what is where
+     */
     public HashMap<List<Integer>,ArrayList<int[]>> MapWorld(){
         for(int x=0; x < world.map.length; x++){
             for(int y=0; y < world.map[x].length; y++){
@@ -91,6 +103,12 @@ public class AStarSearch {
         return graph;
     }
 
+    /**
+     * Finds a given route from a start and end point
+     * @param start Start point of bot
+     * @param goal End point of bot
+     * @return Returns a stack of directions
+     */
     public Stack<int[]> findRoute(int[] start, int[] goal){
         Set<List<Integer>> closedSet = new HashSet<>();
         Set<List<Integer>> openSet = new HashSet<>();
@@ -149,10 +167,22 @@ public class AStarSearch {
 
     }
 
+    /**
+     * Calculates heuristic for A*
+     * @param i Point I
+     * @param j Point J
+     * @return Returns the cost
+     */
     public static float heuristicCost(int[] i,int[] j){
         return ((i[0]-j[0])*(i[0]-j[0])) + ((i[1]-j[1])*(i[1]-j[1]));
     }
 
+    /**
+     * Reconstructs a previous path
+     * @param cameFrom Where bot came from
+     * @param n Where they are
+     * @return Returns a set of directions
+     */
     public static Stack<int[]> reconstructPath(HashMap<List<Integer>,int[]> cameFrom, Node n){
         Stack<int[]> route = new Stack<>();
         int[] current = n.pos;

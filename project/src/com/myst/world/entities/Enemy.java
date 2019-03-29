@@ -14,12 +14,7 @@ public class Enemy extends Entity{
 
     private final float MOVEMENT_SPEED = 10f;
 
-//    private static final float[] vertices =
-//
-//
-//    private static final float[] textureFloats =
-//
-//    private static final int[] indices = ;
+
 
     public Enemy(){
         super(new float[]{

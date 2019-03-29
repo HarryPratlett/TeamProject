@@ -2,6 +2,9 @@ package com.myst.networking;
 
 import java.io.Serializable;
 
+/**
+ * Possible codes for game
+ */
 public enum Codes implements Serializable {
     SET_CLIENT_ID,
     UPDATE_SERVER,

@@ -6,7 +6,9 @@ package com.myst.input;
 import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 
-
+/**
+ * Creates input listeners for a client
+ */
 public class Input extends GLFWCursorPosCallback {
 
     private long window;

@@ -20,6 +20,9 @@ import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
 import com.myst.world.view.Transform;
 
+/**
+ * Implements AI code to create bots
+ */
 public class Bot extends Entity {
 
     private AI intelligence;
@@ -41,6 +44,13 @@ public class Bot extends Entity {
 
 
     private long spikeDamageDelay = 1000;
+
+    /**
+     * Constructor for a bot
+     * @param boundingBoxCoords Co-ordinates of bounding box
+     * @param bullets Given bullets for bot
+     * @param search Starts a search for nearest players/enemies
+     */
     public Bot(Vector2f boundingBoxCoords, ArrayList<Line> bullets, AStarSearch search) {
         super(boundingBoxCoords);
         type = EntityType.PLAYER;
@@ -53,6 +63,10 @@ public class Bot extends Entity {
     }
 
 
+    /**
+     * Initialises the AI within the world
+     * @param world World AI is in
+     */
     public void initialiseAI(World world) {
         intelligence = new AI(transform, world);
     }

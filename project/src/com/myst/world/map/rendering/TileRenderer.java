@@ -16,15 +16,16 @@ import java.util.HashMap;
 
 import static com.myst.helper.Flatten.flatten;
 
+/**
+ * Renders tiles
+ */
 public class  TileRenderer {
     private HashMap<String, Texture> tileTextures;
     private Model model;
-//    public Tile[][] tileMap;
     private int width;
     private int height;
 
-//    tile map should potentially be moved to world
-//    instead all the textures in tilemap should be passed through
+
     public TileRenderer(/*Tile[][] tilemap ,*/ String[] textures){
         tileTextures = new HashMap<String,Texture>();
 
@@ -55,9 +56,6 @@ public class  TileRenderer {
 
     }
 
-//    this renders a given tile at location x y
-//    x and y should be according to the new co-ordinate system
-//    where x is positive and y is negative
 
     /**
      * Renders a given tile
@@ -75,11 +73,10 @@ public class  TileRenderer {
         Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(coords.x,-coords.y,0));
         Matrix4f target = new Matrix4f();
 
-//        translates the tiles according to the camera
+
         cam.getProjection().mul(new Matrix4f(),target);
         target.mul(tile_pos);
 
-//        target is the location of the tile
         shader.setUniform("sampler", 0);
         shader.setUniform("projection", target);
         model.render();

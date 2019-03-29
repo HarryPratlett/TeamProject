@@ -15,9 +15,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.myst.world.entities.EntityType.*;
 
+/**
+ * models the world
+ */
 public class WorldModel {
-    //    max 64 entities
-//    this needs improving, replace the array list with a hashmap
+
     private ConcurrentHashMap<String, ArrayList<EntityData>> entities;
     private ArrayList<EntityData> playersData;
     private ArrayList<EntityData> itemsData;
@@ -163,13 +165,10 @@ public class WorldModel {
                     }
                 }
 
-//              bullet collision code
+
             }
             for(EntityData bulletData : bulletsData){
                 BulletData bulletSpecific = (BulletData) bulletData.typeData;
-
-//                if the bullet is colliding with the owner or we have already calculated whether it collides with
-//                something we ignore the bullet
 
                 if(bulletData.ownerID.equals(playerData.ownerID) || bulletSpecific.checked) continue;
 
@@ -319,11 +318,12 @@ public class WorldModel {
         return itemsData;
     }
 
+    /**
+     * Updates world
+     * @param entity Entity updating for
+     */
     public void updateWorld(EntityData entity) {
         ArrayList<EntityData> clientEntities = entities.get(entity.ownerID);
-
-//        this is sloppy and needs redoing after the prototype and replacing with a better system
-//        a better system may be replacing it with a hashmap which may even be more efficient
 
         if (entity.localID + 1 > clientEntities.size()) {
             while (entity.localID + 1 > clientEntities.size()) {
@@ -331,8 +331,6 @@ public class WorldModel {
             }
         }
 
-//        try and catch need to catch when you try and access an element which doesn't exist
-//        try {
 
         if (clientEntities.get(entity.localID) != null) {
             EntityData cEntityData = clientEntities.get(entity.localID);
@@ -395,8 +393,11 @@ public class WorldModel {
         entities.put(clientID, new ArrayList<>());
     }
 
-
-    //    simply returns all the data stored by the world model in a form for networking to send
+    /**
+     * gets world update
+     * @param forceUpdate If true, forces update
+     * @return Returns new entity data
+     */
     public ArrayList<EntityData> getWorldData(boolean forceUpdate) {
         ArrayList<EntityData> out = new ArrayList<>();
         for (String key : entities.keySet()) {

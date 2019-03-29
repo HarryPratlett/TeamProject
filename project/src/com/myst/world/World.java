@@ -13,26 +13,29 @@ import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
 import org.joml.Vector2f;
 
+/**
+ * Creates a world
+ */
 public class World {
     private final int view = 16;
     private AABB[][] bounding_boxes;
     private int[][] tiles;
-//    private int width;
-//    private int height;
+
     private TileRenderer render;
     public Tile[][] map;
-//    scale is the width of and height of the tiles in the world
+
     public int scale;
 
+    /**
+     * Constructor to create world
+     * @param render Renderer of tiles
+     * @param tileMap Map created by map generator
+     */
     public World(TileRenderer render,Tile[][] tileMap){
         this.render = render;
-//        this needs refactoring
+
         this.map = tileMap;
 
-
-//        width = 30;
-//        height = 30;
-//        scale = 20; /*this has to be equal to the camera */
 
         tiles = new int[map.length][map[0].length];
 
@@ -46,13 +49,16 @@ public class World {
                 }
             }
         }
-
-
     }
 
+    /**
+     * Renders the map
+     * @param shader Shader rendered on
+     * @param camera Users camera
+     * @param window Window displayed in
+     */
     public void render(Shader shader, Camera camera, Window window){
 
-//        the camera co-ordinate system is flipped to that of the world so the camera position needs to be flipped
         float leftBorder = (camera.position.x + (camera.getWidth() / 2));
         float rightBorder = (camera.position.x - (camera.getWidth() / 2));
 

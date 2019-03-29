@@ -15,6 +15,9 @@ import org.joml.Vector3f;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Creates an entity i.e. anything which can be interacted with
+ */
 public abstract class Entity implements Serializable {
     protected Model model;
     public Transform transform;

@@ -10,6 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.myst.world.entities.EntityType.*;
 
+/**
+ * Class for base item
+ */
 public class Item extends Entity {
 
     final public static String APPLE = "apple";
@@ -25,6 +28,10 @@ public class Item extends Entity {
     final private String PATH = "assets/items/";
     final private String PNG = ".png";
 
+    /**
+     * Creates a new item
+     * @param itemType
+     */
     public Item(String itemType) {
         super(new float[]{
                         -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/

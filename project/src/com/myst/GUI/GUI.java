@@ -25,7 +25,9 @@ import java.util.Arrays;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-
+/**
+ * Creates the gui within the game
+ */
 
 public class GUI {
 

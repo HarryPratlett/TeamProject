@@ -10,6 +10,9 @@ import org.lwjgl.glfw.GLFWVidMode;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * Creates a window
+ */
 public class Window {
     private long window;
 

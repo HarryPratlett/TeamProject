@@ -11,18 +11,33 @@ import com.myst.world.World;
 import com.myst.world.entities.Entity;
 import com.myst.world.view.Transform;
 
+/**
+ * AI class - for bots
+ */
 public class AI {
 
     private Transform transform;
     private World world;
 
+    /**
+     * Default constructor for ai
+     * @param transform Transforms AI
+     * @param world World AI is in
+     */
     public AI(Transform transform, World world) {
         this.transform = transform;
         this.world = world;
     }
 
 
-
+    /**
+     * Detects enemies nearby to AI
+     * @param entities List of all entities
+     * @param lightOn Whether other user has flashlight on
+     * @param botOwner Owner of bot
+     * @param botID ID of bot
+     * @return
+     */
     public Transform enemyDetection(ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities, boolean lightOn, String botOwner, int botID) {
         for(String owner: entities.keySet()) {
             for(Integer localID: entities.get(owner).keySet()){
@@ -47,6 +62,10 @@ public class AI {
         return null;
     }
 
+    /**
+     * Uupdates transform
+     * @param transform Updated value for transform
+     */
     public void updateTransform(Transform transform) {
         this.transform = transform;
     }

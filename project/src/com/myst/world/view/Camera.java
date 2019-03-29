@@ -5,7 +5,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 
-//as a note the co-ordinate system is flipped so left is negative and right is positive
 public class Camera {
     public Vector3f position;
     public Matrix4f projection;
@@ -34,7 +33,6 @@ public class Camera {
     }
 
 
-//    now that the co-ordinate system has been redone so must this
     public void updatePosition(){
         if(this.player != null){
             this.setPosition(new Vector3f(-this.player.transform.pos.x * this.scale, -this.player.transform.pos.y * this.scale, 1));

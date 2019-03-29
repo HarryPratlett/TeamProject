@@ -10,25 +10,31 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * Sends client info to the server
+ */
 public class ClientSender extends Thread {
     private ObjectOutputStream toServer;
     private BlockingQueue<Object> queue;
     private boolean sendQueue;
     public boolean endMe = false;
 
+    /**
+     * Creates a client sender
+     * @param toServer Server link
+     * @param q Queue of objects
+     */
     public ClientSender(ObjectOutputStream toServer, BlockingQueue<Object> q){
         this.toServer = toServer;
         this.queue = q;
         sendQueue = false;
     }
 
-//    this should only be startConnection when the client receives a request to update the server
+
     @Override
     public void run(){
         try {
             while(!endMe) {
-//                don't know why I have to have a thread.sleep in here but it won't work without
-//                due to concurrency issues, needs refactoring
                 Thread.sleep(1);
                 if(sendQueue) {
                     sendQueue = false;
@@ -53,10 +59,17 @@ public class ClientSender extends Thread {
 
     }
 
+    /**
+     * Method to add to queue
+     * @param object Object to add to queue
+     */
     public void addToQueue(Object object){
         queue.add(object);
     }
 
+    /**
+     * Sends queue to server if true
+     */
     public void sendQueue(){
         sendQueue = true;
     }

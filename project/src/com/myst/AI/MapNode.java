@@ -9,6 +9,9 @@ import com.myst.datatypes.TileCoords;
 import com.myst.datatypes.WorldCoords;
 import com.myst.world.World;
 
+/**
+ * Map Nodes for AI search
+ */
 public class MapNode implements Comparable<MapNode> {
 
     private Vector3f position;
@@ -20,6 +23,13 @@ public class MapNode implements Comparable<MapNode> {
     private int g;
     private int h;
 
+    /**
+     * Constructor for Map Node
+     * @param position Position of bot
+     * @param goal Goal for bot
+     * @param parent Parent node
+     * @param world World bot is in
+     */
     public MapNode(Vector3f position, Vector3f goal, MapNode parent, World world) {
         this.position = position;
         this.goal = goal;
@@ -31,18 +41,34 @@ public class MapNode implements Comparable<MapNode> {
         f = g + h;
     }
 
+    /**
+     * Gets f value
+     * @return Returns updated f value
+     */
     public int getF() {
         return f;
     }
 
+    /**
+     * Gets position of bot
+     * @return Position of bot
+     */
     public Vector3f getPosition() {
         return position;
     }
 
+    /**
+     * Gets parent map node
+     * @return Parent map node
+     */
     public Optional<MapNode> getParent(){
         return parent;
     }
 
+    /**
+     * Gets euclidean distance between two points
+     * @return Euclidean distance between two points as an int
+     */
     private int euclideanDistance() {
         TileCoords coords = new TileCoords((int)position.x,(int)-position.y);
         if(world.getTile(coords) == null) {
@@ -60,6 +86,11 @@ public class MapNode implements Comparable<MapNode> {
         }
     }
 
+    /**
+     * Compares two map nodes
+     * @param node Map node to be compared against
+     * @return Returns int whether they are same or not
+     */
     @Override
     public int compareTo(MapNode node) {
         return f - node.getF();

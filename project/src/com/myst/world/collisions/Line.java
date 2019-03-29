@@ -5,6 +5,9 @@ import org.joml.Vector2f;
 
 import java.io.Serializable;
 
+/**
+ * Creates lines for intersections
+ */
 public class Line implements Serializable {
     public Vector2f vector;
     public Vector2f position;
@@ -15,7 +18,11 @@ public class Line implements Serializable {
         this.position = position;
     }
 
-//    returns the intersection vector
+    /**
+     * Checks if two lines intersect
+     * @param line2 Line checking against
+     * @return Returns a vector of if they intersect
+     */
     public Vector2f intersection(Line line2){
         float[][] gaussMatrix = new float[3][2];
         gaussMatrix[2][0] = this.position.x - line2.position.x;
@@ -46,7 +53,11 @@ public class Line implements Serializable {
     }
 
 
-//    returns the coefficient of intersection for the second vector
+    /**
+     * Calculates co-ordinates of intersection
+     * @param line2 Line compared against
+     * @return Float co-ordinates
+     */
     public Float intersectionCo(Line line2){
         if(this.vector.x == line2.vector.x && this.vector.y == line2.vector.y){
             return null;
@@ -61,18 +72,18 @@ public class Line implements Serializable {
         gaussMatrix[1][1] = -line2.vector.y;
 
 
-//        eliminating 0 1
+
         float n = -gaussMatrix[0][1] / gaussMatrix[0][0];
         gaussMatrix[0][1] = 0;
         gaussMatrix[1][1] = gaussMatrix[1][1] + (n * gaussMatrix[1][0]);
         gaussMatrix[2][1] = gaussMatrix[2][1] + (n * gaussMatrix[2][0]);
 
-//        eliminating 1 0
+
         n = -gaussMatrix[1][0] / gaussMatrix[1][1];
         gaussMatrix[1][0] = 0;
         gaussMatrix[2][0] = gaussMatrix[2][0] + (n * gaussMatrix[2][1]);
 
-//        calculating the coefficients
+
         float lTwoLambda = gaussMatrix[2][1] / gaussMatrix[1][1];
         float lOneLambda = gaussMatrix[2][0] / gaussMatrix[0][0];
 
@@ -83,6 +94,11 @@ public class Line implements Serializable {
         return lTwoLambda;
     }
 
+    /**
+     * Returns distance to another line
+     * @param line2 Line compared to
+     * @return Distance in float form
+     */
     public Float distanceTo(Line line2){
         if(this.vector.x == line2.vector.x && this.vector.y == line2.vector.y){
             return null;
@@ -97,18 +113,17 @@ public class Line implements Serializable {
         gaussMatrix[1][1] = -line2.vector.y;
 
 
-//        eliminating 0 1
         float n = -gaussMatrix[0][1] / gaussMatrix[0][0];
         gaussMatrix[0][1] = 0;
         gaussMatrix[1][1] = gaussMatrix[1][1] + (n * gaussMatrix[1][0]);
         gaussMatrix[2][1] = gaussMatrix[2][1] + (n * gaussMatrix[2][0]);
 
-//        eliminating 1 0
+
         n = -gaussMatrix[1][0] / gaussMatrix[1][1];
         gaussMatrix[1][0] = 0;
         gaussMatrix[2][0] = gaussMatrix[2][0] + (n * gaussMatrix[2][1]);
 
-//        calculating the coefficients
+
         float lTwoLambda = gaussMatrix[2][1] / gaussMatrix[1][1];
         float lOneLambda = gaussMatrix[2][0] / gaussMatrix[0][0];
 

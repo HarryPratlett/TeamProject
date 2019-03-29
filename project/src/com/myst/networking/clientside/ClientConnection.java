@@ -31,6 +31,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Class which client connects to server
+ */
 public class ClientConnection extends Thread{
     private Integer PORT = 4444;
     private String hostname;
@@ -98,6 +101,13 @@ public class ClientConnection extends Thread{
         }
     }
 
+    /**
+     * Checks a client ID to see if it is available
+     * @param toServer Sends to server
+     * @param fromServer Recieves from server
+     * @param clientID Given client ID
+     * @return True if available false if not
+     */
     public boolean checkClientID(ObjectOutputStream toServer, ObjectInputStream fromServer, String clientID) {
         try {
 //      you ask the server if the client ID is available, if so then it returns true else it returns false

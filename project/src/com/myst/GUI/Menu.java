@@ -21,7 +21,9 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
-
+/**
+ * Creates the main menu for the game
+ */
 public class Menu {
     private final float[] baseVertices = new float[] {
             -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
@@ -516,7 +518,7 @@ public class Menu {
     public void takeInput() {
         glfwPollEvents();
         if(isIpAddress) {
-            if (this.ipAddress.length() <= 12) {
+            if (this.ipAddress.length() <= 14) {
                 if (input.isKeyPressed(GLFW_KEY_1)) {
                     this.ipAddress += "1";
                 } else if (input.isKeyPressed(GLFW_KEY_2)) {
