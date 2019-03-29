@@ -23,15 +23,11 @@ import static com.myst.world.entities.EntityType.PLAYER;
 public class Player extends Entity {
     private ArrayList<Line> bullets;
     private final float MOVEMENT_SPEED = 10f;
-
-
-
-    private long spikeDamageDelay = 1000;
     private long lastSpikeDamage;
     public float health = 100;
     private float maxHealth = 100;
-    private int bulletCount = 30;
-    private int maxBulletCount = 100;
+    private int bulletCount = 10;
+    private int maxBulletCount = 50;
     private long lastPlatformHeal;
     private long lastInvincibilityPickup;
     private long lastInfiniteBulletsPickup;

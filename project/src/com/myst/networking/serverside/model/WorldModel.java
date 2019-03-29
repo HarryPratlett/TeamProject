@@ -153,7 +153,7 @@ public class WorldModel {
                                 break;
                             case ITEM_LIGHT_TRAP:
                                 if (canHealOnLightTrap(playerSpecific) && itemSpecific.isHealingLightTrap) {
-                                    setHealthOfPlayerData(playerSpecific, playerSpecific.health + 1);
+                                    setHealthOfPlayerData(playerSpecific, playerSpecific.health + 2);
                                     playerSpecific.lastHealOnLightTrap = System.currentTimeMillis();
                                     playSound(Audio.HEALTH_UP, playerData.transform.pos);
                                 }
