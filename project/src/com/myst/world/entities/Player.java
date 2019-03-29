@@ -2,7 +2,9 @@ package com.myst.world.entities;
 
 import com.myst.audio.Audio;
 import com.myst.networking.EntityData;
+import com.myst.rendering.Model;
 import com.myst.rendering.Shader;
+import com.myst.rendering.Texture;
 import com.myst.world.collisions.Bullet;
 import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
@@ -12,6 +14,7 @@ import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
 import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
+import com.myst.world.view.Transform;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
@@ -23,6 +26,10 @@ import static com.myst.world.entities.EntityType.PLAYER;
 public class Player extends Entity {
     private ArrayList<Line> bullets;
     private final float MOVEMENT_SPEED = 10f;
+
+
+    private float lastHealth = 100;
+    private long spikeDamageDelay = 1000;
     private long lastSpikeDamage;
     public float health = 100;
     private float maxHealth = 100;
@@ -33,6 +40,28 @@ public class Player extends Entity {
     private long lastInfiniteBulletsPickup;
     private boolean isInvincible = false;
     private boolean hasInfiniteBullets = false;
+    Texture healthBar;
+    float[] baseVertices = new float[]{
+            -0.5f, 0.5f, 0f, /*0*/  0.5f, 0.5f, 0f, /*1*/    0.5f, -0.5f, 0f, /*2*/
+            -0.5f, -0.5f, 0f/*3*/
+    };
+    float[] textureDocks = new float[]{
+            0f, 0f, 1, 0f, 1f, 1f,
+            0f, 1f
+    };
+    int[] indices = {
+            0, 1, 2,
+            2, 3, 0
+    };
+    Transform healthBarTransform;
+    Model healthBarFiller = null;
+    Texture healthBarFillerTexture;
+
+    Model healthBarModel = null;
+
+    Transform bulletBarTransform;
+    Model 
+
 
 //    private static final float[] vertices =
 //
@@ -58,6 +87,16 @@ public class Player extends Entity {
         this.type = PLAYER;
         this.visibleToEnemy = true;
         this.bullets = bullets;
+        this.healthBarModel = new Model(baseVertices, textureDocks,indices);
+        this.healthBar = new Texture("assets/sprites/health_bar/0.png");
+        this.healthBarTransform = new Transform();
+        float healthPercentage = health / maxHealth;
+        healthBarFiller = new Model(
+                new float[]{
+                        -0.5f, 0.5f , 0f, /*0*/  -0.5f+healthPercentage, 0.5f, 0f, /*1*/    -0.5f+healthPercentage, -0.5f, 0f, /*2*/
+                        -0.5f, -0.5f, 0f/*3*/
+                },textureDocks,indices);
+        this.healthBarFillerTexture = new Texture("assets/sprites/health_bar/singlePixel.png");
     }
 
 //    this is when you don't want to render the classes and is only for use of background AI / bot threads
@@ -70,6 +109,17 @@ public class Player extends Entity {
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer, Entity> items) {
 //        these needs fixing and entering into an entities class
 //        the entities will then
+        if(lastHealth != health){
+            lastHealth = health;
+            System.out.println("health has changed");
+            float healthPercentage = health / maxHealth;
+            System.out.println(healthPercentage);
+            this.healthBarFiller = new Model(
+                    new float[]{
+                            -0.5f, 0.5f , 0f, /*0*/  -0.5f+healthPercentage, 0.5f, 0f, /*1*/    -0.5f+healthPercentage, -0.5f, 0f, /*2*/
+                            -0.5f, -0.5f, 0f/*3*/
+                    },textureDocks,indices);
+        }
 
         boolean moved = false;
 
@@ -179,5 +229,25 @@ public class Player extends Entity {
         playerData.hasInfiniteBullets = hasInfiniteBullets;
         data.typeData = playerData;
         return data;
+    }
+
+    @Override
+    public void render(Camera cam, Shader shader){
+        super.render(cam,shader);
+        shader.bind();
+//        healthBarTransform.pos.x = transform.pos.x;
+//        healthBarTransform.pos.y = transform.pos.y;
+//        shader.setUniform("sampler", 0);
+//        shader.setUniform("projection", healthBarTransform.getProjection(cam.getProjection()));
+//        healthBar.bind(0);
+//        healthBarModel.render();
+//        shader.bind();
+        healthBarTransform.pos.x = transform.pos.x;
+        healthBarTransform.pos.y = transform.pos.y;
+        shader.setUniform("sampler", 0);
+        shader.setUniform("projection", healthBarTransform.getProjection(cam.getProjection()));
+        healthBarFillerTexture.bind(0);
+        healthBarFiller.render();
+        shader.bind();
     }
 }
