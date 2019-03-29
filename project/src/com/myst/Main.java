@@ -1,5 +1,5 @@
 /**
- * @author Harry Pratlett, Aled Jackson, Seonghee Han, Brendan Kedwards, Yue Xu, Killu-Smilla Palk
+ * @author Aled Jackson, Brendan Kedwards, Harry Pratlett, Killu-Smilla Palk, Seonghee Han, Yue Xu
  */
 package com.myst;
 

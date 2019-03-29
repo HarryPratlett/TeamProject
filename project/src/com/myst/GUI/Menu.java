@@ -51,30 +51,32 @@ public class Menu {
     private Boolean joinGameAccessed;
     private Boolean hostGameAccessed;
     private Boolean isIpAddress;
-    public  String ipAddress;
-    public  String port;
+    public String ipAddress;
+    public String port;
+    private final String PATH = "assets/gui/main_menu/";
+
     private Texture[] logo = {new Texture("assets/myst_logo.png")};
-    private Texture[] dot = {new Texture("assets/main_menu/typing/dot.png")};
-    private Texture[] background = {new Texture("assets/main_menu/NighBg0.jpg")};
+    private Texture[] dot = {new Texture(PATH + "typing/dot.png")};
+    private Texture[] background = {new Texture(PATH + "background.png")};
     private Texture[] menuTextures = new Texture[]{
-            new Texture("assets/main_menu/singleplayer_button.png"), new Texture("assets/main_menu/multiplayer_button.png"),
-            new Texture("assets/main_menu/quit_button.png")};
+            new Texture(PATH + "singleplayer_button.png"), new Texture(PATH + "multiplayer_button.png"),
+            new Texture(PATH + "quit_button.png")};
     private Texture[] multiplayerTextures = new Texture[]{
-            new Texture("assets/main_menu/host_game_button.png"), new Texture("assets/main_menu/join_game_button.png")};
+            new Texture(PATH + "host_game_button.png"), new Texture(PATH + "join_game_button.png")};
     private Texture[] hostGameTextures = new Texture[]{
-            new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"),
-            new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png"),
-            new Texture("assets/main_menu/submit_button.png")};
+            new Texture(PATH + "IP.png"), new Texture(PATH + "port.png"),
+            new Texture(PATH + "text_box_1.png"), new Texture(PATH + "text_box_2.png"),
+            new Texture(PATH + "submit_button.png")};
     private Texture[] joinGameTextures = new Texture[]{
-            new Texture("assets/main_menu/IP.png"), new Texture("assets/main_menu/port.png"),
-            new Texture("assets/main_menu/text_box_1.png"), new Texture("assets/main_menu/text_box_2.png"),
-            new Texture("assets/main_menu/submit_button.png")};
+            new Texture(PATH + "IP.png"), new Texture(PATH + "port.png"),
+            new Texture(PATH + "text_box_1.png"), new Texture(PATH + "text_box_2.png"),
+            new Texture(PATH + "submit_button.png")};
     private Texture[] numberTextures = new Texture[]{
-            new Texture("assets/main_menu/typing/0.png"), new Texture("assets/main_menu/typing/1.png"),
-            new Texture("assets/main_menu/typing/2.png"), new Texture("assets/main_menu/typing/3.png"),
-            new Texture("assets/main_menu/typing/4.png"), new Texture("assets/main_menu/typing/5.png"),
-            new Texture("assets/main_menu/typing/6.png"), new Texture("assets/main_menu/typing/7.png"),
-            new Texture("assets/main_menu/typing/8.png"), new Texture("assets/main_menu/typing/9.png"),
+            new Texture(PATH + "typing/0.png"), new Texture(PATH + "typing/1.png"),
+            new Texture(PATH + "typing/2.png"), new Texture(PATH + "typing/3.png"),
+            new Texture(PATH + "typing/4.png"), new Texture(PATH + "typing/5.png"),
+            new Texture(PATH + "typing/6.png"), new Texture(PATH + "typing/7.png"),
+            new Texture(PATH + "typing/8.png"), new Texture(PATH + "typing/9.png"),
     };
 
     /**

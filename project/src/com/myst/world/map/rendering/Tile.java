@@ -6,13 +6,9 @@ package com.myst.world.map.rendering;
 import java.io.Serializable;
 
 public class Tile implements Serializable{
-//    tiles is the different tiles that exist
+
     public static int nOfTiles = 0;
     private boolean solid;
-
-//    public static final Tile test_tile = new Tile(  /*0,*/  "assets/tile_18");
-//    public static final Tile test_tile2 = new Tile(/*1,*/"assets/tile_186");
-//    need error checking to make sure that the texture has loaded
 
     private int id;
     private String texture;
@@ -26,12 +22,6 @@ public class Tile implements Serializable{
         nOfTiles++;
         this.id = id;
         this.texture = texture;
-
-//        if(tiles[id] != null){
-//            throw new IllegalStateException("Tiles at: " + id + " is already being used");
-//        }
-//        tiles[id] = this;
-
         this.solid = false;
     }
 

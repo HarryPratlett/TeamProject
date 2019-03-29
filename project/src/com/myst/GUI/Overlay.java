@@ -20,6 +20,8 @@ public class Overlay {
     private Window window;
     private Input input;
 
+    private final String PATH = "assets/gui/main_menu/typing/";
+
     private final float[] baseVertices = new float[] {
             -1f, 0.5f, 0f, /*0*/  1f, 0.5f, 0f, /*1*/    1f, -0.5f, 0f, /*2*/
             -1f, -0.5f, 0f/*3*/
@@ -52,11 +54,11 @@ public class Overlay {
     }
 
     private Texture[] numberTextures = new Texture[]{
-            new Texture("assets/main_menu/typing/0.png"), new Texture("assets/main_menu/typing/1.png"),
-            new Texture("assets/main_menu/typing/2.png"), new Texture("assets/main_menu/typing/3.png"),
-            new Texture("assets/main_menu/typing/4.png"), new Texture("assets/main_menu/typing/5.png"),
-            new Texture("assets/main_menu/typing/6.png"), new Texture("assets/main_menu/typing/7.png"),
-            new Texture("assets/main_menu/typing/8.png"), new Texture("assets/main_menu/typing/9.png"),
+            new Texture(PATH + "0.png"), new Texture(PATH + "1.png"),
+            new Texture(PATH + "2.png"), new Texture(PATH + "3.png"),
+            new Texture(PATH + "4.png"), new Texture(PATH + "5.png"),
+            new Texture(PATH + "6.png"), new Texture(PATH + "7.png"),
+            new Texture(PATH + "8.png"), new Texture(PATH + "9.png"),
     };
 
     /**
@@ -71,9 +73,9 @@ public class Overlay {
 
         for(int i = 0; i < health.length(); i++)  {
             float[] vertices = Arrays.copyOf(baseVertices, baseVertices.length);
-            vertices = this.alterVertices(vertices, new Texture("assets/main_menu/typing/0.png").getHeight(), numberTextures[Integer.valueOf(health.substring(i, i+1))].getWidth(), 0.002, 0.005);
+            vertices = this.alterVertices(vertices, new Texture(PATH + "0.png").getHeight(), numberTextures[Integer.valueOf(health.substring(i, i+1))].getWidth(), 0.002, 0.005);
             Model model = new Model(vertices, textureDocks, indices);
-            this.renderImage(shader, new Texture("assets/main_menu/typing/0.png"), xHealth, 0.9f, new Matrix4f(), model);
+            this.renderImage(shader, new Texture(PATH + "0.png"), xHealth, 0.9f, new Matrix4f(), model);
 //            xHealth += 0.1f;
         }
 //        for(int i = 0; i < ammo.length(); i++)   {

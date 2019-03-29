@@ -35,7 +35,7 @@ public class Bot extends Entity {
     private Stack<int[]> route = null;
     private int[] nextLocation;
     public long lastMove = System.currentTimeMillis();
-    public long moveTime = 500;
+    public long moveTime = 50;
     private AStarSearch search;
 
 

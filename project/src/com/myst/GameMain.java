@@ -1,5 +1,5 @@
 /**
- * @author Aled Jackson, Harry Pratlett, Seonghee Han, Yue Xu, Killu-Smilla Palk, Brendan Kedwards
+ * @author Aled Jackson, Brendan Kedwards, Harry Pratlett, Killu-Smilla Palk, Seonghee Han, Yue Xu
  */
 package com.myst;
 
@@ -168,10 +168,6 @@ public class GameMain {
         Audio.getAudio().initAudioWithPlayer(player);
 
 //        Lighting lights = new Lighting(window.getInput(), window);
-
-//        Item item = new Item();
-//        item.transform.pos.add(1, -2, 0);
-//        myEntities.put(44, item);
 
         while (!window.shouldClose() && !endOfGame) {
 
