@@ -47,9 +47,7 @@ public class GUI {
             2,3,0
     };
 
-
     private float[] vertices;
-
     private Window window;
     private GUIStates currentWindow;
     private Boolean settings_accessed;
@@ -57,23 +55,24 @@ public class GUI {
     private Model model;
     private int volume;
     private int brightness;
-    private Texture[] background = {new Texture("assets/main_menu/NighBg.png")};
-    private Texture[] controlsTexture = {new Texture("assets/Keyboard_asset.png")};
-    private Texture[] menuTexture = {new Texture("assets/settings_button.png")};
+    private final String PATH = "assets/gui/";
+
+    private Texture[] background = {new Texture(PATH + "background.png")};
+    private Texture[] controlsTexture = {new Texture(PATH + "keyboard_asset.png")};
+    private Texture[] menuTexture = {new Texture(PATH + "settings_button.png")};
     private Texture[] menuTextures = new Texture[]{
-            new Texture("assets/resume_button.png"), new Texture("assets/controls_button.png"),
-            new Texture("assets/settings_button.png"), new Texture("assets/exit_button.png")
+            new Texture(PATH + "resume_button.png"), new Texture(PATH + "controls_button.png"),
+            new Texture(PATH + "settings_button.png"), new Texture(PATH + "exit_button.png")
     };
     private Texture[] settingsTextures = new Texture[]{
-            new Texture("assets/brightness_button.png"), new Texture("assets/volume_button.png")};
+            new Texture(PATH + "brightness_button.png"), new Texture(PATH + "volume_button.png")};
     private Texture[] audioTextures = new Texture[]{
-            new Texture("assets/volume_assets/0.png"), new Texture("assets/volume_assets/1.png"),
-            new Texture("assets/volume_assets/2.png"), new Texture("assets/volume_assets/3.png"),
-            new Texture("assets/volume_assets/4.png"), new Texture("assets/volume_assets/5.png")};
-    private Texture[] alterTextures = new Texture[]{new Texture (
-            "assets/volume_assets/plus.png"), new Texture("assets/volume_assets/minus.png"),
-            new Texture("assets/volume_assets/plus1.png"), new Texture("assets/volume_assets/minus1.png")};
-
+            new Texture(PATH + "volume_assets/0.png"), new Texture(PATH + "volume_assets/1.png"),
+            new Texture(PATH + "volume_assets/2.png"), new Texture(PATH + "volume_assets/3.png"),
+            new Texture(PATH + "volume_assets/4.png"), new Texture(PATH + "volume_assets/5.png")};
+    private Texture[] alterTextures = new Texture[]{
+            new Texture(PATH + "volume_assets/plus.png"), new Texture(PATH + "volume_assets/minus.png"),
+            new Texture(PATH + "volume_assets/plus1.png"), new Texture(PATH + "volume_assets/minus1.png")};
 
     /** @param window The window which the GUI will be displayed in
      * @param input The input via which the mouse and keyboard inputs are taken
