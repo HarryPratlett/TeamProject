@@ -64,6 +64,13 @@ public class Player extends Entity {
         this.bullets = bullets;
     }
 
+//    this is when you don't want to render the classes and is only for use of background AI / bot threads
+    public Player(){
+        super(new Vector2f(0.5f,0.5f));
+        this.type = PLAYER;
+        this.visibleToEnemy = true;
+    }
+
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer, Entity> items) {
 //        these needs fixing and entering into an entities class
 //        the entities will then

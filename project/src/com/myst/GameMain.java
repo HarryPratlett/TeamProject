@@ -133,6 +133,8 @@ public class GameMain {
 
         player.localID = IDCounter;
         player.owner = clientID;
+        player.lightDistance = 2.5f;
+        player.visibleToEnemy = true;
 
         IDCounter++;
         Camera camera = new Camera(window.getWidth(), window.getHeight());

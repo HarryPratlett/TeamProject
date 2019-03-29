@@ -2,8 +2,10 @@ package com.myst.world.entities;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.myst.AI.AStarSearch;
 import com.myst.networking.EntityData;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -28,16 +30,25 @@ public class Bot extends Entity {
     public float health = 50;
     private float maxHealth = 50;
     private long lastSpikeDamage = 0;
+    private long timeToReRoute;
+    private long lastReRoute;
+    private Stack<int[]> route = null;
+    private int[] nextLocation;
+    public long lastMove = System.currentTimeMillis();
+    public long moveTime = 500;
+    private AStarSearch search;
+
 
 
     private long spikeDamageDelay = 1000;
-    public Bot(Vector2f boundingBoxCoords, ArrayList<Line> bullets) {
+    public Bot(Vector2f boundingBoxCoords, ArrayList<Line> bullets, AStarSearch search) {
         super(boundingBoxCoords);
         type = EntityType.PLAYER;
         this.visibleToEnemy = true;
         this.bullets = bullets;
         this.exists = true;
         this.isBot = true;
+        this.search = search;
 
     }
 
@@ -46,53 +57,40 @@ public class Bot extends Entity {
         intelligence = new AI(transform, world);
     }
 
-    public float getHealth() {
-        return health;
-    }
-
-    public void setHealth(float health) {
-        if (health < 0) health = 0;
-        if (health > maxHealth) health = maxHealth;
-
-        this.health = health;
-    }
-
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    public void heal(int heal) {
-        setHealth(health + heal);
-    }
-
-    public void damage(int dmg) {
-        setHealth(health - dmg);
-    }
-
-    private boolean canTakeSpikeDamage() {
-        return System.currentTimeMillis() - lastSpikeDamage > spikeDamageDelay;
-    }
-
-    public void updateBot(float deltaTime, World world, ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities) {
+    public void updateBot(float deltaTime, World world, Entity player) {
         //add enemy detection method here, so constantly checks for enemies as well as randomly turning on flashlight.
-        intelligence.updateTransform(transform);
-        Transform enemyTransform = intelligence.enemyDetection(entities, visibleToEnemy, this.owner, this.localID);
-        if (enemyTransform!=null){
-            Line line = new Line(new Vector2f(transform.pos.x, -transform.pos.y), new Vector2f((float) enemyTransform.pos.x,(float) enemyTransform.pos.y));
-            bullets.add(line);
-        }
-        followPath(deltaTime);
-        this.boundingBox.getCentre().set(transform.pos.x , transform.pos.y );
-        int random = (int) (Math.random() * 3000);
 
-        if(random == 1500){
-            if(this.lightDistance == 0.25f){
-                this.lightDistance = 2.5f;
-                this.visibleToEnemy = true;
-            }else{
-                this.lightDistance = 0.25f;
-                this.visibleToEnemy = false;
+        if (player != null) {
+            float distToPlayer = this.transform.pos.distance(player.transform.pos);
+            timeToReRoute = distPlayerRouteTime(distToPlayer);
+            if (route == null) {
+                route = search.findRoute(new int[]{(int) this.transform.pos.x, (int) -this.transform.pos.y},
+                        new int[]{(int) player.transform.pos.x, (int) -player.transform.pos.y});
+                lastReRoute = System.currentTimeMillis();
+                if (!route.isEmpty()) {
+                    nextLocation = route.pop();
+                }
+            } else if ((System.currentTimeMillis() - lastReRoute) >= timeToReRoute || route.isEmpty()) {
+                route = search.findRoute(new int[]{(int) this.transform.pos.x, (int) -this.transform.pos.y},
+                        new int[]{(int) player.transform.pos.x, (int) -player.transform.pos.y});
+                lastReRoute = System.currentTimeMillis();
+                if (!route.isEmpty()) {
+                    nextLocation = route.pop();
+                }
             }
+        }
+
+
+        if(System.currentTimeMillis() - lastMove > 1 && nextLocation != null){
+            this.transform.pos.x = nextLocation[0];
+            this.transform.pos.y = -nextLocation[1];
+            lastMove = System.currentTimeMillis();
+            if(route.isEmpty()){
+                nextLocation = null;
+            }else{
+                nextLocation = route.pop();
+            }
+
         }
 
         AABB[] boxes = new AABB[25];
@@ -119,53 +117,10 @@ public class Bot extends Entity {
         }
     }
 
-    public void followPath(float deltaTime) {
-        Vector3f point = new Vector3f();
-        if(path.size() != 0) {
-            point = path.get(0);
-        }else {
-            return;
-        }
-        if((int)this.transform.pos.x > point.x && (int)this.transform.pos.y > point.y) {
-            transform.pos.add(-MOVEMENT_SPEED * deltaTime, -MOVEMENT_SPEED * deltaTime, 0);
-        }
-        else if((int)this.transform.pos.x > point.x && (int)this.transform.pos.y < point.y) {
-            transform.pos.add(-MOVEMENT_SPEED * deltaTime, MOVEMENT_SPEED * deltaTime, 0);
-        }
-        else if((int)this.transform.pos.x < point.x && (int)this.transform.pos.y > point.y) {
-            transform.pos.add(MOVEMENT_SPEED * deltaTime, -MOVEMENT_SPEED * deltaTime, 0);
-        }
-        else if((int)this.transform.pos.x < point.x && (int)this.transform.pos.y < point.y) {
-            transform.pos.add(MOVEMENT_SPEED * deltaTime, MOVEMENT_SPEED * deltaTime, 0);
-        }
-        else if((int)this.transform.pos.x > point.x) {
-            transform.pos.x += -MOVEMENT_SPEED * deltaTime;
-        }
-        else if((int)this.transform.pos.x < point.x) {
-            transform.pos.x += MOVEMENT_SPEED * deltaTime;
-        }
-        else if ((int)this.transform.pos.y > point.y) {
-            transform.pos.y += -MOVEMENT_SPEED * deltaTime;
-        }
-        else if((int)this.transform.pos.y < point.y) {
-            transform.pos.y += MOVEMENT_SPEED * deltaTime;
-        }
-        else if((int)this.transform.pos.x == point.x && (int)this.transform.pos.y == point.y) {
-            path.remove(0);
-        }
+    public static long distPlayerRouteTime(float distance){
+        return (long) (1000 * Math.pow(2,distance));
     }
 
-    public void setPath(Vector3f goal) {
-        intelligence.updateTransform(transform);
-
-        path = intelligence.pathFind(goal);
-
-        System.out.print(path);
-    }
-
-    public ArrayList<Vector3f> getPath(){
-        return path;
-    }
     @Override
     public EntityData getData() {
         EntityData data = super.getData();
@@ -178,8 +133,17 @@ public class Bot extends Entity {
     }
 
 
+
+
     @Override
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer, Entity> items) {
+
+
+        for(int i=0; i < deltaTime; i++){
+
+        }
+
+
         return;
     }
 }

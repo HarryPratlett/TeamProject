@@ -21,11 +21,7 @@ public class AI {
         this.world = world;
     }
 
-    public ArrayList<Vector3f> pathFind(Vector3f goal) {
-        if(world.getTile((int)goal.x,(int)goal.y) == null) return null;
-        AStarSearch search = new AStarSearch(new Vector3f(transform.pos.x, transform.pos.y, transform.pos.z), goal, world);
-        return search.getPath();
-    }
+
 
     public Transform enemyDetection(ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities, boolean lightOn, String botOwner, int botID) {
         for(String owner: entities.keySet()) {

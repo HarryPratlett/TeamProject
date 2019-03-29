@@ -5,14 +5,11 @@ import com.myst.helper.Timer;
 import com.myst.networking.EntityData;
 import com.myst.rendering.Shader;
 import com.myst.world.collisions.Line;
-import com.myst.world.entities.Bot;
+import com.myst.world.entities.*;
 import com.myst.world.collisions.Bullet;
-import com.myst.world.entities.Enemy;
-import com.myst.world.entities.Entity;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
-import com.myst.world.entities.Player;
 import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
 
@@ -24,8 +21,10 @@ import org.joml.*;
 import org.lwjgl.opengl.GL;
 
 import java.lang.Math;
+import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -39,6 +38,7 @@ public class BotMain extends Thread{
     static int resWidth;
     public boolean shouldEnd;
     private int port;
+    private Vector2f startLocation;
 
     public BotMain(int port){
         this.port = port;
@@ -56,11 +56,16 @@ public class BotMain extends Thread{
         ArrayList<Line> botBullets = new ArrayList<>();
         ClientConnection connection = new ClientConnection(entities, toRender,"127.0.0.1",port,clientID);
 
+
+
         connection.run();
 
         Tile[][] map = connection.map;
         World world = new World(null,map);
 
+        AStarSearch search = new AStarSearch(new Vector3f(), new Vector3f(),world);
+        search.MapWorld();
+        Stack<int[]> route = search.findRoute(new int[]{1,1},new int[]{98,1});
 
         //Player player = new Player(playerBullets);
         //player.lightSource = true;
@@ -68,14 +73,18 @@ public class BotMain extends Thread{
 
         // player.localID = IDCounter;
         // player.owner = clientID;
-        Bot bot = new Bot(new Vector2f(0.5f,0.5f), botBullets);
+        Bot bot = new Bot(new Vector2f(0.5f,0.5f), botBullets, search);
 
         bot.localID = IDCounter;
         bot.owner = clientID;
         IDCounter++;
 
-        bot.transform.pos.add(10, -2, 1);
 
+//        bot.transform.pos.add(connection.startLoc.x,connection.startLoc.y,0);
+        bot.transform.pos.add(10,-1,0);
+        System.out.println("bot starting at");
+        System.out.println(connection.startLoc.x);
+        System.out.println(connection.startLoc.y);
         bot.initialiseAI(world);
         //System.out.println("trying to find a path");
         //bot.setPath(new Vector3f(1,-1,1));
@@ -101,18 +110,44 @@ public class BotMain extends Thread{
         double debugLastTime = Timer.getTime();
 
 
+        Entity player = null;
         while (!shouldEnd){
             debugCurrentTime = Timer.getTime();
             double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
             debugLastTime = debugCurrentTime;
-            if(bot.getPath() == null) {
-                int x = (int) Math.random() * 100;
-                int y = (int) Math.random() * 100;
-                bot.setPath(new Vector3f(x,-y,1));
+            if(player == null) {
+                for (String owner : entities.keySet()) {
+                    for (Integer localID : entities.get(owner).keySet()) {
+                        if(entities.get(owner).get(localID).getType() == EntityType.PLAYER && !owner.equals(clientID)){
+                            player = entities.get(owner).get(localID);
+                        }
+                    }
+                }
             }
-            bot.updateBot((float) timeSinceLastUpdate, world, entities);
-            botBullets.clear();
-
+            bot.updateBot((float) timeSinceLastUpdate, world, player);
+            for(String owner: toRender.keySet()){
+                for(Integer localID: toRender.get(owner).keySet()){
+                    if(!entities.containsKey(owner)){
+                        entities.put(owner,new ConcurrentHashMap<>());
+                    }
+                    EntityData eD = toRender.get(owner).get(localID);
+                    switch(eD.type){
+                        case PLAYER:
+                            Player p =new Player();
+                            p.readInEntityData(eD);
+                            entities.get(owner).put(localID,p);
+                            break;
+                    }
+                    toRender.get(owner).remove(localID);
+                }
+            }
+            if(System.currentTimeMillis() - bot.lastMove < bot.moveTime){
+                try {
+                    Thread.sleep((bot.lastMove + bot.moveTime) - System.currentTimeMillis());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

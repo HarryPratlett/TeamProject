@@ -1,5 +1,6 @@
 package com.myst.world.entities;
 
+import com.myst.rendering.Texture;
 import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
