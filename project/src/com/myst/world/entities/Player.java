@@ -60,7 +60,6 @@ public class Player extends Entity {
     Model healthBarModel = null;
 
     Transform bulletBarTransform;
-    Model 
 
 
 //    private static final float[] vertices =
