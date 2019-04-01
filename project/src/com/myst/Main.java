@@ -3,6 +3,8 @@ package com.myst;
 
 import com.myst.GUI.GUI;
 import com.myst.audio.Audio;
+import com.myst.datatypes.TileCoords;
+import com.myst.datatypes.WorldCoords;
 import com.myst.helper.Timer;
 import com.myst.networking.EntityData;
 import com.myst.networking.clientside.ClientConnection;
@@ -15,6 +17,7 @@ import com.myst.world.entities.*;
 import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
 import com.myst.world.view.Camera;
+import com.myst.world.view.Transform;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -32,6 +35,16 @@ public class Main {
 
     static int IDCounter = 0;
     static String clientID = String.valueOf(Math.random());
+
+    static float leftBorder;
+    static float rightBorder;
+    static float topBorder;
+    static float bottomBorder;
+    static WorldCoords topLeft = new WorldCoords(0,0);
+    static WorldCoords bottomRight = new WorldCoords(0,0);
+    static TileCoords topLeftTile = new TileCoords(0,0);
+    static TileCoords bottomRightTile = new TileCoords(0,0);
+//    put in here to reduce memory leaks
 
     public static void setUp() {
         Window.setCallbacks();
@@ -155,6 +168,7 @@ public class Main {
 //        item.transform.pos.add(1, -2, 0);
 //        myEntities.put(44, item);
 
+
         while (!window.shouldClose()) {
 
             renderFrame = false;
@@ -192,7 +206,7 @@ public class Main {
             }
 
             if (frame_time >= 1) {
-//                System.out.println(frames);
+                System.out.println(frames);
                 frame_time = 0;
                 frames = 0;
                 System.gc();
@@ -208,10 +222,12 @@ public class Main {
                 for (String owner : entities.keySet()) {
                     for (Integer entityID : entities.get(owner).keySet()) {
                         Entity e = entities.get(owner).get(entityID);
-                        if(e instanceof Item) {
-                            if(!((ItemData) e.typeData).hidden) e.render(camera, environmentShader);
-                        } else {
-                            e.render(camera, environmentShader);
+                        if(isEntityInRenderRange(e.transform, camera)) {
+                            if (e instanceof Item) {
+                                if (!((ItemData) e.typeData).hidden) e.render(camera, environmentShader);
+                            } else {
+                                e.render(camera, environmentShader);
+                            }
                         }
                     }
                 }
@@ -396,4 +412,39 @@ public class Main {
             }
         }
     }
+
+    public static boolean isEntityInRenderRange(Transform entityTransform, Camera camera){
+        leftBorder = (camera.position.x + (camera.getWidth() / 2));
+        rightBorder = (camera.position.x - (camera.getWidth() / 2));
+
+        topBorder = (-camera.position.y + (camera.getHeight() / 2));
+        bottomBorder = (-camera.position.y - (camera.getHeight() / 2));
+
+        topLeft.x = leftBorder;
+        topLeft.y = topBorder;
+        bottomRight.x = rightBorder;
+        bottomRight.y = bottomBorder;
+
+        topLeftTile = topLeft.asTileCoords(camera.scale);
+        bottomRightTile = bottomRight.asTileCoords(camera.scale);
+
+        bottomRightTile.x = bottomRightTile.x + 1;
+        bottomRightTile.y = bottomRightTile.y + 1;
+
+        if(entityTransform.pos.x > bottomRightTile.x){
+            return false;
+        }
+        if(-entityTransform.pos.y > bottomRightTile.y){
+            return false;
+        }
+        if(entityTransform.pos.x < topLeftTile.x){
+            return false;
+        }
+        if(-entityTransform.pos.y < topLeftTile.y){
+            return false;
+        }
+        return true;
+
+    }
+
 }
