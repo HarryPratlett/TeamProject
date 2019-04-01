@@ -9,6 +9,8 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_N;
+
 /**
  * Class for playing and controlling audio
  */
@@ -226,7 +228,7 @@ public class Audio {
         healthUpRange = healthUpGainControl.getMaximum() - healthUpGainControl.getMinimum();
 
         modifyVolume(0);
-//        theme();
+        theme();
     }
 
     /**
@@ -512,6 +514,9 @@ public class Audio {
     public void update() {
         if(input.isKeyPressed(GLFW.GLFW_KEY_M)){
             mute();
+        }
+        else if(input.isKeyPressed(GLFW_KEY_N)){
+            themeClip.stop();
         }
     }
 }
