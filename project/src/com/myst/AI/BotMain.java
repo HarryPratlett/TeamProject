@@ -33,15 +33,18 @@ import static org.lwjgl.glfw.GLFW.*;
 public class BotMain extends Thread{
 
     static int IDCounter = 0;
-    static String clientID = String.valueOf(Math.random());
+    static String clientID;
     static int resHeight;
     static int resWidth;
     public boolean shouldEnd;
     private int port;
     private Vector2f startLocation;
+    private int botNo;
 
-    public BotMain(int port){
+    public BotMain(int port, int botNo, String clientID){
         this.port = port;
+        this.botNo = botNo;
+        this.clientID = clientID;
     }
 
 
@@ -53,6 +56,8 @@ public class BotMain extends Thread{
         ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
 
         //ArrayList<Line> playerBullets = new ArrayList<>();
+
+        System.out.println(clientID);
         ArrayList<Line> botBullets = new ArrayList<>();
         ClientConnection connection = new ClientConnection(entities, toRender,"127.0.0.1",port,clientID);
 
@@ -74,27 +79,30 @@ public class BotMain extends Thread{
         // player.localID = IDCounter;
         // player.owner = clientID;
         Bot bot = new Bot(new Vector2f(0.5f,0.5f), botBullets, search);
-
         bot.localID = IDCounter;
         bot.owner = clientID;
         IDCounter++;
-
-
-//        bot.transform.pos.add(connection.startLoc.x,connection.startLoc.y,0);
-        bot.transform.pos.add(10,-1,0);
-        System.out.println("bot starting at");
-        System.out.println(connection.startLoc.x);
-        System.out.println(connection.startLoc.y);
-        bot.initialiseAI(world);
-        //System.out.println("trying to find a path");
-        //bot.setPath(new Vector3f(1,-1,1));
-        //System.out.println("I found a path");
 
         entities.put(clientID, new ConcurrentHashMap<Integer,Entity>());
 
         ConcurrentHashMap<Integer, Entity> myEntities = entities.get(clientID);
 
         myEntities.put(bot.localID, bot);
+
+//        bot.transform.pos.add(connection.startLoc.x,connection.startLoc.y,0);
+        bot.transform.pos.x = ((botNo % 2) * 97) + 1;
+        if(botNo == 2 || botNo == 3){
+            bot.transform.pos.y = -99;
+        } else{
+            bot.transform.pos.y = -1;
+        } 
+        System.out.println("bot starting at");
+        System.out.println(bot.transform.pos.x);
+        System.out.println(bot.transform.pos.y);
+        bot.initialiseAI(world);
+        //System.out.println("trying to find a path");
+        //bot.setPath(new Vector3f(1,-1,1));
+        //System.out.println("I found a path");
 
         double frame_cap = 1.0/60.0;
 
@@ -141,6 +149,7 @@ public class BotMain extends Thread{
                     toRender.get(owner).remove(localID);
                 }
             }
+            calculateBullets(myEntities, botBullets, map);
             if(System.currentTimeMillis() - bot.lastMove < bot.moveTime){
                 try {
                     Thread.sleep((bot.lastMove + bot.moveTime) - System.currentTimeMillis());

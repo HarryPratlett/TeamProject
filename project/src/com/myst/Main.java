@@ -69,6 +69,7 @@ public class Main {
         int frames = 0;
         String clientID = String.valueOf(Math.random());
 
+        System.out.println(clientID);
         boolean amHost = false;
 
         double debugCurrentTime;
@@ -108,7 +109,6 @@ public class Main {
                         }
                         menu.ipAddress = myServer.IP;
                         menu.port = (myServer.port).toString();
-//                        new BotMain(myServer.port).start();
 
                         state = ProgramState.MAIN_MENUS;
                         amHost = true;
@@ -127,7 +127,15 @@ public class Main {
                         }
                         menu.ipAddress = myServer.IP;
                         menu.port = (myServer.port).toString();
-                        new BotMain(Integer.parseInt(menu.port)).start();
+                        String clientID1 = String.valueOf(Math.random());
+                        String clientID2 = String.valueOf(Math.random());
+                        String clientID3 = String.valueOf(Math.random());
+                        BotMain bot1 = new BotMain(Integer.parseInt(menu.port), 1, clientID1);
+                        //BotMain bot2 = new BotMain(Integer.parseInt(menu.port),2,clientID2);
+                        //BotMain bot3 = new BotMain(Integer.parseInt(menu.port),3,clientID3);
+                        bot1.start();
+                        //bot2.start();
+                        //bot3.start();
                         state = ProgramState.SWITCH_TO_GAME_FROM_MENU;
                         break;
                     case SWITCH_TO_GAME_FROM_MENU:
