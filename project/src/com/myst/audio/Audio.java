@@ -36,7 +36,7 @@ public class Audio {
     public static final String HEALTH_UP = "health_up";
 
     private final String WAV = ".wav";
-    private final String PATH = "assets/sounds/";
+    private final String PATH = "project/assets/sounds/";
 
     private final double GUN_DIST = 70;
     private final double SPIKES_DIST = 30;

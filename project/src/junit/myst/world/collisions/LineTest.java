@@ -1,10 +1,11 @@
 package junit.myst.world.collisions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import com.myst.world.collisions.Line;
 import org.joml.Vector2f;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class LineTest {
 

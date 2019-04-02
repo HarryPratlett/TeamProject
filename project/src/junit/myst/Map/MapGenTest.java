@@ -1,17 +1,16 @@
 package junit.myst.Map;
 
-import static org.junit.Assert.*;
+import com.myst.world.map.generating.MapGenerator;
+import com.myst.world.map.rendering.Tile;
+import org.junit.Test;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import javax.imageio.ImageIO;
-
-import org.junit.Test;
-import com.myst.world.map.generating.MapGenerator;
-import com.myst.world.map.rendering.Tile;
+import static org.junit.Assert.assertTrue;
 
 
 
@@ -20,7 +19,7 @@ public class MapGenTest {
 	@Test
 	public void test() {
 		 String[] textures = new String[20];
-	        String path = ("assets/tileset/");
+	        String path = ("project/assets/tileset/");
 	        textures[0] = path + "tile_01";
 	        textures[1] = path + "tile_02";
 	        textures[2] = path + "tile_03";
@@ -53,7 +52,7 @@ public class MapGenTest {
 	@Test
 	public void readcolour() {
 		String[] textures = new String[20];
-        String path = ("assets/tileset/");
+        String path = ("project/assets/tileset/");
         textures[0] = path + "tile_01";
         textures[1] = path + "tile_02";
         textures[2] = path + "tile_03";

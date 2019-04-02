@@ -1,9 +1,4 @@
 package com.myst.networking.serverside;
-// Usage:
-//        java com.myst.networking.serverside.Server
-//
-// There is no provision for ending the server gracefully.  It will
-// end if (and only if) something exceptional happens.
 
 import com.myst.networking.Report;
 import com.myst.networking.serverside.model.WorldModel;
@@ -11,14 +6,14 @@ import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.Inet6Address;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-
+/**
+ * Creates a server for the game
+ */
 public class Server extends Thread{
     private static final int PORT = 0;
     private static final int MAX_CLIENTS = 8;
@@ -35,20 +30,22 @@ public class Server extends Thread{
         new Server().run();
     }
 
-
+    /**
+     * Runs a server
+     */
     public void run() {
         int playerCount;
         System.out.println("starting server");
         WorldModel world = new WorldModel();
 
-        // This table will be shared by the server threads:
+
         ClientTable clientTable = new ClientTable();
 
-        // I am adapting the client table to be used for different group chats
+
         ServerSocket serverSocket = null;
 
         String[] textures = new String[20];
-        String path = ("assets/tileset/");
+        String path = ("project/assets/tileset/");
 
         textures[0] = path + "tile_01";
         textures[1] = path + "tile_02";
@@ -105,17 +102,12 @@ public class Server extends Thread{
         try {
             // We loop for ever, as servers usually do.
             while (true) {
-                Socket socket = s.accept(); // Matches AAAAA in ClientConnection
-                // Listen to the socket, accepting connections from new clients:
-                // By creating another thread to deal with client connection it allows
-                // multiple users to connect at once
+                Socket socket = s.accept();
+
                 new ClientConnectionThread(socket, clientTable, usedIDs, IDKey, world, ticker).start();
             }
         } catch (IOException e) {
-            // Lazy approach:
             Report.error("IO error " + e.getMessage());
-            // A more sophisticated approach could try to establish a new
-            // connection. But this is beyond the scope of this simple exercise.
         }
 
 //        new Timer().schedule(new TimerTask() {

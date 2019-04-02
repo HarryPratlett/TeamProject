@@ -4,17 +4,14 @@
 package com.myst.world.map.rendering;
 
 import com.myst.datatypes.TileCoords;
-import com.myst.datatypes.WorldCoords;
-import com.myst.rendering.Shader;
-import com.myst.world.view.Camera;
 import com.myst.rendering.Model;
+import com.myst.rendering.Shader;
 import com.myst.rendering.Texture;
+import com.myst.world.view.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
-
-import static com.myst.helper.Flatten.flatten;
 
 /**
  * Renders tiles

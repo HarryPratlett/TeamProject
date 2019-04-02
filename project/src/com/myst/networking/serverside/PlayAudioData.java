@@ -1,10 +1,12 @@
 package com.myst.networking.serverside;
 
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.io.Serializable;
 
+/**
+ * Plays a audio in a location
+ */
 public class PlayAudioData implements Serializable {
    public String clipName;
    public Vector3f location;

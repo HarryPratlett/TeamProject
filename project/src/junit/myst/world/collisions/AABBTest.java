@@ -2,10 +2,11 @@ package junit.myst.world.collisions;
 
 import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Line;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import org.joml.Vector2f;
 import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class AABBTest {
     @Test

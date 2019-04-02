@@ -6,11 +6,11 @@ package com.myst.world;
 import com.myst.datatypes.TileCoords;
 import com.myst.datatypes.WorldCoords;
 import com.myst.rendering.Shader;
-import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.collisions.AABB;
 import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
+import com.myst.world.view.Camera;
 import org.joml.Vector2f;
 
 /**

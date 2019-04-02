@@ -4,13 +4,11 @@
 package com.myst;
 
 import com.myst.GUI.GUI;
-import com.myst.GUI.Overlay;
 import com.myst.audio.Audio;
 import com.myst.datatypes.TileCoords;
 import com.myst.datatypes.WorldCoords;
 import com.myst.helper.Timer;
 import com.myst.networking.EntityData;
-import com.myst.networking.clientside.ClientConnection;
 import com.myst.rendering.Model;
 import com.myst.rendering.Shader;
 import com.myst.rendering.Texture;
@@ -19,7 +17,6 @@ import com.myst.world.World;
 import com.myst.world.collisions.Bullet;
 import com.myst.world.collisions.Line;
 import com.myst.world.entities.*;
-import com.myst.world.map.generating.MapGenerator;
 import com.myst.world.map.rendering.Tile;
 import com.myst.world.map.rendering.TileRenderer;
 import com.myst.world.view.Camera;
@@ -30,13 +27,10 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -78,7 +72,7 @@ public class GameMain {
         clientID = clientID1;
 
         String[] textures = new String[20];
-        String path = ("assets/tileset/");
+        String path = ("project/assets/tileset/");
 
         textures[0] = path + "tile_01";
         textures[1] = path + "tile_02";
@@ -115,8 +109,8 @@ public class GameMain {
 
         glClearColor(0f, 0f, 0f, 0f);
 
-        Shader environmentShader = new Shader("assets/shader");
-        Shader menuShader = new Shader("assets/shader2");
+        Shader environmentShader = new Shader("project/assets/shader");
+        Shader menuShader = new Shader("project/assets/shader2");
 
 
 
@@ -243,7 +237,7 @@ public class GameMain {
         if(endOfGame){
             if (player.health > 0) {
 
-                Texture t = new Texture("assets/gui/winner.png");
+                Texture t = new Texture("project/assets/gui/winner.png");
                 vertices = Arrays.copyOf(baseVertices, baseVertices.length);
                 vertices = alterVertices(vertices, t.getHeight(), t.getWidth(), 0.001, 0.003);
                 Model model = new Model(vertices, textureDocks, indices);
@@ -256,7 +250,7 @@ public class GameMain {
                     e.printStackTrace();
                 }
             }   else    {
-                Texture t = new Texture("assets/gui/loser.png");
+                Texture t = new Texture("project/assets/gui/loser.png");
                 vertices = Arrays.copyOf(baseVertices, baseVertices.length);
                 vertices = alterVertices(vertices, t.getHeight(), t.getWidth(), 0.001, 0.003);
                 Model model = new Model(vertices, textureDocks, indices);
@@ -515,11 +509,8 @@ public class GameMain {
         if(entityTransform.pos.x < topLeftTile.x){
             return false;
         }
-        if(-entityTransform.pos.y < topLeftTile.y){
-            return false;
-        }
-        return true;
-    
+        return !(-entityTransform.pos.y < topLeftTile.y);
+
     }
 
     

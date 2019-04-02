@@ -1,6 +1,5 @@
 package com.myst.networking.serverside;
 
-import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.Report;
@@ -10,7 +9,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
-// Gets messages from client and puts them in a queue, for another
+/**
+ * Gets messages from client and puts them in a queue, for another
+ */
 // thread to forward to the appropriate client.
 
 public class ServerReceiver extends Thread {
@@ -60,6 +61,10 @@ public class ServerReceiver extends Thread {
         companion.interrupt();
     }
 
+    /**
+     * Updates the world with new data
+     * @param data The updated data
+     */
     public void updateWorld(Object data) {
         ArrayList<EntityData> entityData = (ArrayList<EntityData>) data;
         for (int i = 0; i < entityData.size(); i++) {

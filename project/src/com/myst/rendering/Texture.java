@@ -3,19 +3,13 @@
  */
 package com.myst.rendering;
 
-import static org.lwjgl.opengl.GL20.*;
-
 import org.lwjgl.BufferUtils;
-
-
 import org.lwjgl.stb.STBImage;
 
-import java.awt.image.BufferedImage;
-
-import java.io.File;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+
+import static org.lwjgl.opengl.GL20.*;
 
 
 /**
