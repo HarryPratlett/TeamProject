@@ -127,10 +127,7 @@ public class Main {
                         }
                         menu.ipAddress = myServer.IP;
                         menu.port = (myServer.port).toString();
-                        String clientID1 = String.valueOf(Math.random());
-                        String clientID2 = String.valueOf(Math.random());
-                        String clientID3 = String.valueOf(Math.random());
-                        BotMain bot1 = new BotMain(Integer.parseInt(menu.port), 1, clientID1);
+                        BotMain bot1 = new BotMain(Integer.parseInt(menu.port));
                         //BotMain bot2 = new BotMain(Integer.parseInt(menu.port),2,clientID2);
                         //BotMain bot3 = new BotMain(Integer.parseInt(menu.port),3,clientID3);
                         bot1.start();

@@ -33,7 +33,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class BotMain extends Thread{
 
     static int IDCounter = 0;
-    static String clientID;
+    static String clientID = String.valueOf(Math.random());
     static int resHeight;
     static int resWidth;
     public boolean shouldEnd;
@@ -41,10 +41,8 @@ public class BotMain extends Thread{
     private Vector2f startLocation;
     private int botNo;
 
-    public BotMain(int port, int botNo, String clientID){
+    public BotMain(int port){
         this.port = port;
-        this.botNo = botNo;
-        this.clientID = clientID;
     }
 
 
@@ -57,7 +55,6 @@ public class BotMain extends Thread{
 
         //ArrayList<Line> playerBullets = new ArrayList<>();
 
-        System.out.println(clientID);
         ArrayList<Line> botBullets = new ArrayList<>();
         ClientConnection connection = new ClientConnection(entities, toRender,"127.0.0.1",port,clientID);
 
@@ -90,12 +87,7 @@ public class BotMain extends Thread{
         myEntities.put(bot.localID, bot);
 
 //        bot.transform.pos.add(connection.startLoc.x,connection.startLoc.y,0);
-        bot.transform.pos.x = ((botNo % 2) * 97) + 1;
-        if(botNo == 2 || botNo == 3){
-            bot.transform.pos.y = -99;
-        } else{
-            bot.transform.pos.y = -1;
-        } 
+        bot.transform.pos.add(98,-1,0);
         System.out.println("bot starting at");
         System.out.println(bot.transform.pos.x);
         System.out.println(bot.transform.pos.y);
@@ -208,7 +200,7 @@ public class BotMain extends Thread{
 
 
             int mapX = (int) Math.floor((double) currentPos.x);
-            int mapY = (int) Math.floor((double) currentPos.y);
+            int mapY = (int) Math.floor((double) -currentPos.y);
 
             boolean hitWall = false;
             int total = 0;
@@ -226,6 +218,9 @@ public class BotMain extends Thread{
                     side = 1;
                     total++;
                 }
+                System.out.println("mapX: " +mapX);
+                System.out.println("mapY: " +mapY);
+                System.out.println("Tile Solid: " +map[mapX][mapY].isSolid());
                 if(map[mapX][mapY].isSolid()){
                     hitWall = true;
                 }
