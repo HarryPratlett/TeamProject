@@ -2,6 +2,7 @@ package com.myst.AI;
 
 import com.myst.world.World;
 import com.myst.world.entities.Entity;
+import com.myst.world.entities.Player;
 import com.myst.world.view.Transform;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,32 +34,28 @@ public class AI {
      * @param botID ID of bot
      * @return
      */
-    public Transform enemyDetection(ConcurrentHashMap<String,ConcurrentHashMap<Integer, Entity>> entities, boolean lightOn, String botOwner, int botID) {
-        for(String owner: entities.keySet()) {
-            for(Integer localID: entities.get(owner).keySet()){
-                if(owner.equals(botOwner) && localID == botID) continue;
-                Transform enemyTransform = entities.get(owner).get(localID).transform;
-                if(lightOn || entities.get(owner).get(localID).visibleToEnemy) {
-                    if((Math.abs(enemyTransform.pos.x - transform.pos.x) < 2.5f) && (Math.abs(-enemyTransform.pos.y - (-transform.pos.y)) < 2.5f)) {
-                        return enemyTransform;
-                    }else {
-                        return null;
-                    }
-                }else {
-                    if((Math.abs(enemyTransform.pos.x - transform.pos.x) < 0.25f) && (Math.abs(-enemyTransform.pos.y - (-transform.pos.y)) < 0.25f)) {
-                        return enemyTransform;
-                    }else {
-                        return null;
-                    }
-                }
-            }
-
-        }
-        return null;
+    public Transform enemyDetection(Entity player, boolean lightOn) {
+    	if(player.visibleToEnemy || lightOn) {
+    		if((Math.abs(player.transform.pos.x - transform.pos.x) < 2.5f) && (Math.abs(-player.transform.pos.y - (-transform.pos.y)) < 2.5f)) {
+    			System.out.println("Found you "+player.transform.pos);
+    			return player.transform;
+    		}else {       
+    			return null;        
+    		}       
+    	}else {   
+    		if((Math.abs(player.transform.pos.x - transform.pos.x) < 0.25f) && (Math.abs(-player.transform.pos.y - (-transform.pos.y)) < 0.25f)) {        
+    			System.out.println("Found you");
+    			return player.transform;            
+    		}else {      
+    			return null;           
+    		}
+    	}      
     }
+   
+
 
     /**
-     * Uupdates transform
+     * Updates transform
      * @param transform Updated value for transform
      */
     public void updateTransform(Transform transform) {

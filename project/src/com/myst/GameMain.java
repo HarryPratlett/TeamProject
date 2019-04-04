@@ -72,7 +72,7 @@ public class GameMain {
         clientID = clientID1;
 
         String[] textures = new String[20];
-        String path = ("project/assets/tileset/");
+        String path = ("assets/tileset/");
 
         textures[0] = path + "tile_01";
         textures[1] = path + "tile_02";
@@ -109,8 +109,8 @@ public class GameMain {
 
         glClearColor(0f, 0f, 0f, 0f);
 
-        Shader environmentShader = new Shader("project/assets/shader");
-        Shader menuShader = new Shader("project/assets/shader2");
+        Shader environmentShader = new Shader("assets/shader");
+        Shader menuShader = new Shader("assets/shader2");
 
 
 
@@ -237,7 +237,7 @@ public class GameMain {
         if(endOfGame){
             if (player.health > 0) {
 
-                Texture t = new Texture("project/assets/gui/winner.png");
+                Texture t = new Texture("assets/gui/winner.png");
                 vertices = Arrays.copyOf(baseVertices, baseVertices.length);
                 vertices = alterVertices(vertices, t.getHeight(), t.getWidth(), 0.001, 0.003);
                 Model model = new Model(vertices, textureDocks, indices);
@@ -250,7 +250,7 @@ public class GameMain {
                     e.printStackTrace();
                 }
             }   else    {
-                Texture t = new Texture("project/assets/gui/loser.png");
+                Texture t = new Texture("assets/gui/loser.png");
                 vertices = Arrays.copyOf(baseVertices, baseVertices.length);
                 vertices = alterVertices(vertices, t.getHeight(), t.getWidth(), 0.001, 0.003);
                 Model model = new Model(vertices, textureDocks, indices);

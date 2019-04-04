@@ -25,7 +25,7 @@ public class Item extends Entity {
     final public static String BULLETS_BIG = "bullets_big";
     final public static String LIGHT_TRAP = "healing_platform";
 
-    final private String PATH = "project/assets/items/";
+    final private String PATH = "assets/items/";
     final private String PNG = ".png";
 
     /**

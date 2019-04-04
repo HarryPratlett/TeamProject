@@ -84,7 +84,7 @@ public class Player extends Entity {
         this.visibleToEnemy = true;
         this.bullets = bullets;
         this.healthBarModel = new Model(baseVertices, textureDocks,indices);
-        this.healthBar = new Texture("project/assets/sprites/health_bar/0.png");
+        this.healthBar = new Texture("assets/sprites/health_bar/0.png");
         this.healthBarTransform = new Transform();
         float healthPercentage = health / maxHealth;
         healthBarFiller = new Model(
@@ -92,7 +92,7 @@ public class Player extends Entity {
                         -0.5f, 0.5f , 0f, /*0*/  -0.5f+healthPercentage, 0.5f, 0f, /*1*/    -0.5f+healthPercentage, -0.5f, 0f, /*2*/
                         -0.5f, -0.5f, 0f/*3*/
                 },textureDocks,indices);
-        this.healthBarFillerTexture = new Texture("project/assets/sprites/health_bar/singlePixel.png");
+        this.healthBarFillerTexture = new Texture("assets/sprites/health_bar/singlePixel.png");
     }
 
 //    this is when you don't want to render the classes and is only for use of background AI / bot threads

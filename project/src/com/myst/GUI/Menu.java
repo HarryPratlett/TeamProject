@@ -53,9 +53,9 @@ public class Menu {
     private Boolean isIpAddress;
     public String ipAddress;
     public String port;
-    private final String PATH = "project/assets/gui/main_menu/";
+    private final String PATH = "assets/gui/main_menu/";
 
-    private Texture[] logo = {new Texture("project/assets/myst_logo.png")};
+    private Texture[] logo = {new Texture("assets/myst_logo.png")};
     private Texture[] dot = {new Texture(PATH + "typing/dot.png")};
     private Texture[] background = {new Texture(PATH + "background.png")};
     private Texture[] menuTextures = new Texture[]{
@@ -86,7 +86,7 @@ public class Menu {
      */
     public Menu(Window window, Input input)   {
         this.window = window;
-        this.shader = new Shader ("project/assets/shader2");
+        this.shader = new Shader ("assets/shader2");
         this.input = input;
         this.currentWindow = MenuStates.MAIN_MENU;
         this.multiplayerAccessed = false;

@@ -2,6 +2,7 @@ package com.myst.world.entities;
 
 import com.myst.AI.AI;
 import com.myst.AI.AStarSearch;
+import com.myst.audio.Audio;
 import com.myst.networking.EntityData;
 import com.myst.rendering.Window;
 import com.myst.world.World;
@@ -9,6 +10,8 @@ import com.myst.world.collisions.AABB;
 import com.myst.world.collisions.Collision;
 import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
+import com.myst.world.view.Transform;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -38,7 +41,7 @@ public class Bot extends Entity {
     public long moveTime = 50;
     private AStarSearch search;
 
-
+    private boolean moved;
 
     private long spikeDamageDelay = 1000;
 
@@ -93,8 +96,11 @@ public class Bot extends Entity {
 
 
         if(System.currentTimeMillis() - lastMove > 1 && nextLocation != null){
-            this.transform.pos.x = nextLocation[0];
-            this.transform.pos.y = -nextLocation[1];
+            
+        	this.transform.pos.x = nextLocation[0];
+        	this.transform.pos.y = -nextLocation[1];
+        	Audio.getAudio().play(Audio.FOOTSTEPS, this.transform.pos);
+        	Audio.getAudio().stop(Audio.FOOTSTEPS);
             lastMove = System.currentTimeMillis();
             if(route.isEmpty()){
                 nextLocation = null;
@@ -103,7 +109,26 @@ public class Bot extends Entity {
             }
 
         }
-
+        if(player != null) {
+        	Transform enemyTransform  = intelligence.enemyDetection(player, visibleToEnemy);
+        	if(enemyTransform != null) {
+        		/*if(enemyTransform.pos.y > this.transform.pos.y) {
+        			this.transform.rotation += 0.1f;
+        		}else {
+        			this.transform.rotation -= 0.1f;
+        		}*/
+        		try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        		Line line = new Line(new Vector2f(transform.pos.x + 0.5f, transform.pos.y - 0.5f), new Vector2f((float) enemyTransform.pos.x, (float) -enemyTransform.pos.y));
+        		bullets.add(line);
+                Audio.getAudio().play(Audio.GUN, this.transform.pos);
+                
+        	}
+        }
         AABB[] boxes = new AABB[25];
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {

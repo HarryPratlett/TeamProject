@@ -45,7 +45,7 @@ public class Server extends Thread{
         ServerSocket serverSocket = null;
 
         String[] textures = new String[20];
-        String path = ("project/assets/tileset/");
+        String path = ("assets/tileset/");
 
         textures[0] = path + "tile_01";
         textures[1] = path + "tile_02";

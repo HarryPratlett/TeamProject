@@ -27,6 +27,7 @@ public class BotMain extends Thread{
     public boolean shouldEnd;
     private int port;
     private Vector2f startLocation;
+    private int botNo;
 
     public BotMain(int port){
         this.port = port;
@@ -41,6 +42,7 @@ public class BotMain extends Thread{
         ConcurrentHashMap<String,ConcurrentHashMap<Integer, EntityData>> toRender = new ConcurrentHashMap<>();
 
         //ArrayList<Line> playerBullets = new ArrayList<>();
+
         ArrayList<Line> botBullets = new ArrayList<>();
         ClientConnection connection = new ClientConnection(entities, toRender,"127.0.0.1",port,clientID);
 
@@ -62,27 +64,25 @@ public class BotMain extends Thread{
         // player.localID = IDCounter;
         // player.owner = clientID;
         Bot bot = new Bot(new Vector2f(0.5f,0.5f), botBullets, search);
-
         bot.localID = IDCounter;
         bot.owner = clientID;
         IDCounter++;
-
-
-//        bot.transform.pos.add(connection.startLoc.x,connection.startLoc.y,0);
-        bot.transform.pos.add(10,-1,0);
-        System.out.println("bot starting at");
-        System.out.println(connection.startLoc.x);
-        System.out.println(connection.startLoc.y);
-        bot.initialiseAI(world);
-        //System.out.println("trying to find a path");
-        //bot.setPath(new Vector3f(1,-1,1));
-        //System.out.println("I found a path");
 
         entities.put(clientID, new ConcurrentHashMap<Integer,Entity>());
 
         ConcurrentHashMap<Integer, Entity> myEntities = entities.get(clientID);
 
         myEntities.put(bot.localID, bot);
+
+//        bot.transform.pos.add(connection.startLoc.x,connection.startLoc.y,0);
+        bot.transform.pos.add(98,-1,0);
+        System.out.println("bot starting at");
+        System.out.println(bot.transform.pos.x);
+        System.out.println(bot.transform.pos.y);
+        bot.initialiseAI(world);
+        //System.out.println("trying to find a path");
+        //bot.setPath(new Vector3f(1,-1,1));
+        //System.out.println("I found a path");
 
         double frame_cap = 1.0/60.0;
 
@@ -129,6 +129,7 @@ public class BotMain extends Thread{
                     toRender.get(owner).remove(localID);
                 }
             }
+            calculateBullets(myEntities, botBullets, map);
             if(System.currentTimeMillis() - bot.lastMove < bot.moveTime){
                 try {
                     Thread.sleep((bot.lastMove + bot.moveTime) - System.currentTimeMillis());
@@ -187,7 +188,7 @@ public class BotMain extends Thread{
 
 
             int mapX = (int) Math.floor((double) currentPos.x);
-            int mapY = (int) Math.floor((double) currentPos.y);
+            int mapY = (int) Math.floor((double) -currentPos.y);
 
             boolean hitWall = false;
             int total = 0;

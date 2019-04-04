@@ -77,7 +77,7 @@ public class MapGenerator {
      * <br>All of the tiles have empty edges.
      */
     public Tile[][] generateMap(int width, int height) {
-        String path = "project/assets/tile_sheet/";
+        String path = "assets/tile_sheet/";
         Tile[][] map = new Tile[width][height];
 
         for (int x = 0; x < width; x++) {

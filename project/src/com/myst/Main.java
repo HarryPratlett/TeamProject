@@ -68,6 +68,7 @@ public class Main {
         int frames = 0;
         String clientID = String.valueOf(Math.random());
 
+        System.out.println(clientID);
         boolean amHost = false;
 
         double debugCurrentTime;
@@ -105,9 +106,8 @@ public class Main {
                                 e.printStackTrace();
                             }
                         }
-                        menu.ipAddress = Server.IP;
-                        menu.port = (Server.port).toString();
-//                        new BotMain(myServer.port).start();
+                        menu.ipAddress = myServer.IP;
+                        menu.port = (myServer.port).toString();
 
                         state = ProgramState.MAIN_MENUS;
                         amHost = true;
@@ -124,6 +124,7 @@ public class Main {
                                 e.printStackTrace();
                             }
                         }
+
                         menu.ipAddress = Server.IP;
                         menu.port = (Server.port).toString();
                         new BotMain(Integer.parseInt(menu.port)).start();

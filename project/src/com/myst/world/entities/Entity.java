@@ -37,7 +37,7 @@ public abstract class Entity implements Serializable {
 
     public Entity(float[] vertices, float[] texture, int[] indices, Vector2f boundingBoxCoords){
         model = new Model(vertices, texture, indices);
-        this.texture = new Texture("project/assets/sprites/player.png");
+        this.texture = new Texture("assets/sprites/player.png");
         transform = new Transform();
         transform.scale = new Vector3f(1,1,1);
         boundingBox = new AABB(new Vector2f(transform.pos.x, transform.pos.y), boundingBoxCoords);
