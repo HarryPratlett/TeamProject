@@ -28,6 +28,7 @@ public class BotMain extends Thread{
     private int port;
     private Vector2f startLocation;
     private int botNo;
+    public static boolean endOfGame = false;
 
     public BotMain(int port){
         this.port = port;

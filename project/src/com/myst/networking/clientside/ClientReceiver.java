@@ -1,6 +1,7 @@
 package com.myst.networking.clientside;
 
 import com.myst.GameMain;
+import com.myst.AI.BotMain;
 import com.myst.audio.Audio;
 import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
@@ -62,6 +63,7 @@ public class ClientReceiver extends Thread {
                         System.out.println("trying to end game");
                         endMe = true;
                         GameMain.endOfGame = true;
+                        BotMain.endOfGame = true;
                         break;
                     default:
                         break;

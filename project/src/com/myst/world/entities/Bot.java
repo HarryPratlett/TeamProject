@@ -113,17 +113,20 @@ public class Bot extends Entity {
         if(player != null) {
         	Transform enemyTransform  = intelligence.enemyDetection(player, visibleToEnemy);
         	if(enemyTransform != null) {
-        		/*if(enemyTransform.pos.y > this.transform.pos.y) {
-        			this.transform.rotation += 0.1f;
-        		}else {
-        			this.transform.rotation -= 0.1f;
-        		}*/
         		try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				} 
+        		double xPos = enemyTransform.pos.x;
+		        double yPos = -enemyTransform.pos.y;
+
+		        transform.rotation = (float) Math.atan(yPos / xPos);
+
+		        if (xPos < 0) {
+		            transform.rotation += Math.PI;
+		        }
         		Line line = new Line(new Vector2f(transform.pos.x + 0.5f, transform.pos.y - 0.5f), new Vector2f((float) enemyTransform.pos.x, (float) -enemyTransform.pos.y));
                 bullets.add(line);
                 Audio.getAudio().play(Audio.GUN, this.transform.pos);
