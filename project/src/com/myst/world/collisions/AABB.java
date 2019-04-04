@@ -1,6 +1,5 @@
 package com.myst.world.collisions;
 
-import com.myst.world.entities.Player;
 import org.joml.Vector2f;
 
 import java.io.Serializable;
@@ -89,9 +88,7 @@ public class AABB implements Serializable{
         }
         if(intersectionThree!=null) {
             if (intersectionThree >= 0 && intersectionThree <= 1) {
-                if (line.distanceTo(hitboxLineThree) < length) {
-                    return true;
-                }
+                return line.distanceTo(hitboxLineThree) < length;
             }
         }
         return false;

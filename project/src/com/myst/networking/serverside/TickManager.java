@@ -5,13 +5,12 @@ import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.Report;
 import com.myst.networking.serverside.model.WorldModel;
-import com.myst.world.entities.EntityType;
-import com.myst.world.entities.ItemData;
 
 import java.util.ArrayList;
 
-import static jdk.nashorn.internal.objects.Global.println;
-
+/**
+ * Manages the ticks and events that occur on them
+ */
 public class TickManager extends Thread{
     private final int TICKRATE = 60;
     private ServerSender[] senders = new ServerSender[8];
@@ -25,6 +24,9 @@ public class TickManager extends Thread{
     int ticks = 60;
 
 
+    /**
+     * Runs a tick manager
+     */
     @Override
     public void run(){
         while(true){
@@ -44,9 +46,6 @@ public class TickManager extends Thread{
 
             itemGenerator.update();
             if(ticks >= 60){
-//                System.out.println("players");
-//                System.out.println(wm.players);
-//                System.out.println(wm.playersAlive);
                 ticks = 0;
             }
 
@@ -65,6 +64,10 @@ public class TickManager extends Thread{
         System.out.println("tick manager is ending");
     }
 
+    /**
+     * Adds a server sender to the tick manager
+     * @param sender The server sender
+     */
     public void addSender(ServerSender sender){
         Boolean added = false;
         synchronized (senderListKey){

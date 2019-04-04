@@ -7,7 +7,6 @@ import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.entities.BulletData;
 import com.myst.world.entities.Entity;
-import com.myst.world.entities.PlayerData;
 import com.myst.world.view.Camera;
 import org.joml.Vector2f;
 

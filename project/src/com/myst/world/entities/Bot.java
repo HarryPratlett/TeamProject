@@ -1,18 +1,9 @@
 package com.myst.world.entities;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Stack;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.myst.AI.AI;
 import com.myst.AI.AStarSearch;
 import com.myst.audio.Audio;
 import com.myst.networking.EntityData;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
-
-import com.myst.AI.AI;
 import com.myst.rendering.Window;
 import com.myst.world.World;
 import com.myst.world.collisions.AABB;
@@ -20,6 +11,14 @@ import com.myst.world.collisions.Collision;
 import com.myst.world.collisions.Line;
 import com.myst.world.view.Camera;
 import com.myst.world.view.Transform;
+
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implements AI code to create bots

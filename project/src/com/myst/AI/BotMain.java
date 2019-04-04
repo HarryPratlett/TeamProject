@@ -1,34 +1,22 @@
 package com.myst.AI;
 
-import com.myst.GUI.GUI;
 import com.myst.helper.Timer;
 import com.myst.networking.EntityData;
-import com.myst.rendering.Shader;
-import com.myst.world.collisions.Line;
-import com.myst.world.entities.*;
-import com.myst.world.collisions.Bullet;
-import com.myst.world.view.Camera;
-import com.myst.rendering.Window;
-import com.myst.world.World;
-import com.myst.world.map.generating.MapGenerator;
-import com.myst.world.map.rendering.Tile;
-
-
 import com.myst.networking.clientside.ClientConnection;
+import com.myst.world.World;
+import com.myst.world.collisions.Bullet;
+import com.myst.world.collisions.Line;
+import com.myst.world.entities.Bot;
+import com.myst.world.entities.Entity;
+import com.myst.world.entities.EntityType;
+import com.myst.world.entities.Player;
+import com.myst.world.map.rendering.Tile;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
-import com.myst.world.map.rendering.TileRenderer;
-import org.joml.*;
-import org.lwjgl.opengl.GL;
-
-import java.lang.Math;
-import java.security.acl.Owner;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.glfw.GLFW.*;
 
 public class BotMain extends Thread{
 
@@ -218,9 +206,6 @@ public class BotMain extends Thread{
                     side = 1;
                     total++;
                 }
-                System.out.println("mapX: " +mapX);
-                System.out.println("mapY: " +mapY);
-                System.out.println("Tile Solid: " +map[mapX][mapY].isSolid());
                 if(map[mapX][mapY].isSolid()){
                     hitWall = true;
                 }
@@ -232,7 +217,7 @@ public class BotMain extends Thread{
                 wallDist = (mapX - currentPos.x + (1- stepX) / 2) / bulletVec.x;
             } else{
                 wallDist = (mapY - currentPos.y + (1- stepY) / 2) / bulletVec.y;
-            };
+            }
 
             Bullet newBullet = new Bullet(bullet,wallDist,100f);
             newBullet.owner = clientID;

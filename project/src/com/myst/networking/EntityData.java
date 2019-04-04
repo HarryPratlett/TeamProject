@@ -6,6 +6,9 @@ import com.myst.world.view.Transform;
 
 import java.io.Serializable;
 
+/**
+ * All data for given entities
+ */
 public class EntityData implements Serializable {
     public String ownerID;
     public Integer localID;

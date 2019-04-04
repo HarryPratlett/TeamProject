@@ -1,11 +1,9 @@
 package com.myst.networking.serverside;
 
 import com.myst.networking.Codes;
-import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.Report;
 import com.myst.networking.serverside.model.WorldModel;
-import com.myst.world.entities.Item;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,9 +12,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
-
-// This is the thread which is run whilst a clients is connecting
-// it verifies all their details and makes sure there are enough players to run the game
+/**
+ * Thread that runs whilst a client is connecting
+ */
 public class ClientConnectionThread extends Thread {
     private Socket socket;
     private ClientTable clientTable;
@@ -34,23 +32,20 @@ public class ClientConnectionThread extends Thread {
         this.world = world;
         this.ticker = ticker;
         this.usedIDs = usedIDs;
-        // we have a maximum of 8 clients per server
-//      availableIDs is a list of booleans which if an element is true means it's index is available as an ID e.g.
-//      [T,F,F,F,T] ->  IDs 0,4 are available IDs 1,2,3 are not
     }
 
+    /**
+     * Runs a client connection thread
+     */
     @Override
     public void run() {
         try {
             ObjectInputStream fromClient = new ObjectInputStream(socket.getInputStream());
             System.out.println("someone connected");
-            // We ask for the client's request
             String clientRequest = null;
             ObjectOutputStream toClient = new ObjectOutputStream(socket.getOutputStream());
 
             String clientID = null;
-//          the try loop is about setting up the ClientID
-//          may have to put if null in to catch any errors
             try {
                 Message msg = (Message) fromClient.readObject();
                 if (msg.header != Codes.SET_CLIENT_ID) {
@@ -90,13 +85,7 @@ public class ClientConnectionThread extends Thread {
             while(playerCount < 2){
                 Thread.sleep(100);
             }
-            toClient.writeObject(new Message(Codes.GAME_STARTED,(int) playerCountAtStart ));
-
-
-
-//            I'm now adding a client
-
-
+            toClient.writeObject(new Message(Codes.GAME_STARTED, playerCountAtStart));
 
             System.out.println(clientID);
 
@@ -108,17 +97,13 @@ public class ClientConnectionThread extends Thread {
             ServerSender serverSender = new ServerSender(clientQueue, toClient, clientID, world);
             ServerReceiver serverReceiver = new ServerReceiver(clientID, fromClient, clientTable, serverSender, world);
 
-//              the ticker controls when the server sender sends out to the client
             serverReceiver.start();
             ticker.addSender(serverSender);
 
 
         } catch (IOException e) {
-            // Lazy approach:
             Report.error("IO error " + e.getMessage());
             e.printStackTrace();
-            // A more sophisticated approach could try to establish a new
-            // connection. But this is beyond the scope of this simple exercise.
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

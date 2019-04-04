@@ -1,18 +1,4 @@
 package com.myst.networking.clientside;
-// Usage:
-//        java ClientConnection user-nickname server-hostname
-//
-// After initializing and opening appropriate sockets, we start two
-// client threads, one to send messages, and another one to get
-// messages.
-//
-// A limitation of our implementation is that there is no provision
-// for a client to end after we start it. However, we implemented
-// things so that pressing ctrl-c will cause the client to end
-// gracefully without causing the server to fail.
-//
-// Another limitation is that there is no provision to terminate when
-// the server dies.
 
 import com.myst.networking.Codes;
 import com.myst.networking.EntityData;
@@ -58,8 +44,10 @@ public class ClientConnection extends Thread{
         this.PORT = port;
     }
 
+    /**
+     * Opens a pair of sockets
+     */
     public void run() {
-        // Open sockets:
         ObjectOutputStream toServer = null;
         ObjectInputStream fromServer = null;
         Socket server = null;
@@ -74,7 +62,6 @@ public class ClientConnection extends Thread{
 
             if (!checkClientID(toServer, fromServer, clientID)) {
                 Report.error("client ID was unavailable");
-//        lazy way of doing this needs to be refactored, only doing for the prototype
                 System.exit(1);
                 return;
             }
@@ -110,7 +97,6 @@ public class ClientConnection extends Thread{
      */
     public boolean checkClientID(ObjectOutputStream toServer, ObjectInputStream fromServer, String clientID) {
         try {
-//      you ask the server if the client ID is available, if so then it returns true else it returns false
             toServer.writeObject(new Message(Codes.SET_CLIENT_ID, clientID));
             Message response = (Message) fromServer.readObject();
             switch (response.header) {

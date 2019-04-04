@@ -1,5 +1,8 @@
 package com.myst.networking;
 
+/**
+ * Reports error with the server
+ */
 public class Report {
 
   public static void behaviour(String message) {

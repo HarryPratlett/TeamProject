@@ -1,13 +1,10 @@
 package com.myst.AI;
 
-import java.util.Optional;
-
-import org.joml.Vector2f;
+import com.myst.datatypes.TileCoords;
+import com.myst.world.World;
 import org.joml.Vector3f;
 
-import com.myst.datatypes.TileCoords;
-import com.myst.datatypes.WorldCoords;
-import com.myst.world.World;
+import java.util.Optional;
 
 /**
  * Map Nodes for AI search

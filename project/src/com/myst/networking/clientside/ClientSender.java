@@ -1,11 +1,7 @@
 package com.myst.networking.clientside;
 
-import com.myst.networking.Codes;
-import com.myst.networking.EntityData;
 import com.myst.networking.Message;
-import com.myst.world.entities.Entity;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.BlockingQueue;
@@ -30,7 +26,9 @@ public class ClientSender extends Thread {
         sendQueue = false;
     }
 
-
+    /**
+     * Runs a client sender
+     */
     @Override
     public void run(){
         try {

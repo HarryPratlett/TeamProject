@@ -1,11 +1,15 @@
 package com.myst.rendering;
-import org.lwjgl.BufferUtils;
 
-import static org.lwjgl.opengl.GL20.*;
+import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static org.lwjgl.opengl.GL20.*;
+
+/**
+ * Creates a model to render an image
+ */
 public class Model {
     private int draw_count;
 //    vbox id
@@ -15,12 +19,16 @@ public class Model {
 //    indices id
     private int i_id;
 
+    /**
+     * Constructor to create the model
+     * @param vertices Vertices for image/projection
+     * @param tex_coords ''
+     * @param indices ''
+     */
     public Model(float[] vertices, float[] tex_coords, int[] indices){
-//        divided by 2 because we have a 2 dimensional model
+
         draw_count = indices.length;
 
-
-//        giving opengl the buffer to draw the model and assigning it an id
         v_id = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, v_id);
         glBufferData(GL_ARRAY_BUFFER, createFloatBuffer(vertices) , GL_STATIC_DRAW);
@@ -33,29 +41,27 @@ public class Model {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, i_id);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, createIntBuffer(indices), GL_STATIC_DRAW);
 
-//        unbinding v_id
+
         glBindBuffer(GL_ARRAY_BUFFER,0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 
     }
 
-//    draws the model (vbo)
+    /**
+     * Draws the model
+     */
     public void render(){
-//        enable and disable are just so opengl knows what you are doing
-//        glEnableClientState(GL_VERTEX_ARRAY);
-//        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-//        does the same as the two lines above
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
         glBindBuffer(GL_ARRAY_BUFFER,v_id);
-//        first argument is the dimensions
+
         glVertexAttribPointer(0,3,GL_FLOAT,false,0,0);
-//
+
         glBindBuffer(GL_ARRAY_BUFFER,t_id);
-        //        the 2 refers to the two dimensions
+
         glVertexAttribPointer(1,2,GL_FLOAT,false,0,0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,i_id);
@@ -63,26 +69,33 @@ public class Model {
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER,0);
-//
-//        glDisableClientState(GL_VERTEX_ARRAY);
-//        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-//        does the same as the two lines above
+
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
     }
 
+    /**
+     * Creates the float buffer
+     * @param data Data for the float buffer
+     * @return Returns the float buffer
+     */
     private FloatBuffer createFloatBuffer(float[] data){
         FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
         buffer.put(data);
-//        wierd thing, opengl just wants things flipped
+
         buffer.flip();
         return buffer;
     }
 
+    /**
+     * Creates an int buffer
+     * @param data Data for the int buffer
+     * @return Returns the int buffer
+     */
     private IntBuffer createIntBuffer(int[] data) {
         IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
         buffer.put(data);
-//        wierd thing, opengl just wants things flipped
+
         buffer.flip();
         return buffer;
     }

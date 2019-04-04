@@ -11,7 +11,6 @@ import com.myst.world.entities.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -37,6 +36,9 @@ public class ClientReceiver extends Thread {
         this.toRender = toRender;
     }
 
+    /**
+     * Runs a client reciever to recieve stuff from the server
+     */
     @Override
     public void run(){
         while(!endMe){
@@ -80,10 +82,17 @@ public class ClientReceiver extends Thread {
         System.out.println("Client receiver ended");
     }
 
+    /**
+     * Plays audio from the server
+     * @param playAudioData
+     */
     public void playAudio(PlayAudioData playAudioData) {
         Audio.getAudio().play(playAudioData.clipName, playAudioData.location);
     }
 
+    /**
+     * Sends entities to the server
+     */
     private void sendEntities(){
 
         ConcurrentHashMap<Integer, Entity> myEntities = this.entities.get(clientID);
@@ -94,11 +103,7 @@ public class ClientReceiver extends Thread {
         for(Integer i: myEntities.keySet()){
             if (myEntities.get(i) != null){
                 EntityData data= myEntities.get(i).getData();
-                if(myEntities.get(i).visibleToEnemy){
-                    data.lightSource = true;
-                } else{
-                    data.lightSource = false;
-                }
+                data.lightSource = myEntities.get(i).visibleToEnemy;
                 toSend.add(data);
             }
         }

@@ -1,15 +1,17 @@
 package com.myst.world.entities;
 
-import com.myst.rendering.Texture;
-import com.myst.world.view.Camera;
 import com.myst.rendering.Window;
 import com.myst.world.World;
+import com.myst.world.view.Camera;
 import org.joml.Vector2f;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.myst.world.entities.EntityType.PLAYER;
 
+/**
+ * Class for enemies, in order to create them
+ */
 public class Enemy extends Entity{
 
     private final float MOVEMENT_SPEED = 10f;
@@ -33,6 +35,7 @@ public class Enemy extends Entity{
         this.type = PLAYER;
 
     }
+
 
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer,Entity> items) {
 //        these needs fixing and entering into an entities class

@@ -13,17 +13,20 @@ package com.myst.GUI;
 import com.myst.audio.Audio;
 import com.myst.input.Input;
 import com.myst.rendering.Model;
+import com.myst.rendering.Shader;
 import com.myst.rendering.Texture;
 import com.myst.rendering.Window;
-import com.myst.rendering.Shader;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import java.util.HashMap;
+
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
+import java.util.HashMap;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
 
 /**
  * Creates the gui within the game
@@ -58,7 +61,7 @@ public class GUI {
     private Model model;
     private int volume;
     private int brightness;
-    private final String PATH = "assets/gui/";
+    private final String PATH = "project/assets/gui/";
 
     private Texture[] background = {new Texture(PATH + "background.png")};
     private Texture[] controlsTexture = {new Texture(PATH + "keyboard_asset.png")};
@@ -162,6 +165,10 @@ public class GUI {
         model.render();
     }
 
+    /**
+     * Renders a GUI menu when the player opens it
+     * @param shader Shader used to render it
+     */
     public void renderGUI(Shader shader) {
         renderBackground(shader);     
         float y = 0.55f;
@@ -259,13 +266,19 @@ public class GUI {
                             if (brightness > 0) { brightness -= 1; }
                             break;
                         case "plus.png":
-                            Audio.getAudio().modifySfxVolume(1);
-                            Audio.getAudio().modifyThemeVolume(1);
-                            break;
+                            if (volume < 5) {
+                                volume += 1;
+                                Audio.getAudio().modifySfxVolume(1);
+                                Audio.getAudio().modifyThemeVolume(1);
+                                break;
+                            }
                         case "minus.png":
-                            Audio.getAudio().modifySfxVolume(-1);
-                            Audio.getAudio().modifyThemeVolume(-1);
-                            break;
+                            if (volume > 0) {
+                                volume -= 1;
+                                Audio.getAudio().modifySfxVolume(-1);
+                                Audio.getAudio().modifyThemeVolume(-1);
+                                break;
+                            }
                     }
                 }
             }

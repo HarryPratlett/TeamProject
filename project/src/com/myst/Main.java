@@ -4,7 +4,6 @@
 package com.myst;
 
 import com.myst.AI.BotMain;
-import com.myst.GUI.GUI;
 import com.myst.GUI.Menu;
 import com.myst.GUI.MenuStates;
 import com.myst.helper.Timer;
@@ -25,7 +24,7 @@ public class Main {
 
 
 
-        public static void main(String[] args) {
+    public static void main(String[] args) {
 //        setting up opengl
         Window.setCallbacks();
         if (!glfwInit()) {
@@ -100,7 +99,7 @@ public class Main {
                     case START_SERVER:
                         myServer = new Server();
                         myServer.start();
-                        while(!myServer.foundIPAndPort) {
+                        while(!Server.foundIPAndPort) {
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException e) {
@@ -118,21 +117,17 @@ public class Main {
                     case START_SINGLE_PLAYER:
                         myServer = new Server();
                         myServer.start();
-                        while(!myServer.foundIPAndPort) {
+                        while(!Server.foundIPAndPort) {
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         }
-                        menu.ipAddress = myServer.IP;
-                        menu.port = (myServer.port).toString();
-                        BotMain bot1 = new BotMain(Integer.parseInt(menu.port));
-                        //BotMain bot2 = new BotMain(Integer.parseInt(menu.port),2,clientID2);
-                        //BotMain bot3 = new BotMain(Integer.parseInt(menu.port),3,clientID3);
-                        bot1.start();
-                        //bot2.start();
-                        //bot3.start();
+
+                        menu.ipAddress = Server.IP;
+                        menu.port = (Server.port).toString();
+                        new BotMain(Integer.parseInt(menu.port)).start();
                         state = ProgramState.SWITCH_TO_GAME_FROM_MENU;
                         break;
                     case SWITCH_TO_GAME_FROM_MENU:

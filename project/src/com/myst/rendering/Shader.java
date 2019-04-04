@@ -1,14 +1,15 @@
 package com.myst.rendering;
+
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+import org.lwjgl.BufferUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
-import org.joml.Vector2f;
-import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
-import org.joml.Matrix4f;
 import static org.lwjgl.opengl.GL20.*;
 
 /**

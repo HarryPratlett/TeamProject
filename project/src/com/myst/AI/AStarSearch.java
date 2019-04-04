@@ -1,19 +1,10 @@
 package com.myst.AI;
 
-import java.lang.reflect.Array;
-import java.nio.IntBuffer;
-import java.util.*;
-
+import com.myst.world.World;
 import com.myst.world.map.rendering.Tile;
-import com.sun.org.apache.xml.internal.utils.IntStack;
-import org.joml.Vector2f;
-import org.joml.Vector2i;
 import org.joml.Vector3f;
 
-import com.myst.datatypes.TileCoords;
-import com.myst.datatypes.WorldCoords;
-import com.myst.helper.Timer;
-import com.myst.world.World;
+import java.util.*;
 
 /**
  * Algorithm via which bots find players

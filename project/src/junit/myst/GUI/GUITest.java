@@ -4,15 +4,14 @@ import com.myst.GUI.GUI;
 import com.myst.rendering.Window;
 import org.junit.Test;
 import org.lwjgl.opengl.GL;
+
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.*;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 public class GUITest {
 

@@ -3,19 +3,12 @@
  */
 package com.myst.datatypes;
 
-
+/**
+ * Tile co-ordinate class for Map Generation
+ */
 public class TileCoords {
     public int x;
     public int y;
-
-//    the tile coords are stored so that
-//
-//
-//        |------- x
-//        |
-//        |
-//        y
-//
 
     /**
      * Constructor for the tile co-ordinates

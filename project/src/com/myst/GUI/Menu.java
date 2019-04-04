@@ -6,20 +6,18 @@ import com.myst.helper.Timer;
 import com.myst.input.Input;
 import com.myst.rendering.Model;
 import com.myst.rendering.Shader;
-import com.myst.rendering.Window;
 import com.myst.rendering.Texture;
+import com.myst.rendering.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
+
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 import java.util.HashMap;
 
-
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 /**
  * Creates the main menu for the game
@@ -222,6 +220,10 @@ public class Menu {
         }
     }
 
+    /**
+     * Updates the program state when doing things in the opening menu
+     * @return Returns the current program state
+     */
     public ProgramState update(){
         ProgramState state = ProgramState.MAIN_MENUS;
         switch(currentWindow){

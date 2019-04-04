@@ -1,6 +1,5 @@
 package com.myst.world.collisions;
 
-import org.joml.Matrix3f;
 import org.joml.Vector2f;
 
 import java.io.Serializable;

@@ -1,16 +1,11 @@
 package com.myst.AI;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
 import com.myst.world.World;
 import com.myst.world.entities.Entity;
 import com.myst.world.entities.Player;
 import com.myst.world.view.Transform;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * AI class - for bots

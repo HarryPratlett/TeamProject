@@ -6,7 +6,10 @@ import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.serverside.PlayAudioData;
 import com.myst.networking.serverside.ServerSender;
-import com.myst.world.entities.*;
+import com.myst.world.entities.BulletData;
+import com.myst.world.entities.EntityType;
+import com.myst.world.entities.ItemData;
+import com.myst.world.entities.PlayerData;
 import com.myst.world.map.rendering.Tile;
 import org.joml.Vector3f;
 

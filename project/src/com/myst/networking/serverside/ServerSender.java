@@ -1,19 +1,17 @@
 package com.myst.networking.serverside;
 
 import com.myst.networking.Codes;
-import com.myst.networking.EntityData;
 import com.myst.networking.Message;
 import com.myst.networking.serverside.model.WorldModel;
-import com.myst.world.entities.EntityType;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
-// Continuously reads from message queue for a particular client,
-// forwarding to the client.
+/**
+ * Continuously reads from message queue for a particular client,
+ * forwarding to the client.
+ */
 
 public class ServerSender extends Thread {
     private BlockingQueue<Object> clientQueue;
@@ -32,16 +30,16 @@ public class ServerSender extends Thread {
         world.addSender(this);
     }
 
+    /**
+     * Runs the server sender
+     */
     @Override
     public void run() {
         try {
             while (!end) {
-//        don't know why but it won't work without a thread.sleep()
                 Thread.sleep(1);
                     while (!clientQueue.isEmpty()) {
-//                        System.out.println("size: " + clientQueue.size());
                         Object msg = clientQueue.take();
-
                         client.writeObject(msg);
                         client.reset();
                     }
@@ -52,27 +50,32 @@ public class ServerSender extends Thread {
         }
     }
 
+    /**
+     * Requests an update for the client
+     */
     public void requestClientUpdate() {
         clientQueue.add(new Message(Codes.UPDATE_SERVER, null));
     }
 
+    /**
+     * Adds a server message
+     * @param message The message to be added
+     */
     public void addMessage(Message message) {
         clientQueue.add(message);
     }
 
+    /**
+     * Ends a server sender
+     */
     public void end(){end = true;}
 
+    /**
+     * Ends a game
+     */
     public void endGame(){
         clientQueue.add(new Message(Codes.GAME_ENDED,null));
     }
 
 }
 
-
-/*
-
- * Throws InterruptedException if interrupted while waiting
-
- * See https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/BlockingQueue.html#take--
-
- */
