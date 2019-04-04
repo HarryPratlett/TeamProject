@@ -99,7 +99,7 @@ public class BotMain extends Thread{
 
 
         Entity player = null;
-        while (!shouldEnd){
+        while (!shouldEnd && bot.health > 0){
             debugCurrentTime = Timer.getTime();
             double timeSinceLastUpdate = (debugCurrentTime - debugLastTime);
             debugLastTime = debugCurrentTime;
@@ -121,7 +121,7 @@ public class BotMain extends Thread{
                     EntityData eD = toRender.get(owner).get(localID);
                     switch(eD.type){
                         case PLAYER:
-                            Player p =new Player();
+                            Player p = new Player();
                             p.readInEntityData(eD);
                             entities.get(owner).put(localID,p);
                             break;
@@ -229,7 +229,7 @@ public class BotMain extends Thread{
                 newBullet.transform.rotation += Math.PI;
             }
             newBullet.transform.pos.x = currentPos.x;
-            newBullet.transform.pos.y = -currentPos.y;
+            newBullet.transform.pos.y = currentPos.y;
 
 
             myEntities.put(newBullet.localID,newBullet);

@@ -124,8 +124,8 @@ public class Bot extends Entity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-//        		Line line = new Line(new Vector2f(transform.pos.x + 0.5f, transform.pos.y - 0.5f), new Vector2f((float) enemyTransform.pos.x, (float) -enemyTransform.pos.y));
-//        		bullets.add(line);
+        		Line line = new Line(new Vector2f(transform.pos.x + 0.5f, transform.pos.y - 0.5f), new Vector2f((float) enemyTransform.pos.x, (float) -enemyTransform.pos.y));
+                bullets.add(line);
                 Audio.getAudio().play(Audio.GUN, this.transform.pos);
                 
         	}

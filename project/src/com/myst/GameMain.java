@@ -212,7 +212,10 @@ public class GameMain {
                 for (String owner : entities.keySet()) {
                     for (Integer entityID : entities.get(owner).keySet()) {
                         Entity e = entities.get(owner).get(entityID);
-                        if(isEntityInRenderRange(e.transform, camera)) {
+                        if(e.getType() == EntityType.BULLET){
+                            e.render(camera,environmentShader);
+                        }
+                        else if(isEntityInRenderRange(e.transform, camera)) {
                             if (e instanceof Item) {
                                 if (!((ItemData) e.typeData).hidden) e.render(camera, environmentShader);
                             } else {
@@ -444,7 +447,7 @@ public class GameMain {
                     else if (entitiesData.type == EntityType.ITEM_LIGHT_TRAP)
                         ent = new Item(Item.LIGHT_TRAP);
                     else if (entitiesData.type == EntityType.BULLET)
-                        ent = new Bullet(new Line(new Vector2f(), new Vector2f()), 0, 0);
+                        ent = new Bullet(new Line(new Vector2f(), new Vector2f()), ((BulletData) entitiesData.typeData).length, 0);
                     else
                         ent = new Enemy();
                     ent.readInEntityData(entitiesData);

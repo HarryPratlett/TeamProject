@@ -52,6 +52,7 @@ public class Bullet extends Entity {
         this.lightDistance = 0f;
         this.lightSource = false;
         this.timeOfCreation = System.nanoTime();
+        this.texture = new Texture("assets/sprites/player.png");
 
     }
 
@@ -72,6 +73,7 @@ public class Bullet extends Entity {
         this.lightDistance = 0f;
         this.lightSource = false;
         this.timeOfCreation = System.nanoTime();
+
     }
 
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer,Entity> items){
