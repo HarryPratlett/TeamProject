@@ -55,6 +55,25 @@ public class Bullet extends Entity {
 
     }
 
+    /**
+     * Constructor for a new bullet
+     * @param line Line bullet follows
+     * @param length Length of line
+     * @param damage Damage bullet will do
+     * @param renderable a last parameter which doesn't matter and is purely for the sake of having a constructor that
+     *                   doesn't use the OpenGL API
+     */
+
+    public Bullet(Line line, float length, float damage, Object renderable){
+        super(new Vector2f(0.5f,0.5f));
+        this.length = length;
+        this.line = line;
+        this.type = BULLET;
+        this.lightDistance = 0f;
+        this.lightSource = false;
+        this.timeOfCreation = System.nanoTime();
+    }
+
     public void update(float deltaTime, Window window, Camera camera, World world, ConcurrentHashMap<Integer,Entity> items){
 
     }
