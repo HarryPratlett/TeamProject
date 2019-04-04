@@ -67,8 +67,6 @@ public class Main {
         double frame_time = 0;
         int frames = 0;
         String clientID = String.valueOf(Math.random());
-
-        System.out.println(clientID);
         boolean amHost = false;
 
         double debugCurrentTime;

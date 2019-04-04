@@ -385,7 +385,7 @@ public class Audio {
      */
     public void setControlVolume(FloatControl control, double volumeMod) {
         float range = control.getMaximum() - control.getMinimum();
-        double gain = (range / MAX_VOLUME * (volume * volumeMod)) + control.getMinimum();
+        double gain = (range / MAX_VOLUME * 0.9 * (volume * volumeMod)) + control.getMinimum();
         control.setValue((float) gain);
     }
 

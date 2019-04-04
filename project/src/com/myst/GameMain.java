@@ -228,7 +228,7 @@ public class GameMain {
                 createAndRender(toRender, entities);
 
                 gui.render(menuShader);
-                //overlay.render(menuShader);
+
 
 
                 window.swapBuffers();

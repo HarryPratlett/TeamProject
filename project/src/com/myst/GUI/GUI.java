@@ -61,7 +61,7 @@ public class GUI {
     private Model model;
     private int volume;
     private int brightness;
-    private final String PATH = "project/assets/gui/";
+    private final String PATH = "assets/gui/";
 
     private Texture[] background = {new Texture(PATH + "background.png")};
     private Texture[] controlsTexture = {new Texture(PATH + "keyboard_asset.png")};
