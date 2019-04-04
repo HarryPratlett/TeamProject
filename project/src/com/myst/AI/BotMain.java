@@ -219,7 +219,7 @@ public class BotMain extends Thread{
                 wallDist = (mapY - currentPos.y + (1- stepY) / 2) / bulletVec.y;
             }
 
-            Bullet newBullet = new Bullet(bullet,wallDist,100f);
+            Bullet newBullet = new Bullet(bullet,wallDist,100f,null);
             newBullet.owner = clientID;
             newBullet.localID = IDCounter;
             IDCounter++;
